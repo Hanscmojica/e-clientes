@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage - Referencias</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide-static@latest/dist/lucide.min.js"></script>
+    <style>
+        /* Fuente personalizada */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Estilo para asegurar que el footer se quede abajo */
+        .site-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .site-content {
+            flex-grow: 1;
+        }
+        /* Pequeño ajuste para los iconos */
+        .icon {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            stroke-width: 2;
+            vertical-align: middle;
+            margin-right: 0.25em; /* Espacio entre icono y texto */
+        }
+        /* Estilos para el Modal (Pop-up) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro semitransparente */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50; /* Asegurar que esté por encima de todo */
+            opacity: 0; /* Oculto por defecto */
+            visibility: hidden; /* Oculto por defecto */
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem; /* 32px */
+            border-radius: 0.5rem; /* 8px */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            max-width: 90%;
+            width: 500px; /* Ancho del modal */
+            position: relative;
+            transform: scale(0.95); /* Efecto de escala al aparecer */
+            transition: transform 0.3s ease;
+            max-height: 90vh; /* Altura máxima para evitar que sea muy largo */
+            overflow-y: auto; /* Scroll si el contenido es muy largo */
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+        .modal-close-button {
+            position: absolute;
+            top: 0.75rem; /* 12px */
+            right: 0.75rem; /* 12px */
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #6b7280; /* gray-500 */
+        }
+        .modal-close-button:hover {
+             color: #1f2937; /* gray-800 */
+        }
+        .modal-close-button .icon {
+             width: 1.5rem; /* 24px */
+             height: 1.5rem; /* 24px */
+        }
+        /* Estilo para enlace activo en la navegación */
+        .nav-link-active {
+            border-bottom-width: 2px;
+            border-color: #6366f1; /* indigo-500 */
+            color: #1f2937; /* gray-900 */
+        }
+        .nav-link-inactive {
+             border-bottom-width: 2px;
+             border-color: transparent;
+             color: #6b7280; /* gray-500 */
+        }
+        .nav-link-inactive:hover {
+            border-color: #d1d5db; /* gray-300 */
+            color: #374151; /* gray-700 */
+        }
+         /* Estilo para enlace activo en menú móvil */
+        .mobile-nav-link-active {
+            background-color: #eef2ff; /* indigo-50 */
+            border-color: #6366f1; /* indigo-500 */
+            color: #4338ca; /* indigo-700 */
+            border-left-width: 4px;
+        }
+        .mobile-nav-link-inactive {
+             border-color: transparent;
+             color: #4b5563; /* gray-600 */
+             border-left-width: 4px;
+        }
+         .mobile-nav-link-inactive:hover {
+             background-color: #f9fafb; /* gray-50 */
+             border-color: #d1d5db; /* gray-300 */
+             color: #1f2937; /* gray-800 */
+         }
+         /* Estilos para diferentes estados */
+        .status-liberado { color: #16a34a; } /* green-600 */
+        .status-en-proceso { color: #ca8a04; } /* yellow-600 */
+        .status-en-transito { color: #2563eb; } /* blue-600 */
+        .status-pendiente-aduana { color: #d97706; } /* amber-600 */
+
+    </style>
+</head>
+<body class="bg-gray-100">
+
+<div class="site-container">
+
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <div class="flex-shrink-0 flex items-center text-xl font-bold text-indigo-600">
+                        E-CLIENTES
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="homepage_referencias.html" class="nav-link-active inline-flex items-center px-1 pt-1 text-sm font-medium" aria-current="page">
+                            Referencias
+                        </a>
+                        <a href="#" class="nav-link-inactive inline-flex items-center px-1 pt-1 text-sm font-medium"> Dashboard
+                        </a>
+                        <a href="biblioteca.html" class="nav-link-inactive inline-flex items-center px-1 pt-1 text-sm font-medium">
+                            Biblioteca
+                        </a>
+                        <a href="historial.html" class="nav-link-inactive inline-flex items-center px-1 pt-1 text-sm font-medium">
+                            Historial
+                        </a>
+                        <a href="#" class="nav-link-inactive inline-flex items-center px-1 pt-1 text-sm font-medium"> Perfil
+                        </a>
+                    </div>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                     <button type="button" onclick="logout()" class="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <i data-lucide="log-out" class="icon"></i>
+                        Salir
+                    </button>
+                </div>
+                <div class="-mr-2 flex items-center sm:hidden">
+                    <button type="button" id="mobileMenuButton" class="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-controls="mobile-menu" aria-expanded="false">
+                        <span class="sr-only">Abrir menú principal</span>
+                        <svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                         <svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="hidden sm:hidden" id="mobile-menu">
+            <div class="pt-2 pb-3 space-y-1">
+                <a href="homepage_referencias.html" class="mobile-nav-link-active block pl-3 pr-4 py-2 text-base font-medium" aria-current="page">Referencias</a>
+                <a href="#" class="mobile-nav-link-inactive block pl-3 pr-4 py-2 text-base font-medium">Dashboard</a>
+                <a href="biblioteca.html" class="mobile-nav-link-inactive block pl-3 pr-4 py-2 text-base font-medium">Biblioteca</a>
+                <a href="historial.html" class="mobile-nav-link-inactive block pl-3 pr-4 py-2 text-base font-medium">Historial</a>
+                <a href="#" class="mobile-nav-link-inactive block pl-3 pr-4 py-2 text-base font-medium">Perfil</a>
+                 <a href="#" onclick="logout()" class="border-transparent text-red-600 hover:bg-red-50 hover:border-red-300 hover:text-red-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">Salir</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="site-content max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div class="px-4 py-6 sm:px-0">
+            <h1 class="text-3xl font-bold text-gray-900 mb-6">Mis Referencias</h1>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+
+                <div class="bg-white overflow-hidden shadow rounded-lg p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Referencia #REF12345</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500 truncate">Contenedor: MSCU1234567</p>
+                        <p class="mt-1 text-sm text-gray-500">Fecha: 03/05/2025</p>
+                        <p class="mt-1 text-sm text-gray-500">Estado: <span class="font-medium status-liberado">Liberado</span></p>
+                    </div>
+                    <div class="mt-4 flex flex-wrap gap-2 justify-start">
+                        <button onclick="downloadPdf('Referencia_REF12345.pdf')" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs leading-4 font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <i data-lucide="download" class="icon"></i>PDF
+                        </button>
+                        <button onclick="openPreviewModal({ id: '#REF12345', contenedor: 'MSCU1234567', fecha: '03/05/2025', estado: 'Liberado', origen: 'Shanghai, China', destino: 'Veracruz, México', tipoCarga: 'General', peso: '22 Toneladas', bl: 'MSCUXYZ789' })" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                             <i data-lucide="eye" class="icon"></i>Vista Previa
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow rounded-lg p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Referencia #REF67890</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500 truncate">Contenedor: CMAU7654321</p>
+                        <p class="mt-1 text-sm text-gray-500">Fecha: 02/05/2025</p>
+                        <p class="mt-1 text-sm text-gray-500">Estado: <span class="font-medium status-en-proceso">En Proceso</span></p>
+                    </div>
+                     <div class="mt-4 flex flex-wrap gap-2 justify-start">
+                         <button onclick="downloadPdf('Referencia_REF67890.pdf')" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs leading-4 font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <i data-lucide="download" class="icon"></i>PDF
+                        </button>
+                        <button onclick="openPreviewModal({ id: '#REF67890', contenedor: 'CMAU7654321', fecha: '02/05/2025', estado: 'En Proceso', origen: 'Rotterdam, Países Bajos', destino: 'Veracruz, México', tipoCarga: 'Refrigerada', peso: '18 Toneladas', bl: 'CMAUVWX456' })" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                             <i data-lucide="eye" class="icon"></i>Vista Previa
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow rounded-lg p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Referencia #REF11223</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500 truncate">Contenedor: HLCU9876543</p>
+                        <p class="mt-1 text-sm text-gray-500">Fecha: 01/05/2025</p>
+                        <p class="mt-1 text-sm text-gray-500">Estado: <span class="font-medium status-liberado">Liberado</span></p>
+                    </div>
+                     <div class="mt-4 flex flex-wrap gap-2 justify-start">
+                         <button onclick="downloadPdf('Referencia_REF11223.pdf')" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs leading-4 font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <i data-lucide="download" class="icon"></i>PDF
+                        </button>
+                        <button onclick="openPreviewModal({ id: '#REF11223', contenedor: 'HLCU9876543', fecha: '01/05/2025', estado: 'Liberado', origen: 'Hamburg, Alemania', destino: 'Veracruz, México', tipoCarga: 'Peligrosa (IMO)', peso: '15 Toneladas', bl: 'HLCURST123' })" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                             <i data-lucide="eye" class="icon"></i>Vista Previa
+                        </button>
+                    </div>
+                </div>
+
+                 <div class="bg-white overflow-hidden shadow rounded-lg p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Referencia #REF44556</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500 truncate">Contenedor: APLU1122334</p>
+                        <p class="mt-1 text-sm text-gray-500">Fecha: 10/05/2025</p>
+                        <p class="mt-1 text-sm text-gray-500">Estado: <span class="font-medium status-en-transito">En Tránsito</span></p>
+                    </div>
+                     <div class="mt-4 flex flex-wrap gap-2 justify-start">
+                         <button onclick="downloadPdf('Referencia_REF44556.pdf')" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs leading-4 font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <i data-lucide="download" class="icon"></i>PDF
+                        </button>
+                        <button onclick="openPreviewModal({ id: '#REF44556', contenedor: 'APLU1122334', fecha: '10/05/2025', estado: 'En Tránsito', origen: 'Manzanillo, México', destino: 'Long Beach, USA', tipoCarga: 'Automotriz', peso: '19 Toneladas', bl: 'APLUABC123' })" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                             <i data-lucide="eye" class="icon"></i>Vista Previa
+                        </button>
+                    </div>
+                </div>
+
+                 <div class="bg-white overflow-hidden shadow rounded-lg p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Referencia #REF77889</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500 truncate">Contenedor: ZIMU5566778</p>
+                        <p class="mt-1 text-sm text-gray-500">Fecha: 11/05/2025</p>
+                        <p class="mt-1 text-sm text-gray-500">Estado: <span class="font-medium status-pendiente-aduana">Pendiente Aduana</span></p>
+                    </div>
+                     <div class="mt-4 flex flex-wrap gap-2 justify-start">
+                         <button onclick="downloadPdf('Referencia_REF77889.pdf')" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs leading-4 font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <i data-lucide="download" class="icon"></i>PDF
+                        </button>
+                        <button onclick="openPreviewModal({ id: '#REF77889', contenedor: 'ZIMU5566778', fecha: '11/05/2025', estado: 'Pendiente Aduana', origen: 'Valencia, España', destino: 'Veracruz, México', tipoCarga: 'Textil', peso: '12 Toneladas', bl: 'ZIMUDEFG456' })" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                             <i data-lucide="eye" class="icon"></i>Vista Previa
+                        </button>
+                    </div>
+                </div>
+
+                 <div class="bg-white overflow-hidden shadow rounded-lg p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Referencia #REF99001</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500 truncate">Contenedor: ONEY1212121</p>
+                        <p class="mt-1 text-sm text-gray-500">Fecha: 12/05/2025</p>
+                        <p class="mt-1 text-sm text-gray-500">Estado: <span class="font-medium status-liberado">Liberado</span></p>
+                    </div>
+                     <div class="mt-4 flex flex-wrap gap-2 justify-start">
+                         <button onclick="downloadPdf('Referencia_REF99001.pdf')" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs leading-4 font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <i data-lucide="download" class="icon"></i>PDF
+                        </button>
+                        <button onclick="openPreviewModal({ id: '#REF99001', contenedor: 'ONEY1212121', fecha: '12/05/2025', estado: 'Liberado', origen: 'Santos, Brasil', destino: 'Altamira, México', tipoCarga: 'Químicos', peso: '21 Toneladas', bl: 'ONEYHIJ789' })" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                             <i data-lucide="eye" class="icon"></i>Vista Previa
+                        </button>
+                    </div>
+                </div>
+
+                 <div class="bg-white overflow-hidden shadow rounded-lg p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Referencia #REF23234</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500 truncate">Contenedor: EVGU3434343</p>
+                        <p class="mt-1 text-sm text-gray-500">Fecha: 13/05/2025</p>
+                        <p class="mt-1 text-sm text-gray-500">Estado: <span class="font-medium status-en-proceso">En Proceso</span></p>
+                    </div>
+                     <div class="mt-4 flex flex-wrap gap-2 justify-start">
+                         <button onclick="downloadPdf('Referencia_REF23234.pdf')" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs leading-4 font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <i data-lucide="download" class="icon"></i>PDF
+                        </button>
+                        <button onclick="openPreviewModal({ id: '#REF23234', contenedor: 'EVGU3434343', fecha: '13/05/2025', estado: 'En Proceso', origen: 'Hong Kong, China', destino: 'Ensenada, México', tipoCarga: 'Electrónicos', peso: '16 Toneladas', bl: 'EVGUKLM012' })" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                             <i data-lucide="eye" class="icon"></i>Vista Previa
+                        </button>
+                    </div>
+                </div>
+
+                 <div class="bg-white overflow-hidden shadow rounded-lg p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Referencia #REF54546</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500 truncate">Contenedor: COSU7878787</p>
+                        <p class="mt-1 text-sm text-gray-500">Fecha: 14/05/2025</p>
+                        <p class="mt-1 text-sm text-gray-500">Estado: <span class="font-medium status-liberado">Liberado</span></p>
+                    </div>
+                     <div class="mt-4 flex flex-wrap gap-2 justify-start">
+                         <button onclick="downloadPdf('Referencia_REF54546.pdf')" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs leading-4 font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <i data-lucide="download" class="icon"></i>PDF
+                        </button>
+                        <button onclick="openPreviewModal({ id: '#REF54546', contenedor: 'COSU7878787', fecha: '14/05/2025', estado: 'Liberado', origen: 'Callao, Perú', destino: 'Veracruz, México', tipoCarga: 'Alimentos', peso: '20 Toneladas', bl: 'COSUNOP345' })" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                             <i data-lucide="eye" class="icon"></i>Vista Previa
+                        </button>
+                    </div>
+                </div>
+
+                 <div class="bg-white overflow-hidden shadow rounded-lg p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Referencia #REF87879</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500 truncate">Contenedor: MAEU2121212</p>
+                        <p class="mt-1 text-sm text-gray-500">Fecha: 15/05/2025</p>
+                        <p class="mt-1 text-sm text-gray-500">Estado: <span class="font-medium status-en-transito">En Tránsito</span></p>
+                    </div>
+                     <div class="mt-4 flex flex-wrap gap-2 justify-start">
+                         <button onclick="downloadPdf('Referencia_REF87879.pdf')" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs leading-4 font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <i data-lucide="download" class="icon"></i>PDF
+                        </button>
+                        <button onclick="openPreviewModal({ id: '#REF87879', contenedor: 'MAEU2121212', fecha: '15/05/2025', estado: 'En Tránsito', origen: 'Bremerhaven, Alemania', destino: 'Veracruz, México', tipoCarga: 'Maquinaria', peso: '23 Toneladas', bl: 'MAEUQRS678' })" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                             <i data-lucide="eye" class="icon"></i>Vista Previa
+                        </button>
+                    </div>
+                </div>
+
+                 <div class="bg-white overflow-hidden shadow rounded-lg p-5 flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Referencia #REF01012</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500 truncate">Contenedor: HMMU9090909</p>
+                        <p class="mt-1 text-sm text-gray-500">Fecha: 16/05/2025</p>
+                        <p class="mt-1 text-sm text-gray-500">Estado: <span class="font-medium status-pendiente-aduana">Pendiente Aduana</span></p>
+                    </div>
+                     <div class="mt-4 flex flex-wrap gap-2 justify-start">
+                         <button onclick="downloadPdf('Referencia_REF01012.pdf')" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs leading-4 font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                            <i data-lucide="download" class="icon"></i>PDF
+                        </button>
+                        <button onclick="openPreviewModal({ id: '#REF01012', contenedor: 'HMMU9090909', fecha: '16/05/2025', estado: 'Pendiente Aduana', origen: 'Busan, Corea del Sur', destino: 'Manzanillo, México', tipoCarga: 'Muebles', peso: '17 Toneladas', bl: 'HMMUTUV901' })" class="inline-flex items-center px-3 py-1.5 border border-gray-300 text-xs leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                             <i data-lucide="eye" class="icon"></i>Vista Previa
+                        </button>
+                    </div>
+                </div>
+
+            </div> </div>
+    </main>
+
+    <footer class="bg-white mt-8">
+        <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
+            &copy; 2025 Mi Naviera. Todos los derechos reservados.
+        </div>
+    </footer>
+
+</div>
+
+<div id="previewModal" class="modal-overlay">
+    <div class="modal-content">
+        <button onclick="closePreviewModal()" class="modal-close-button" aria-label="Cerrar">
+             <i data-lucide="x" class="icon"></i>
+        </button>
+        <h3 class="text-xl font-semibold text-gray-900 mb-4" id="modalTitle">Detalles de la Referencia</h3>
+        <div class="space-y-3 text-sm text-gray-700">
+            <p><strong>ID Referencia:</strong> <span id="modalRefId"></span></p>
+            <p><strong>Contenedor:</strong> <span id="modalContenedor"></span></p>
+            <p><strong>Fecha:</strong> <span id="modalFecha"></span></p>
+            <p><strong>Estado:</strong> <span id="modalEstado" class="font-medium"></span></p>
+            <hr class="my-3">
+            <p><strong>Origen:</strong> <span id="modalOrigen"></span></p>
+            <p><strong>Destino:</strong> <span id="modalDestino"></span></p>
+            <p><strong>Tipo de Carga:</strong> <span id="modalTipoCarga"></span></p>
+            <p><strong>Peso:</strong> <span id="modalPeso"></span></p>
+            <p><strong>Bill of Lading (BL):</strong> <span id="modalBl"></span></p>
+        </div>
+         <div class="mt-6 text-right">
+             <button id="modalDownloadButton" onclick="" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                 <i data-lucide="download" class="icon"></i>
+                 Descargar PDF
+             </button>
+         </div>
+    </div>
+</div>
+
+<script>
+    // --- Constantes Globales ---
+    const modalOverlay = document.getElementById('previewModal');
+
+    // --- Función para Descarga de PDF ---
+    function downloadPdf(filename) {
+      console.log(`Intentando descargar: ${filename}`);
+      const pdfDataUri = 'data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0tpZHNbMyAwIFJdL0NvdW50IDE+PgplbmRvYmoKMyAwIG9iago8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL01lZGlhQm94WzAgMCA2MTIgNzkyXS9SZXNvdXJjZXM8PC9Gb250PDwvRjEgNCAwIFI+Pj4vUHJvY1NldFsvUERGL1RleHRdL0NvbnRlbnRzIDUgMCBSPj4KZW5kb2JqCjQgMCBvYmoKPDwvVHlwZS9Gb250L1N1YnR5cGUvVHlwZTEvQmFzZUZvbnQvSGVsdmV0aWNhPj4KZW5kb2JqCjUgMCBvYmoKPDwvTGVuZ3RoIDQ0Pj4Kc3RyZWFtCkJUCjcwIDcwMCBUZAovRjEgMTIgVGYKKHolaSBtdW5kbyBQREYhKSBUagpFVAplbmRzdHJlYW0KZW5kb2JqCnhyZWYKMCA2CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwMDYxIDAwMDAwIG4gCjAwMDAwMDAxMTkgMDAwMDAgbiAKMDAwMDAwMDI4MyAwMDAwMCBuIAowMDAwMDAwMzM4IDAwMDAwIG4gCnRyYWlsZXIKPDwKL1NpemUgNgovUm9vdCAxIDAgUgo+PgpzdGFydHhyZWYKNDM0CiUlRU9GCg=='; // PDF simple "Hola mundo PDF!"
+      try {
+          const link = document.createElement('a');
+          link.href = pdfDataUri;
+          link.download = filename;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          console.log(`Descarga de ${filename} iniciada.`);
+      } catch (error) {
+          console.error(`Error al intentar descargar ${filename}:`, error);
+      }
+    }
+
+    // --- Funciones para el Modal ---
+    function openPreviewModal(data) {
+        console.log("Intentando abrir modal para:", data.id);
+        if (!modalOverlay) {
+            console.error("Error Crítico: El elemento modal con id 'previewModal' no fue encontrado en el DOM.");
+            return;
+        }
+        try {
+            // Llenar campos
+            document.getElementById('modalTitle').textContent = `Detalles de la Referencia ${data.id}`;
+            document.getElementById('modalRefId').textContent = data.id;
+            document.getElementById('modalContenedor').textContent = data.contenedor;
+            document.getElementById('modalFecha').textContent = data.fecha;
+            document.getElementById('modalEstado').textContent = data.estado;
+            document.getElementById('modalOrigen').textContent = data.origen;
+            document.getElementById('modalDestino').textContent = data.destino;
+            document.getElementById('modalTipoCarga').textContent = data.tipoCarga;
+            document.getElementById('modalPeso').textContent = data.peso;
+            document.getElementById('modalBl').textContent = data.bl;
+
+            // Ajustar color del estado
+            const estadoSpan = document.getElementById('modalEstado');
+            estadoSpan.className = 'font-medium'; // Reset class
+            if (data.estado.toLowerCase() === 'liberado') {
+                estadoSpan.classList.add('status-liberado');
+            } else if (data.estado.toLowerCase() === 'en proceso') {
+                estadoSpan.classList.add('status-en-proceso');
+            } else if (data.estado.toLowerCase() === 'en tránsito') {
+                estadoSpan.classList.add('status-en-transito');
+            } else if (data.estado.toLowerCase() === 'pendiente aduana') {
+                 estadoSpan.classList.add('status-pendiente-aduana');
+            } else {
+                estadoSpan.classList.add('text-gray-600'); // Color por defecto
+            }
+
+            // Actualizar botón descarga modal
+            const modalDownloadBtn = document.getElementById('modalDownloadButton');
+            const downloadFilename = `Referencia_${data.id.replace('#', '')}.pdf`;
+            modalDownloadBtn.setAttribute('onclick', `downloadPdf('${downloadFilename}')`);
+
+            // Mostrar modal
+            console.log("Añadiendo clase 'active' al modal overlay.");
+            modalOverlay.classList.add('active');
+
+            // Renderizar iconos
+             if (typeof lucide !== 'undefined') {
+                 console.log("Renderizando iconos Lucide dentro del modal.");
+                 lucide.createIcons({ context: modalOverlay });
+             } else {
+                  console.error("La librería Lucide no está disponible para renderizar iconos en el modal.");
+             }
+        } catch (error) {
+            console.error("Error al intentar poblar o mostrar el modal:", error);
+            if (modalOverlay) modalOverlay.classList.remove('active');
+        }
+    }
+
+    function closePreviewModal() {
+        console.log("Intentando cerrar modal.");
+        if (modalOverlay) {
+            modalOverlay.classList.remove('active');
+        } else {
+             console.error("Error: Intentando cerrar un modal que no fue encontrado ('previewModal').");
+        }
+    }
+
+    // --- Event Listeners ---
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', (event) => {
+            if (event.target === modalOverlay) {
+                console.log("Clic detectado en el overlay. Cerrando modal.");
+                closePreviewModal();
+            }
+        });
+    } else {
+         console.warn("Advertencia: No se pudo añadir el listener de clic al overlay porque 'previewModal' no fue encontrado.");
+    }
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && modalOverlay && modalOverlay.classList.contains('active')) {
+            console.log("Tecla Escape presionada. Cerrando modal.");
+            closePreviewModal();
+        }
+    });
+
+    const menuButton = document.getElementById('mobileMenuButton');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (menuButton && mobileMenu) {
+        const openIcon = menuButton.querySelector('svg:not(.hidden)');
+        const closeIcon = menuButton.querySelector('svg.hidden');
+        menuButton.addEventListener('click', () => {
+          if (!openIcon || !closeIcon) {
+              console.error("Error: Iconos de menú móvil no encontrados.");
+              return;
+          }
+          const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
+          menuButton.setAttribute('aria-expanded', !isExpanded);
+          mobileMenu.classList.toggle('hidden');
+          openIcon.classList.toggle('hidden');
+          openIcon.classList.toggle('block');
+          closeIcon.classList.toggle('hidden');
+          closeIcon.classList.toggle('block');
+        });
+    } else {
+        console.warn("Advertencia: Elementos del menú móvil no encontrados (botón o panel).");
+    }
+
+    // --- Inicialización ---
+    document.addEventListener('DOMContentLoaded', (event) => {
+        if (typeof lucide !== 'undefined') {
+             console.log("DOM cargado. Renderizando iconos Lucide iniciales.");
+             lucide.createIcons();
+        } else {
+             console.error("La librería Lucide no está disponible al cargar el DOM.");
+        }
+    });
+
+    // --- Función Logout ---
+    function logout() {
+        console.log("Cerrando sesión...");
+        alert("Cerrando sesión... Volviendo a la página de login.");
+        window.location.href = 'login_form_moderno.html';
+    }
+
+</script>
+
+</body>
+</html>
