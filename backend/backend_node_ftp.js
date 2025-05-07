@@ -9,7 +9,7 @@ const multer = require('multer');
 const stream = require('stream');
 const path = require('path');
 
-// --- Configuración del servidor FTPS (cambia estos valores reales) ---
+// --- Configuración del servidor FTPS ---
 const FTP_CONFIG = {
     host: "127.0.0.1",
     port: 21,
@@ -17,7 +17,7 @@ const FTP_CONFIG = {
     password: "12345",
     secure: true,
     secureOptions: {
-        rejectUnauthorized: false // ¡NO USAR EN PRODUCCIÓN si puedes evitarlo!
+        rejectUnauthorized: false 
     }
 };
 
@@ -44,7 +44,7 @@ async function connectAndLogin() {
     }
 }
 
-// --- Ruta: Listar archivos ---
+// --- Ruta: Listar archivos en la raíz ---
 app.get('/list', async (req, res) => {
     let client;
     try {
@@ -93,6 +93,61 @@ app.get('/list', async (req, res) => {
     }
 });
 
+// --- Ruta: Listar archivos en un subdirectorio ---
+app.get('/list/:subdirectory', async (req, res) => {
+    const subdirectory = decodeURIComponent(req.params.subdirectory);
+    const remotePath = path.join(FTP_BASE_DIR, subdirectory).replace(/\\/g, '/');
+    
+    let client;
+    try {
+        client = await connectAndLogin();
+        const list = await client.list(remotePath);
+
+        const formattedList = list.map(item => {
+            let dateAdded = item.modifiedAt?.toISOString().split('T')[0] || 'N/A';
+
+            let sizeStr = '';
+            if (item.isFile && item.size != null) {
+                sizeStr = item.size > 1024 * 1024
+                    ? `${(item.size / (1024 * 1024)).toFixed(1)} MB`
+                    : `${Math.round(item.size / 1024)} KB`;
+            }
+
+            let docType = item.isDirectory ? 'Carpeta' : 'Archivo';
+            if (item.isFile && item.name.includes('.')) {
+                const ext = item.name.split('.').pop().toLowerCase();
+                if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) docType = 'Imagen';
+                else if (['pdf'].includes(ext)) docType = 'PDF';
+                else if (['doc', 'docx'].includes(ext)) docType = 'Word';
+                else if (['xls', 'xlsx'].includes(ext)) docType = 'Excel';
+                else if (['txt', 'log', 'csv'].includes(ext)) docType = 'Texto';
+                else if (['zip', 'rar', '7z'].includes(ext)) docType = 'Comprimido';
+            }
+
+            return {
+                id: item.name,
+                title: item.name,
+                type: docType,
+                dateAdded: dateAdded,
+                size: sizeStr,
+                description: `${docType} FTP`,
+                filename: item.name,
+                isDir: item.isDirectory
+            };
+        });
+
+        res.json(formattedList);
+    } catch (err) {
+        console.error(`Error en /list/${subdirectory}:`, err);
+        if (err.code === 550) {  // Código FTP para "Archivo o directorio no encontrado"
+            return res.status(404).json({ error: "No se encontró la carpeta de documentos para esta referencia en el servidor." });
+        }
+        res.status(500).json({ error: err.message });
+    } finally {
+        if (client && !client.closed) client.close();
+    }
+});
+
 // --- Ruta: Subir archivo ---
 app.post('/upload', upload.single('file'), async (req, res) => {
     if (!req.file) return res.status(400).json({ error: "No se recibió ningún archivo" });
@@ -116,7 +171,7 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     }
 });
 
-// --- Ruta: Descargar archivo ---
+// --- Ruta: Descargar archivo (corregida) ---
 app.get('/download/:filename', async (req, res) => {
     const filename = decodeURIComponent(req.params.filename);
     const remotePath = path.join(FTP_BASE_DIR, filename).replace(/\\/g, '/');
@@ -126,12 +181,53 @@ app.get('/download/:filename', async (req, res) => {
         client = await connectAndLogin();
         await client.size(remotePath); // Verifica existencia del archivo
 
-        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.setHeader('Content-Disposition', `attachment; filename="${path.basename(remotePath)}"`);
         res.setHeader('Content-Type', 'application/octet-stream');
 
         await client.downloadTo(res, remotePath);
     } catch (err) {
         console.error("Error en /download:", err);
+        if (!res.headersSent) {
+            res.status(err.code === 550 ? 404 : 500).json({
+                error: err.code === 550 ? "Archivo no encontrado en el servidor FTPS" : err.message
+            });
+        }
+    } finally {
+        if (client && !client.closed) client.close();
+    }
+});
+
+// --- Ruta: Ver archivo (corregida) ---
+app.get('/view/:filename', async (req, res) => {
+    const filename = decodeURIComponent(req.params.filename);
+    const remotePath = path.join(FTP_BASE_DIR, filename).replace(/\\/g, '/');
+
+    let client;
+    try {
+        client = await connectAndLogin();
+        
+        // Determinar el tipo de contenido basado en la extensión
+        const ext = path.extname(path.basename(remotePath)).toLowerCase();
+        let contentType = 'application/octet-stream';
+        
+        if (ext === '.pdf') contentType = 'application/pdf';
+        else if (['.jpg', '.jpeg'].includes(ext)) contentType = 'image/jpeg';
+        else if (ext === '.png') contentType = 'image/png';
+        else if (ext === '.gif') contentType = 'image/gif';
+        else if (ext === '.txt') contentType = 'text/plain';
+        
+        res.setHeader('Content-Type', contentType);
+        
+        // Para imágenes y PDFs, configurar para visualización en línea
+        if (contentType.startsWith('image/') || contentType === 'application/pdf') {
+            res.setHeader('Content-Disposition', `inline; filename="${path.basename(remotePath)}"`);
+        } else {
+            res.setHeader('Content-Disposition', `attachment; filename="${path.basename(remotePath)}"`);
+        }
+
+        await client.downloadTo(res, remotePath);
+    } catch (err) {
+        console.error("Error en /view:", err);
         if (!res.headersSent) {
             res.status(err.code === 550 ? 404 : 500).json({
                 error: err.code === 550 ? "Archivo no encontrado en el servidor FTPS" : err.message

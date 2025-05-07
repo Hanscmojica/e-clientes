@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Moderno - Naviera</title>
+    <title>Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <style>
         /* Fuente personalizada */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
             /* Imagen de fondo */
-            background-image: url('https://images.unsplash.com/photo-1611789641969-9b51a978f9c3?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); /* [Imagen de Contenedores de carga en un puerto] */
-            background-size: cover; /* Cubrir todo el espacio */
-            background-position: center; /* Centrar la imagen */
-            background-repeat: no-repeat; /* No repetir la imagen */
-            background-attachment: fixed; /* Fijar la imagen al hacer scroll */
+            background-image: url('/assets/naviera.jpg'); 
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat; 
+            background-attachment: fixed; 
         }
         /* Superposición oscura para mejorar legibilidad del formulario */
         body::before {
@@ -105,10 +106,10 @@
             const password = passwordInput.value; // No quitar espacios en contraseña
 
             // --- Simulación de Autenticación ---
-            // En una aplicación real, aquí harías una llamada a tu backend
+            // En una aplicación real, aquí se haría una llamada a tu backend
             // para verificar las credenciales.
-            // Para este ejemplo, usaremos credenciales hardcodeadas:
-            const validUsername = 'usuario'; // Cambia esto si quieres
+            // Para este ejemplo, se uso credenciales hardcodeadas:
+            const validUsername = 'usuario'; 
             const validPassword = 'password123'; // Cambia esto si quieres
 
             if (username === validUsername && password === validPassword) {

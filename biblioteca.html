@@ -7,53 +7,42 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/lucide-static@latest/dist/lucide.min.js"></script>
     <style>
-        /* Fuente personalizada */
+        /* Estilos CSS sin cambios */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
-        /* Estilo para asegurar que el footer se quede abajo */
         .site-container { display: flex; flex-direction: column; min-height: 100vh; }
         .site-content { flex-grow: 1; }
-         /* Iconos */
         .icon { display: inline-block; width: 1em; height: 1em; stroke-width: 2; vertical-align: middle; margin-right: 0.3em; }
         .icon-sm { width: 0.9em; height: 0.9em; margin-right: 0.2em;}
         .icon-lg { width: 1.2em; height: 1.2em; margin-right: 0.4em;}
-
-        /* Estilos Navegación */
         .nav-link-active { border-bottom-width: 2px; border-color: #6366f1; color: #1f2937; }
         .nav-link-inactive { border-bottom-width: 2px; border-color: transparent; color: #6b7280; }
         .nav-link-inactive:hover { border-color: #d1d5db; color: #374151; }
         .mobile-nav-link-active { background-color: #eef2ff; border-color: #6366f1; color: #4338ca; border-left-width: 4px; }
         .mobile-nav-link-inactive { border-color: transparent; color: #4b5563; border-left-width: 4px; }
         .mobile-nav-link-inactive:hover { background-color: #f9fafb; border-color: #d1d5db; color: #1f2937; }
-
-        /* Estilos Tabla y Controles */
         th { background-color: #f3f4f6; }
         th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid #e5e7eb; }
         tbody tr:hover { background-color: #f9fafb; }
         .sortable:hover { cursor: pointer; background-color: #e5e7eb; }
         .sort-icon { opacity: 0.5; margin-left: 0.2rem; }
         .sortable.active .sort-icon { opacity: 1; color: #4f46e5; }
-
-        /* Estilos Paginación */
         .pagination-button { padding: 0.5rem 1rem; margin: 0 0.25rem; border: 1px solid #d1d5db; border-radius: 0.375rem; background-color: white; color: #374151; transition: background-color 0.2s; }
         .pagination-button:hover:not(:disabled) { background-color: #f3f4f6; }
         .pagination-button.active { background-color: #6366f1; color: white; border-color: #6366f1; }
         .pagination-button:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        /* Input y Select */
         .form-input, .form-select { border: 1px solid #d1d5db; border-radius: 0.375rem; padding: 0.5rem 0.75rem; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: border-color 0.2s, box-shadow 0.2s; }
         .form-input:focus, .form-select:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3); }
-
-        /* Estilo para input file oculto */
         input[type="file"] { display: none; }
-        /* Estilo para label que actúa como botón */
         .file-upload-label { display: inline-block; cursor: pointer; padding: 0.5rem 1rem; background-color: #4f46e5; color: white; border-radius: 0.375rem; transition: background-color 0.2s; }
         .file-upload-label:hover { background-color: #4338ca; }
-        /* Mensajes de estado */
         #uploadStatus { margin-top: 0.5rem; font-size: 0.875rem; }
         .status-success { color: #16a34a; }
         .status-error { color: #dc2626; }
         .status-uploading { color: #2563eb; }
+        /* Ajuste para botones de acción */
+        td button .icon-sm { width: 1em; height: 1em; margin-right: 0.2em; /* Añadir margen si hay texto */ }
+        td button { display: inline-flex; align-items: center; padding: 0.25rem 0.5rem; /* Padding más pequeño */ }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -132,7 +121,7 @@
                     <option value="Comprimido">Comprimido</option>
                     <option value="Carpeta">Carpeta</option>
                     <option value="Archivo">Archivo (Otro)</option>
-                    </select>
+                </select>
             </div>
              <button id="clearFiltersButton" class="text-sm text-indigo-600 hover:text-indigo-800">Limpiar filtros</button>
         </div>
@@ -166,7 +155,7 @@
 
     <footer class="bg-white mt-12 border-t border-gray-200">
         <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
-            &copy; 2025 Mi Naviera. Todos los derechos reservados.
+            &copy; 2025 Agencia Aduanal. Rodall Oseguera. Todos los derechos reservados.
         </div>
     </footer>
 
@@ -177,12 +166,12 @@
     const BACKEND_URL = 'http://localhost:5001';
 
     // --- Datos se obtendrán del backend ---
-    let currentDocuments = []; // Almacena la lista real de documentos
+    let currentDocuments = [];
 
     // --- State Variables ---
     let currentPage = 1;
     const itemsPerPage = 10;
-    let currentSort = { column: 'title', order: 'asc' }; // Cambiado default sort
+    let currentSort = { column: 'title', order: 'asc' };
     let currentSearchTerm = '';
     let currentTypeFilter = '';
 
@@ -196,7 +185,8 @@
     const showingFromSpan = document.getElementById('showingFrom');
     const showingToSpan = document.getElementById('showingTo');
     const totalItemsSpan = document.getElementById('totalItems');
-    const sortableHeaders = document.querySelectorAll('.sortable');
+    const documentsTable = document.querySelector('.bg-white.shadow table');
+    const sortableHeaders = documentsTable ? documentsTable.querySelectorAll('thead th.sortable') : [];
     const uploadForm = document.getElementById('uploadForm');
     const fileInput = document.getElementById('fileInput');
     const fileNameSpan = document.getElementById('fileName');
@@ -207,7 +197,7 @@
     function formatDate(dateString) {
         if (!dateString || dateString === 'N/A') return 'N/A';
         try {
-            const date = new Date(dateString + 'T00:00:00'); // Añadir hora para evitar problemas de zona horaria
+            const date = new Date(dateString + 'T00:00:00');
             if (isNaN(date)) return 'Fecha inválida';
             const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
             return date.toLocaleDateString('es-MX', options);
@@ -215,10 +205,11 @@
     }
 
     function renderIcons(context = document) {
-        try {
-            if (typeof lucide !== 'undefined') { lucide.createIcons({ context }); }
-            else { console.warn("Lucide no definido al renderizar iconos."); }
-        } catch (error) { console.error("Error renderizando iconos:", error); }
+        // Solo intentar si la librería 'lucide' está cargada
+        if (typeof lucide !== 'undefined' && lucide && typeof lucide.createIcons === 'function') {
+            try { lucide.createIcons({ context }); }
+            catch (error) { console.error("Error al renderizar iconos Lucide:", error); }
+        } else { if (!window.lucideCheckFailed) { console.warn("Lucide no definido al intentar renderizar iconos."); window.lucideCheckFailed = true; } }
     }
 
 
@@ -226,11 +217,8 @@
     async function fetchDocumentsFromBackend() {
         console.log("Obteniendo lista de documentos del backend...");
         if(tableBody) tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500">Cargando documentos...</td></tr>`;
-        if(totalItemsSpan) totalItemsSpan.textContent = '0'; // Reset count while loading
-        if(showingFromSpan) showingFromSpan.textContent = '0';
-        if(showingToSpan) showingToSpan.textContent = '0';
+        if(totalItemsSpan) totalItemsSpan.textContent = '0'; if(showingFromSpan) showingFromSpan.textContent = '0'; if(showingToSpan) showingToSpan.textContent = '0';
         updatePaginationControls(0,0,0);
-
         try {
             const response = await fetch(`${BACKEND_URL}/list`);
             if (!response.ok) {
@@ -241,12 +229,11 @@
             const data = await response.json();
             console.log("Documentos recibidos:", data);
             currentDocuments = Array.isArray(data) ? data : [];
-            displayPage(1); // Mostrar página 1 con datos reales
+            displayPage(1);
         } catch (error) {
             console.error('Error al obtener documentos:', error);
             if(tableBody) tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-red-600">Error al cargar documentos: ${error.message}</td></tr>`;
-            currentDocuments = [];
-            displayPage(1); // Mostrar estado vacío
+            currentDocuments = []; displayPage(1);
         }
     }
 
@@ -254,9 +241,7 @@
     // --- FTP Interaction Functions ---
     async function handleFileUpload() {
         if (!fileInput || !fileInput.files || fileInput.files.length === 0) { if(uploadStatusDiv){ uploadStatusDiv.textContent = 'Por favor, selecciona un archivo primero.'; uploadStatusDiv.className = 'status-error';} return; }
-        const file = fileInput.files[0];
-        const formData = new FormData();
-        formData.append('file', file);
+        const file = fileInput.files[0]; const formData = new FormData(); formData.append('file', file);
         if(uploadStatusDiv) { uploadStatusDiv.textContent = `Subiendo ${file.name}...`; uploadStatusDiv.className = 'status-uploading';}
         if(fileNameSpan) fileNameSpan.textContent = file.name;
         try {
@@ -264,61 +249,36 @@
             const result = await response.json();
             if (response.ok) {
                 if(uploadStatusDiv) { uploadStatusDiv.textContent = result.message || 'Archivo subido con éxito.'; uploadStatusDiv.className = 'status-success';}
-                if(uploadForm) uploadForm.reset();
-                if(fileNameSpan) fileNameSpan.textContent = 'Ningún archivo seleccionado';
-                await fetchDocumentsFromBackend(); // Refrescar lista
-            } else {
-                if(uploadStatusDiv) { uploadStatusDiv.textContent = `Error: ${result.error || response.statusText}`; uploadStatusDiv.className = 'status-error';}
-            }
-        } catch (error) {
-            console.error('Error en la subida:', error);
-            if(uploadStatusDiv) { uploadStatusDiv.textContent = 'Error de red o del servidor al subir.'; uploadStatusDiv.className = 'status-error'; }
-        }
+                if(uploadForm) uploadForm.reset(); if(fileNameSpan) fileNameSpan.textContent = 'Ningún archivo seleccionado';
+                await fetchDocumentsFromBackend();
+            } else { if(uploadStatusDiv) { uploadStatusDiv.textContent = `Error: ${result.error || response.statusText}`; uploadStatusDiv.className = 'status-error';} }
+        } catch (error) { console.error('Error en la subida:', error); if(uploadStatusDiv) { uploadStatusDiv.textContent = 'Error de red o del servidor al subir.'; uploadStatusDiv.className = 'status-error'; } }
     }
 
     function triggerDownload(filename) {
         console.log(`Iniciando descarga para: ${filename}`);
         const downloadUrl = `${BACKEND_URL}/download/${encodeURIComponent(filename)}`;
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const link = document.createElement('a'); link.href = downloadUrl; link.style.display = 'none';
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
         console.log(`Petición de descarga enviada a: ${downloadUrl}`);
     }
 
-    function previewDocument(docTitle) {
-        alert(`Simulando vista previa de: ${docTitle}`);
-        console.log(`Vista previa simulada para: ${docTitle}`);
-    }
+    function previewDocument(docTitle) { alert(`Simulando vista previa de: ${docTitle}`); console.log(`Vista previa simulada para: ${docTitle}`); }
 
 
-    // --- Core Logic Functions (Filtering, Sorting, Rendering, Pagination) ---
+    // --- Core Logic Functions ---
     function filterAndSortDocuments() {
         let filteredData = [...currentDocuments];
-        // Filtrado
         filteredData = filteredData.filter(doc => {
-            const searchTermLower = currentSearchTerm.toLowerCase();
-            const titleMatch = doc.title && doc.title.toLowerCase().includes(searchTermLower);
+            const searchTermLower = currentSearchTerm.toLowerCase(); const titleMatch = doc.title && doc.title.toLowerCase().includes(searchTermLower);
             const descMatch = doc.description && doc.description.toLowerCase().includes(searchTermLower);
-            const matchesSearch = currentSearchTerm === '' || titleMatch || descMatch;
-            const matchesType = currentTypeFilter === '' || doc.type === currentTypeFilter;
+            const matchesSearch = currentSearchTerm === '' || titleMatch || descMatch; const matchesType = currentTypeFilter === '' || doc.type === currentTypeFilter;
             return matchesSearch && matchesType;
         });
-
-        // Ordenación
         filteredData.sort((a, b) => {
             let valA = a[currentSort.column]; let valB = b[currentSort.column];
-            if (currentSort.column === 'dateAdded') {
-                if (valA === 'N/A' && valB === 'N/A') return 0; if (valA === 'N/A') return currentSort.order === 'asc' ? 1 : -1; if (valB === 'N/A') return currentSort.order === 'asc' ? -1 : 1;
-                // Intentar parsear fechas, manejar errores
-                try { valA = new Date(valA + 'T00:00:00'); } catch(e){ valA = null; }
-                try { valB = new Date(valB + 'T00:00:00'); } catch(e){ valB = null; }
-                if (valA == null && valB == null) return 0; if (valA == null) return currentSort.order === 'asc' ? 1 : -1; if (valB == null) return currentSort.order === 'asc' ? -1 : 1;
-            } else if (currentSort.column === 'size') {
-                const sizeToBytes = (sizeStr = "") => { if (!sizeStr || typeof sizeStr !== 'string') return 0; const parts = sizeStr.split(' '); const value = parseFloat(parts[0]) || 0; const unit = (parts[1] || "KB").toUpperCase(); if (unit === 'MB') return value * 1024 * 1024; if (unit === 'KB') return value * 1024; return value; };
-                valA = sizeToBytes(valA); valB = sizeToBytes(valB);
+            if (currentSort.column === 'dateAdded') { if (valA === 'N/A' && valB === 'N/A') return 0; if (valA === 'N/A') return currentSort.order === 'asc' ? 1 : -1; if (valB === 'N/A') return currentSort.order === 'asc' ? -1 : 1; try { valA = new Date(valA + 'T00:00:00'); } catch(e){ valA = null; } try { valB = new Date(valB + 'T00:00:00'); } catch(e){ valB = null; } if (valA == null && valB == null) return 0; if (valA == null) return currentSort.order === 'asc' ? 1 : -1; if (valB == null) return currentSort.order === 'asc' ? -1 : 1;
+            } else if (currentSort.column === 'size') { const sizeToBytes = (sizeStr = "") => { if (!sizeStr || typeof sizeStr !== 'string') return 0; const parts = sizeStr.split(' '); const value = parseFloat(parts[0]) || 0; const unit = (parts[1] || "KB").toUpperCase(); if (unit === 'MB') return value * 1024 * 1024; if (unit === 'KB') return value * 1024; return value; }; valA = sizeToBytes(valA); valB = sizeToBytes(valB);
             } else if (typeof valA === 'string') { valA = (valA || "").toLowerCase(); valB = (valB || "").toLowerCase();
             } else { if (valA == null && valB == null) return 0; if (valA == null) return currentSort.order === 'asc' ? 1 : -1; if (valB == null) return currentSort.order === 'asc' ? -1 : 1; }
             if (valA < valB) return currentSort.order === 'asc' ? -1 : 1; if (valA > valB) return currentSort.order === 'asc' ? 1 : -1; return 0;
@@ -327,27 +287,45 @@
     }
 
     function renderTable(documents) {
-        if(!tableBody) return;
+        if(!tableBody) { console.error("Elemento 'documentsTableBody' no encontrado para renderizar."); return; }
         tableBody.innerHTML = '';
         if (!documents || documents.length === 0) {
             tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500">No se encontraron documentos${currentSearchTerm || currentTypeFilter ? ' que coincidan con los filtros.' : '.'}</td></tr>`;
             return;
         }
-        documents.forEach(doc => {
+        console.log(`[renderTable] Renderizando ${documents.length} filas...`);
+        documents.forEach((doc, index) => {
             const row = document.createElement('tr');
             const safeFilename = doc.filename || doc.title;
             const isDir = doc.isDir || doc.type === 'Carpeta';
             const itemIcon = isDir ? '<i data-lucide="folder" class="icon-sm text-yellow-500 mr-2"></i>' : '<i data-lucide="file-text" class="icon-sm text-gray-400 mr-2"></i>';
+
+            // --- Construir HTML para la celda de acciones (CON TEXTO) ---
+            let actionsHtml = '';
+            if (!isDir) {
+                const escapedFilename = safeFilename.replace(/'/g, "\\'");
+                const escapedTitle = (doc.title || 'Documento').replace(/'/g, "\\'");
+                // Añadir texto junto al icono
+                actionsHtml = `
+                    <button onclick="triggerDownload('${escapedFilename}')" class="text-green-600 hover:text-green-900 p-1 text-xs" title="Descargar">
+                        <i data-lucide="download" class="icon-sm"></i> Descargar
+                    </button>
+                    <button onclick="previewDocument('${escapedTitle}')" class="text-indigo-600 hover:text-indigo-900 p-1 text-xs" title="Vista Previa">
+                        <i data-lucide="eye" class="icon-sm"></i> Ver
+                    </button>
+                `;
+            } else {
+                 actionsHtml = '<span class="text-gray-400 italic text-xs">N/A</span>';
+            }
+            // --- Fin de construir HTML para acciones ---
+            // console.log(`[renderTable] Fila ${index}, Archivo: ${doc.title}, ¿Es Carpeta?: ${isDir}, HTML Acciones: ${actionsHtml.substring(0, 50)}...`);
+
             row.innerHTML = `
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 flex items-center">${itemIcon} ${doc.title || 'Sin título'}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${doc.type || 'N/A'}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDate(doc.dateAdded)}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${isDir ? '-' : (doc.size || 'N/A')}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                    ${isDir ? '<span class="text-gray-400 italic text-xs">N/A</span>' :
-                        `<button onclick="triggerDownload('${safeFilename.replace(/'/g, "\\'")}')" class="text-green-600 hover:text-green-900" title="Descargar"><i data-lucide="download" class="icon-sm"></i></button>
-                         <button onclick="previewDocument('${(doc.title || 'Documento').replace(/'/g, "\\'")}')" class="text-indigo-600 hover:text-indigo-900" title="Vista Previa"><i data-lucide="eye" class="icon-sm"></i></button>`}
-                </td>`;
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">${actionsHtml}</td> `;
             tableBody.appendChild(row);
         });
          renderIcons(tableBody);
@@ -365,15 +343,14 @@
     }
 
     function updateSortIcons() {
-        const table = document.querySelector('#documentsTableBody')?.closest('table');
-        if (!table) return;
-        const headers = table.querySelectorAll('thead th.sortable');
+        if (!documentsTable) return;
+        const headers = documentsTable.querySelectorAll('thead th.sortable');
         headers.forEach(header => {
             const icon = header.querySelector('.sort-icon i'); if (!icon) return;
             const sortKey = header.getAttribute('data-sort'); header.classList.remove('active'); icon.setAttribute('data-lucide', 'arrow-up-down');
             if (sortKey === currentSort.column) { header.classList.add('active'); icon.setAttribute('data-lucide', currentSort.order === 'asc' ? 'arrow-up' : 'arrow-down'); }
         });
-         const thead = table.querySelector('thead'); if(thead) renderIcons(thead);
+         const thead = documentsTable.querySelector('thead'); if(thead) renderIcons(thead);
     }
 
     function displayPage(pageNumber) {
@@ -396,17 +373,15 @@
         if (prevPageButton) prevPageButton.addEventListener('click', () => { if (currentPage > 1) displayPage(currentPage - 1); }); else console.warn("prevPageButton no encontrado");
         if (nextPageButton) nextPageButton.addEventListener('click', () => { const totalItems = filterAndSortDocuments().length; const totalPages = Math.ceil(totalItems / itemsPerPage); if (currentPage < totalPages) displayPage(currentPage + 1); }); else console.warn("nextPageButton no encontrado");
 
-        const table = document.querySelector('#documentsTableBody')?.closest('table');
-        if (table) {
-            const headers = table.querySelectorAll('thead th.sortable');
-            headers.forEach(header => {
+        if (sortableHeaders && sortableHeaders.length > 0) {
+            sortableHeaders.forEach(header => {
                 header.addEventListener('click', () => {
                     const sortKey = header.getAttribute('data-sort'); if (!sortKey) return;
                     if (currentSort.column === sortKey) { currentSort.order = currentSort.order === 'asc' ? 'desc' : 'asc'; } else { currentSort.column = sortKey; currentSort.order = 'asc'; }
                     displayPage(1);
                 });
             });
-        } else { console.warn("Tabla o cabeceras no encontradas para listeners de ordenación."); }
+        } else { console.warn("Cabeceras 'sortable' no encontradas.");}
 
         if (fileInput) { fileInput.addEventListener('change', () => { if (fileInput.files.length > 0) { if(fileNameSpan) fileNameSpan.textContent = fileInput.files[0].name; handleFileUpload(); } else { if(fileNameSpan) fileNameSpan.textContent = 'Ningún archivo seleccionado'; } });
         } else { console.warn("fileInput no encontrado."); }
@@ -418,9 +393,9 @@
     // --- Initial Load ---
     document.addEventListener('DOMContentLoaded', () => {
         console.log("Biblioteca Profesional - DOM cargado.");
+        renderIcons(); // Intentar renderizar iconos iniciales
         setupEventListeners();
-        fetchDocumentsFromBackend(); // <<--- LLAMAR PARA OBTENER DATOS REALES
-        renderIcons(); // Renderizar iconos iniciales
+        fetchDocumentsFromBackend(); // Llamar para obtener datos reales
     });
 
     // Función Logout
