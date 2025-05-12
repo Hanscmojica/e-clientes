@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Clientes - Perfil de Usuario</title>
+  <link rel="stylesheet" href="css/perfil.css">
+  <!-- Iconos de Google Material -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Tipografía moderna -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Header moderno -->
+  <header class="main-header">
+    <div class="header-container">
+      <div class="header-left">
+        <div class="logo">
+          <span class="material-icons">analytics</span>
+          <h1>E-Clientes</h1>
+        </div>
+      </div>
+      
+      <nav class="header-nav">
+        <ul>
+          <li><a href="api.html">Referencias</a></li>
+        </ul>
+      </nav>
+      
+      <div class="header-right">
+        <div class="user-info">
+          <span class="material-icons">account_circle</span>
+          <span class="user-name">Usuario</span>
+        </div>
+        <button class="logout-btn" title="Cerrar sesión" onclick="logout()">
+          <span class="material-icons">logout</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="main-content">
+    <div class="container">
+      <div class="page-header">
+        <h2>Perfil de Usuario</h2>
+        <p>Administra tu información personal y configuración de la cuenta</p>
+      </div>
+
+      <div class="profile-container">
+        <!-- Sidebar de navegación -->
+        <aside class="profile-sidebar">
+          <nav class="profile-nav">
+            <a href="#" class="nav-item active" data-section="personal">
+              <span class="material-icons">person</span>
+              Información Personal
+            </a>
+            <a href="#" class="nav-item" data-section="company">
+              <span class="material-icons">business</span>
+              Empresa
+            </a>
+            <a href="#" class="nav-item" data-section="security">
+              <span class="material-icons">security</span>
+              Seguridad
+            </a>
+            <a href="#" class="nav-item" data-section="preferences">
+              <span class="material-icons">settings</span>
+              Preferencias
+            </a>
+            <a href="#" class="nav-item" data-section="notifications">
+              <span class="material-icons">notifications</span>
+              Notificaciones
+            </a>
+          </nav>
+        </aside>
+
+        <!-- Contenido principal del perfil -->
+        <div class="profile-content">
+          <!-- Sección de Información Personal -->
+          <section id="personal-section" class="profile-section active">
+            <h3>Información Personal</h3>
+            
+            <div class="avatar-section">
+              <div class="avatar-container">
+                <img src="https://via.placeholder.com/150" alt="Avatar" id="avatar-img">
+                <button class="avatar-edit-btn" onclick="cambiarAvatar()">
+                  <span class="material-icons">camera_alt</span>
+                </button>
+              </div>
+              <div class="avatar-info">
+                <h4 id="user-full-name">Juan Perez Gonzalez</h4>
+                <p class="user-role">Administrador</p>
+                <p class="user-since">Usuario desde: Enero 2023</p>
+              </div>
+            </div>
+
+            <form id="personal-form" class="profile-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="nombre">
+                    <span class="material-icons">person</span>
+                    Nombre
+                  </label>
+                  <input type="text" id="nombre" value="Juan" required>
+                </div>
+                <div class="form-group">
+                  <label for="apellidos">
+                    <span class="material-icons">person</span>
+                    Apellidos
+                  </label>
+                  <input type="text" id="apellidos" value="Pérez González" required>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="email">
+                    <span class="material-icons">email</span>
+                    Correo Electrónico
+                  </label>
+                  <input type="email" id="email" value="juan.perez@empresa.com" required>
+                </div>
+                <div class="form-group">
+                  <label for="telefono">
+                    <span class="material-icons">phone</span>
+                    Teléfono
+                  </label>
+                  <input type="tel" id="telefono" value="+52 229 123 4567">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="direccion">
+                  <span class="material-icons">location_on</span>
+                  Dirección
+                </label>
+                <input type="text" id="direccion" value="Av. Principal #123, Veracruz, Ver.">
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn-primary">
+                  <span class="material-icons">save</span>
+                  Guardar Cambios
+                </button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Sección de Empresa -->
+          <section id="company-section" class="profile-section">
+            <h3>Información de la Empresa</h3>
+            
+            <form id="company-form" class="profile-form">
+              <div class="form-group">
+                <label for="empresa-nombre">
+                  <span class="material-icons">business</span>
+                  Nombre de la Empresa
+                </label>
+                <input type="text" id="empresa-nombre" value="Importadora ABC S.A. de C.V." required>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="rfc">
+                    <span class="material-icons">badge</span>
+                    RFC
+                  </label>
+                  <input type="text" id="rfc" value="IAB123456HM7" required>
+                </div>
+                <div class="form-group">
+                  <label for="cargo">
+                    <span class="material-icons">work</span>
+                    Cargo
+                  </label>
+                  <input type="text" id="cargo" value="Gerente de Operaciones">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="direccion-empresa">
+                  <span class="material-icons">location_city</span>
+                  Dirección de la Empresa
+                </label>
+                <textarea id="direccion-empresa" rows="3">Blvd. Avila Camacho #1234
+Col. Centro, C.P. 91700
+Veracruz, Ver., México</textarea>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn-primary">
+                  <span class="material-icons">save</span>
+                  Guardar Cambios
+                </button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Sección de Seguridad -->
+          <section id="security-section" class="profile-section">
+            <h3>Seguridad</h3>
+            
+            <div class="security-info">
+              <div class="security-item">
+                <div class="security-icon">
+                  <span class="material-icons">lock</span>
+                </div>
+                <div class="security-content">
+                  <h4>Contraseña</h4>
+                  <p>Última actualización: hace 45 días</p>
+                  <button class="btn-secondary" onclick="mostrarModalContraseña()">
+                    Cambiar Contraseña
+                  </button>
+                </div>
+              </div>
+
+              <div class="security-item">
+                <div class="security-icon">
+                  <span class="material-icons">verified_user</span>
+                </div>
+                <div class="security-content">
+                  <h4>Autenticación de Dos Factores</h4>
+                  <p>Protege tu cuenta con una capa adicional de seguridad</p>
+                  <div class="toggle-container">
+                    <label class="toggle">
+                      <input type="checkbox" id="toggle-2fa">
+                      <span class="slider"></span>
+                    </label>
+                    <span id="2fa-status">Desactivado</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="security-item">
+                <div class="security-icon">
+                  <span class="material-icons">devices</span>
+                </div>
+                <div class="security-content">
+                  <h4>Sesiones Activas</h4>
+                  <p>Dispositivos donde has iniciado sesión</p>
+                  <button class="btn-secondary" onclick="verSesiones()">
+                    Ver Dispositivos
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Sección de Preferencias -->
+          <section id="preferences-section" class="profile-section">
+            <h3>Preferencias</h3>
+            
+            <form id="preferences-form" class="profile-form">
+              <div class="preference-item">
+                <div class="preference-info">
+                  <h4>Idioma</h4>
+                  <p>Selecciona el idioma de la interfaz</p>
+                </div>
+                <select id="idioma" class="preference-select">
+                  <option value="es">Español</option>
+                  <option value="en">English</option>
+                </select>
+              </div>
+
+              <div class="preference-item">
+                <div class="preference-info">
+                  <h4>Formato de Fecha</h4>
+                  <p>Elige cómo se muestran las fechas</p>
+                </div>
+                <select id="formato-fecha" class="preference-select">
+                  <option value="dd/mm/yyyy">DD/MM/AAAA</option>
+                  <option value="mm/dd/yyyy">MM/DD/AAAA</option>
+                  <option value="yyyy-mm-dd">AAAA-MM-DD</option>
+                </select>
+              </div>
+
+              <div class="preference-item">
+                <div class="preference-info">
+                  <h4>Tema</h4>
+                  <p>Selecciona el tema de la aplicación</p>
+                </div>
+                <select id="tema" class="preference-select">
+                  <option value="light">Claro</option>
+                  <option value="dark">Oscuro</option>
+                  <option value="auto">Automático</option>
+                </select>
+              </div>
+
+              <div class="preference-item">
+                <div class="preference-info">
+                  <h4>Resultados por Página</h4>
+                  <p>Número de elementos a mostrar en las tablas</p>
+                </div>
+                <select id="items-por-pagina" class="preference-select">
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn-primary">
+                  <span class="material-icons">save</span>
+                  Guardar Preferencias
+                </button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Sección de Notificaciones -->
+          <section id="notifications-section" class="profile-section">
+            <h3>Notificaciones</h3>
+            
+            <form id="notifications-form" class="profile-form">
+              <div class="notification-group">
+                <h4>Notificaciones por Email</h4>
+                
+                <div class="notification-item">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="email-nuevas-referencias" checked>
+                    <span class="checkbox-text">Nuevas referencias disponibles</span>
+                  </label>
+                </div>
+
+                <div class="notification-item">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="email-actualizaciones" checked>
+                    <span class="checkbox-text">Actualizaciones de estado</span>
+                  </label>
+                </div>
+
+                <div class="notification-item">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="email-reportes">
+                    <span class="checkbox-text">Reportes semanales</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="notification-group">
+                <h4>Notificaciones del Sistema</h4>
+                
+                <div class="notification-item">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="sistema-alertas" checked>
+                    <span class="checkbox-text">Alertas importantes</span>
+                  </label>
+                </div>
+
+                <div class="notification-item">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="sistema-mantenimiento" checked>
+                    <span class="checkbox-text">Avisos de mantenimiento</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn-primary">
+                  <span class="material-icons">save</span>
+                  Guardar Configuración
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <div class="footer-container">
+      <div class="footer-section">
+        <h3>E-Clientes</h3>
+        <p>Sistema de gestión de referencias y clientes para operaciones aduaneras.</p>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Enlaces Rápidos</h3>
+        <ul>
+          <li><a href="#">Documentación</a></li>
+          <li><a href="#">Soporte Técnico</a></li>
+          <li><a href="#">Preguntas Frecuentes</a></li>
+          <li><a href="#">Términos de Uso</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Contacto</h3>
+        <ul>
+          <li>
+            <span class="material-icons">email</span>
+            soporte@e-clientes.com
+          </li>
+          <li>
+            <span class="material-icons">phone</span>
+            (123) 456-7890
+          </li>
+          <li>
+            <span class="material-icons">location_on</span>
+            Veracruz, Ver., México
+          </li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Horario de Atención</h3>
+        <p>Lunes a Viernes<br>9:00 AM - 6:00 PM<br>Sábados<br>9:00 AM - 2:00 PM</p>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2024 E-Clientes. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Modal de Cambio de Contraseña -->
+  <div id="passwordModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Cambiar Contraseña</h2>
+        <span class="close">&times;</span>
+      </div>
+      <form id="password-form" class="modal-form">
+        <div class="form-group">
+          <label for="current-password">
+            <span class="material-icons">lock</span>
+            Contraseña Actual
+          </label>
+          <input type="password" id="current-password" required>
+        </div>
+        <div class="form-group">
+          <label for="new-password">
+            <span class="material-icons">lock_open</span>
+            Nueva Contraseña
+          </label>
+          <input type="password" id="new-password" required>
+          <div class="password-strength" id="password-strength"></div>
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">
+            <span class="material-icons">lock_outline</span>
+            Confirmar Contraseña
+          </label>
+          <input type="password" id="confirm-password" required>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
+          <button type="submit" class="btn-primary">Cambiar Contraseña</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de Sesiones Activas -->
+  <div id="sessionsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Sesiones Activas</h2>
+        <span class="close">&times;</span>
+      </div>
+      <div class="sessions-list">
+        <!-- Las sesiones se cargarán dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/perfil.js"></script>
+</body>
+</html>

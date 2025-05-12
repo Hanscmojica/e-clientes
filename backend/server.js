@@ -5,6 +5,7 @@ const ftp = require('basic-ftp');
 const multer = require('multer');
 const stream = require('stream');
 const path = require('path');
+const v1ApiExternaRouter = require("./routes/apiExternaRoutes")
 
 // Configuración
 const FTP_CONFIG = {
@@ -24,10 +25,16 @@ const SERVER_PORT = 5001;
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: '*', // Permitir todos los orígenes durante desarrollo
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true // Para cookies si es necesario
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../')));
+
 
 // Configurar multer para manejar archivos en memoria
 const storage = multer.memoryStorage();
@@ -66,6 +73,8 @@ app.post('/api/auth/login', (req, res) => {
         });
     }
 });
+
+app.use("/api/v1/apiExterna", v1ApiExternaRouter);
 
 // Ruta: Logout simplificado
 app.post('/api/auth/logout', (req, res) => {

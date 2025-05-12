@@ -1,0 +1,598 @@
+/* Estilos para alertas */
+.alert.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+/* Estilos para las tarjetas de referencias */
+.referencias-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.reference-card {
+  background: white;
+  color: #333; /* Color base para el texto */
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: all 0.3s ease;
+  border: 1px solid #e0e0e0; /* Usando una variable CSS sería mejor: var(--border-color) */
+}
+
+.reference-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.reference-card .ref-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.reference-card .ref-number {
+  font-size: 18px;
+  font-weight: 600;
+  color: #5e5ff7; /* Considerar usar var(--primary-color) o var(--accent-color) */
+  text-decoration: none;
+}
+
+.reference-card .ref-number:hover {
+  text-decoration: underline;
+}
+
+.reference-card .ref-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.reference-card .ref-detail-item {
+  display: flex;
+  align-items: flex-start;
+  font-size: 14px;
+  color: #333; /* var(--dark-text) */
+}
+
+.reference-card .ref-detail-item strong {
+  font-weight: 600;
+  color: #000; /* var(--dark-text) */
+  min-width: 100px; /* Ajustar según necesidad */
+  margin-right: 10px;
+}
+
+.reference-card .ref-detail-item span {
+  color: #333; /* var(--dark-text) */
+}
+
+.reference-card .ref-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+/* Clases de estado específicas */
+.reference-card .ref-status.status-pending {
+  background: #fff3cd; /* var(--warning-bg-light, si la tienes) */
+  color: #856404;    /* var(--warning-text, si la tienes) */
+}
+.reference-card .ref-status.status-processing {
+  background: #cce5ff; /* var(--info-bg-light, si la tienes) */
+  color: #004085;    /* var(--info-text, si la tienes) */
+}
+.reference-card .ref-status.status-completed {
+  background: var(--primary-color); /* var(--success-color) */
+  color: #ffffff;
+}
+.reference-card .ref-status.status-dispatch {
+  background: #f8d7da; /* var(--danger-bg-light, si la tienes) */
+  color: #721c24;    /* var(--danger-text, si la tienes) */
+}
+
+.reference-card .ref-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e0e0e0; /* var(--border-color) */
+}
+
+.reference-card .btn-action {
+  flex: 1;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  text-decoration: none;
+}
+
+.reference-card .btn-action.btn-pdf {
+  background: var(--primary-color); /* Usar variable si está definida */
+  color: white;
+}
+.reference-card .btn-action.btn-pdf:hover {
+  background: #218838; /* Un tono más oscuro de --success-color */
+}
+
+.reference-card .btn-action.btn-preview {
+  background: var(--secondary-color, #f8f9fa); /* Usar variable */
+  color: var(--dark-text, #333);
+  border: 1px solid var(--border-color, #dee2e6);
+}
+.reference-card .btn-action.btn-preview .material-icons {
+  color: var(--dark-text, #333);
+}
+.reference-card .btn-action.btn-preview:hover {
+  background: #e9ecef; /* Un tono más oscuro de --secondary-color */
+}
+.reference-card .btn-action .material-icons {
+  font-size: 18px;
+}
+
+/* Ajustes para el contenedor de información del cliente en la página principal */
+.cliente-info {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* var(--shadow) */
+  color: var(--dark-text, #333);
+}
+
+.cliente-info h2 {
+  background: var(--primary-color, #5e5ff7);
+  color: white;
+  padding: 10px 15px;
+  margin: -20px -20px 20px -20px; /* Para que el fondo se extienda a los bordes del padding del padre */
+  border-radius: 12px 12px 0 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.cliente-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.cliente-detail-item {
+  flex: 1;
+  min-width: 200px; /* Asegura que no se compriman demasiado */
+}
+
+.cliente-detail-item strong {
+  display: block;
+  color: var(--light-text, #6c757d);
+  font-size: 12px;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+.cliente-detail-item span {
+  display: block;
+  background: var(--primary-color, #5e5ff7);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* Ajustes para la paginación */
+.pagination {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px; /* Reducido para más compacto */
+}
+
+.pagination button {
+  padding: 8px 15px; /* Ligeramente más pequeño */
+  border: none;
+  border-radius: 6px;
+  background: var(--primary-color, #5e5ff7);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.pagination button:disabled {
+  background: #ccc; /* Un gris más claro para deshabilitado */
+  color: #888;
+  cursor: not-allowed;
+}
+.pagination button:not(:disabled):hover {
+  background: var(--primary-hover, #4a4bd8);
+}
+.pagination span { /* Estilo para el texto "Página X de Y" */
+    padding: 8px 12px;
+    font-size: 14px;
+    color: var(--dark-text);
+}
+
+
+/* Results info */
+.results-info {
+  text-align: center;
+  color: var(--light-text, #666);
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+/* --- ESTILOS PARA EL MODAL Y SUS PESTAÑAS --- */
+
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; /* Permite scroll si el modal es más grande que la ventana, aunque el contenido interno también tendrá scroll */
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 5% auto;
+  padding: 0; /* El padding se maneja en header y body */
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  
+  /* --- CAMBIOS PARA HACERLO REDIMENSIONABLE Y MÁS GRANDE POR DEFECTO --- */
+  width: 70vw; /* Ancho inicial relativo al viewport width */
+  height: 75vh; /* Alto inicial relativo al viewport height */
+  min-width: 500px; /* Ancho mínimo */
+  min-height: 450px; /* Alto mínimo */
+  max-width: 95vw; /* Para que no exceda el ancho de la pantalla */
+  max-height: 90vh; /* Para que no exceda el alto de la pantalla */
+  
+  resize: both; /* Permite redimensionar horizontal y verticalmente */
+  overflow: hidden; /* El scroll principal se manejará dentro de .modal-body o los paneles */
+  
+  display: flex; /* Para controlar la distribución del espacio interno */
+  flex-direction: column; /* El header y el body se apilarán verticalmente */
+  
+  animation: slideDownModal 0.3s ease-out;
+}
+
+@keyframes slideDownModal {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+  padding: 15px 25px;
+  background-color: var(--primary-color, #5e5ff7);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color, #dee2e6);
+  border-radius: 12px 12px 0 0;
+  flex-shrink: 0; /* Evita que el header se encoja */
+  cursor: move; /* Sugerencia visual de que el modal podría ser movible (aunque no implementado aquí) */
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.modal-header .close {
+  color: white;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.modal-header .close:hover {
+  transform: scale(1.1);
+}
+
+.modal-body {
+  padding: 0px 25px 20px 25px; /* Ajustado el padding superior */
+  flex-grow: 1; /* Permite que el cuerpo del modal crezca para llenar el espacio */
+  display: flex;
+  flex-direction: column; /* Las pestañas y el contenido de la pestaña se apilarán */
+  overflow: hidden; /* El scroll se manejará en los paneles internos */
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 2px solid var(--border-color, #e0e0e0);
+  margin-bottom: 15px; /* Reducido el espacio */
+  flex-shrink: 0; /* Evita que la barra de pestañas se encoja */
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--light-text, #666);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+}
+.tab-button .material-icons {
+  font-size: 20px;
+}
+.tab-button:hover {
+  color: var(--primary-color, #5e5ff7);
+}
+.tab-button.active {
+  color: var(--primary-color, #5e5ff7);
+  font-weight: 600;
+  border-bottom-color: var(--primary-color, #5e5ff7);
+}
+
+.tab-content { /* Contenedor de TODOS los tab-panel */
+  flex-grow: 1; /* Ocupa el espacio restante en modal-body */
+  display: flex; /* Para que el panel activo pueda usar flex-grow */
+  overflow: hidden; /* El scroll se manejará dentro del panel activo */
+}
+
+.tab-panel {
+  display: none; /* Oculto por defecto */
+  animation: fadeInPanel 0.4s ease;
+  width: 100%; /* Asegura que ocupe todo el ancho del .tab-content */
+  /* --- CAMBIOS PARA QUE EL PANEL ACTIVO CREZCA --- */
+  flex-direction: column; /* Para que el h3 y el contenido interno se apilen */
+}
+
+.tab-panel.active {
+  display: flex; /* Cambiado a flex para permitir que sus hijos crezcan */
+  flex-grow: 1; /* El panel activo ocupa todo el espacio de .tab-content */
+}
+
+.tab-panel h3 {
+  font-size: 18px;
+  color: var(--primary-color);
+  margin-top: 0;
+  margin-bottom: 10px; /* Reducido */
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0; /* Evita que el título se encoja */
+}
+
+/* Estilos para la información de detalle de referencia en el modal */
+.referencia-info-modal { /* Este es #detalleReferenciaContenido */
+    flex-grow: 1; /* Permite que esta área crezca */
+    overflow-y: auto; /* Scroll si el contenido del detalle es muy largo */
+    padding-right: 10px; /* Espacio para la barra de scroll */
+}
+.referencia-info-modal p {
+    margin-bottom: 8px;
+    font-size: 15px;
+    line-height: 1.6;
+}
+.referencia-info-modal p strong {
+    font-weight: 600;
+    color: var(--dark-text);
+    min-width: 120px;
+    display: inline-block;
+}
+
+
+/* --- ESTILOS PARA LA LISTA DE DOCUMENTOS EN LA PESTAÑA BIBLIOTECA --- */
+#listaDocumentos { /* Este es el UL */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    /* --- CAMBIOS PARA QUE LA LISTA CREZCA Y TENGA SCROLL --- */
+    flex-grow: 1; /* Permite que la lista crezca dentro de su panel */
+    overflow-y: auto; /* Scroll si hay muchos documentos */
+    /* padding-right: 10px; ya lo tenías en el HTML, es buena idea */
+}
+
+#listaDocumentos li {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color, #e5e7eb);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    transition: box-shadow 0.2s ease;
+}
+#listaDocumentos li:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+#listaDocumentos li > .material-icons {
+    margin-right: 15px;
+    color: var(--accent-color, #3b82f6);
+    font-size: 24px;
+    flex-shrink: 0;
+}
+#listaDocumentos li .document-name {
+    flex-grow: 1;
+    font-size: 15px;
+    color: var(--dark-text, #1f2937);
+    margin-right: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#listaDocumentos li .document-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.btn-accion-doc {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    padding: 7px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.btn-accion-doc .material-icons {
+    font-size: 18px;
+}
+.btn-accion-doc.download {
+    background-color: var(--primary-color, #1e3a8a);
+    color: white;
+}
+.btn-accion-doc.download:hover {
+    background-color: var(--primary-hover, #1e40af);
+}
+.btn-accion-doc.download .material-icons {
+    color: white;
+}
+.btn-accion-doc.view {
+    background-color: var(--secondary-color, #f8fafc);
+    color: var(--primary-color, #1e3a8a);
+    border: 1px solid var(--border-color, #e5e7eb);
+}
+.btn-accion-doc.view:hover {
+    background-color: #e9ecef;
+    border-color: #ced4da;
+}
+ .btn-accion-doc.view .material-icons {
+    color: var(--primary-color, #1e3a8a);
+}
+
+/* Estilos para el input de búsqueda dentro del modal */
+.search-filter-container-modal { /* Contenedor del input de búsqueda en biblioteca */
+    margin-bottom: 10px; /* Reducido */
+    flex-shrink: 0; /* Evita que se encoja */
+}
+.search-filter-container-modal .search-filter-box-modal input {
+    background-color: transparent;
+}
+.search-filter-container-modal .search-filter-box-modal input:focus {
+    box-shadow: none;
+}
+
+
+/* Estilos para los items del historial */
+#historialContenido { /* Div que contiene los .historial-item */
+    /* --- CAMBIOS PARA QUE EL HISTORIAL CREZCA Y TENGA SCROLL --- */
+    flex-grow: 1; /* Permite que el área de historial crezca */
+    overflow-y: auto; /* Scroll si hay muchos items de historial */
+    /* padding-right: 10px; ya lo tenías en el HTML */
+}
+#historialContenido .historial-item {
+  padding: 15px;
+  margin-bottom: 10px;
+  border-left: 4px solid var(--accent-color, #3b82f6);
+  background-color: var(--secondary-color, #f8fafc);
+  border-radius: 0 8px 8px 0;
+  transition: background-color 0.2s ease;
+}
+#historialContenido .historial-item:hover {
+  background-color: #e9ecef;
+}
+#historialContenido .historial-item p {
+  margin: 5px 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+#historialContenido .historial-item p strong {
+  font-weight: 600;
+  color: var(--dark-text);
+  min-width: 100px;
+  display: inline-block;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .referencias-grid {
+    grid-template-columns: 1fr;
+  }
+  .modal-content {
+    width: 90vw; /* Más ancho en tabletas */
+    height: 85vh; /* Más alto en tabletas */
+    min-width: 90%; /* Ajustar min-width para tabletas */
+  }
+  .tabs {
+    font-size: 14px;
+  }
+  .tab-button {
+    padding: 10px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .reference-card {
+    padding: 15px;
+  }
+  .reference-card .ref-detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .reference-card .ref-detail-item strong {
+    margin-bottom: 2px;
+    min-width: auto;
+  }
+  .modal-content {
+    width: 95vw; /* Casi todo el ancho en móviles */
+    height: 88vh; /* Casi todo el alto en móviles */
+    margin: 2.5vh auto; /* Centrado con pequeño margen */
+    min-height: 300px; /* Un mínimo razonable para móviles */
+  }
+  .modal-body {
+    padding: 10px 15px 15px 15px; /* Menos padding en móviles */
+  }
+  .tab-button {
+    padding: 8px 10px;
+    font-size: 13px;
+    gap: 5px;
+  }
+  .tab-button .material-icons {
+    font-size: 18px;
+  }
+  #listaDocumentos li {
+    padding: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  #listaDocumentos li .document-name {
+    margin-bottom: 8px;
+    white-space: normal;
+  }
+  #listaDocumentos li .document-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .btn-accion-doc {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+}
