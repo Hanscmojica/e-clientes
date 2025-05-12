@@ -1,15 +1,15 @@
 // Datos del usuario (simulado - en producción vendría del backend)
 let userData = {
-    nombre: "Juan",
-    apellidos: "Pérez González",
-    email: "juan.perez@empresa.com",
-    telefono: "+52 229 123 4567",
+    nombre: "Hans Carli Rowesonur",
+    apellidos: "Hansen Mojica",
+    email: "hansc.mojica@rodall.com",
+    telefono: "+52 961 573 5235",
     direccion: "Av. Principal #123, Veracruz, Ver.",
     empresa: {
-      nombre: "Importadora ABC S.A. de C.V.",
+      nombre: "Toyar Trade S.A. de C.V.",
       rfc: "IAB123456HM7",
-      cargo: "Gerente de Operaciones",
-      direccion: "Blvd. Avila Camacho #1234\nCol. Centro, C.P. 91700\nVeracruz, Ver., México"
+      cargo: "Administrador",
+      direccion: "Av. Francisco I. Madero 33, Centro, 91700 Veracruz."
     },
     preferencias: {
       idioma: "es",
@@ -28,6 +28,9 @@ let userData = {
   
   // Inicialización
   document.addEventListener('DOMContentLoaded', function() {
+    // Verificar si hay sesión activa
+    verificarSesion();
+    
     // Configurar navegación lateral
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
@@ -64,6 +67,29 @@ let userData = {
       newPasswordInput.addEventListener('input', validarFortalezaContraseña);
     }
   });
+  
+  // Función para verificar si hay sesión activa
+  function verificarSesion() {
+    const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+    
+    if (!userSession) {
+      // Si no hay sesión, redirigir a login.html
+      window.location.href = 'login.html';
+      return;
+    }
+    
+    // Actualizar información del usuario en la interfaz
+    try {
+      const sessionData = JSON.parse(userSession);
+      // Actualizar nombre en el header si está disponible
+      const userNameElement = document.querySelector('.user-name');
+      if (userNameElement && sessionData.username) {
+        userNameElement.textContent = sessionData.username;
+      }
+    } catch (error) {
+      console.error('Error al procesar la sesión:', error);
+    }
+  }
   
   // Función para cambiar entre secciones
   function cambiarSeccion(sectionName) {
@@ -372,7 +398,11 @@ let userData = {
   // Función para cerrar sesión
   function logout() {
     if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-      // Aquí iría la lógica de logout
+      // Eliminar datos de sesión
+      localStorage.removeItem('userSession');
+      sessionStorage.removeItem('userSession');
+      
+      // Redirigir a la página de login
       window.location.href = 'login.html';
     }
   }

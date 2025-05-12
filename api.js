@@ -41,6 +41,14 @@ document.addEventListener('click', function(e) {
         } else {
             console.warn(`No se encontró el panel de pestaña: #${tabName}-tab`);
         }
+        
+        // Si se selecciona la pestaña biblioteca, cargar los documentos
+        if (tabName === "biblioteca") {
+            const referenciaIndex = parseInt(modal.dataset.referenciaIndex || "0");
+            if (referenciasCompletas[referenciaIndex]) {
+                generarBibliotecaModal(referenciasCompletas[referenciaIndex]);
+            }
+        }
     }
 });
 
@@ -215,6 +223,185 @@ function formatearFecha(fechaStr) {
     }
 }
 
+// Función para generar la biblioteca de documentos DENTRO DEL MODAL
+function generarBibliotecaModal(referenciaOriginal) {
+    const listaDocumentosUI = modal.querySelector('#listaDocumentos');
+    const noDocumentosMensaje = modal.querySelector('#noDocumentosModalMensaje');
+
+    if (!listaDocumentosUI || !noDocumentosMensaje) {
+        console.error("Elementos de la biblioteca no encontrados en el modal.");
+        return;
+    }
+    
+    // Mostrar indicador de carga
+    listaDocumentosUI.innerHTML = '<li style="text-align:center; padding:20px;">Cargando documentos...</li>';
+    noDocumentosMensaje.style.display = 'none';
+    
+    // Obtener el número de referencia
+    const numeroReferencia = referenciaOriginal.Referencia || '';
+    
+    console.log(`Generando biblioteca para referencia: ${numeroReferencia}`);
+    
+    if (!numeroReferencia) {
+        noDocumentosMensaje.style.display = 'block';
+        noDocumentosMensaje.textContent = 'No se pudo identificar la referencia';
+        listaDocumentosUI.innerHTML = '';
+        return;
+    }
+
+    // URL del backend para obtener los documentos de esta referencia
+    const BACKEND_URL = 'http://localhost:5001';
+    const endpointUrl = `${BACKEND_URL}/list/${numeroReferencia}`;
+    
+    console.log(`Consultando endpoint: ${endpointUrl}`);
+    
+    // Llamada al servidor para obtener la lista de documentos
+    fetch(endpointUrl)
+        .then(response => {
+            console.log(`Respuesta del servidor: status=${response.status}`);
+            if (!response.ok) {
+                throw new Error(`Error del servidor: ${response.status} ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(documentos => {
+            console.log(`Documentos recibidos:`, documentos);
+            
+            // Limpiar contenedor
+            listaDocumentosUI.innerHTML = '';
+
+            if (!documentos || documentos.length === 0) {
+                noDocumentosMensaje.style.display = 'block';
+                noDocumentosMensaje.textContent = 'No hay documentos disponibles para esta referencia.';
+                listaDocumentosUI.style.display = 'none';
+                return;
+            }
+
+            noDocumentosMensaje.style.display = 'none';
+            listaDocumentosUI.style.display = '';
+
+            // Mostrar cada documento en la lista
+            documentos.forEach((doc, index) => {
+                const li = document.createElement('li');
+                
+                // Obtener información del documento con manejo de valores nulos/undefined
+                const nombreArchivo = doc.title || doc.nombre || doc.filename || `Documento ${index + 1}`;
+                const tamanioArchivo = doc.size || '';
+                
+                // Determinar el icono adecuado según el tipo de archivo
+                let iconName = 'description'; // Icono por defecto
+                
+                if (nombreArchivo.toLowerCase().includes('factura')) iconName = 'receipt';
+                else if (nombreArchivo.toLowerCase().includes('bl') || nombreArchivo.toLowerCase().includes('lading')) iconName = 'article';
+                else if (nombreArchivo.toLowerCase().includes('cove')) iconName = 'receipt_long';
+                else if (nombreArchivo.toLowerCase().includes('.xml')) iconName = 'code';
+                else if (nombreArchivo.toLowerCase().includes('.xlsx') || nombreArchivo.toLowerCase().includes('.xls')) iconName = 'assessment';
+                else if (nombreArchivo.toLowerCase().includes('pedimento')) iconName = 'assignment';
+                
+                // Filename seguro para URLs
+                const safeFilename = doc.filename || doc.title || doc.nombre || nombreArchivo;
+                const escapedFilename = encodeURIComponent(safeFilename);
+                
+                li.innerHTML = `
+                    <span class="material-icons">${iconName}</span>
+                    <span class="document-name">${nombreArchivo} ${tamanioArchivo ? '(' + tamanioArchivo + ')' : ''}</span>
+                    <div class="document-actions">
+                        <a href="#" class="btn-accion-doc download" title="Descargar" onclick="event.stopPropagation(); descargarDocumentoModal('${numeroReferencia}', '${escapedFilename}')">
+                            <span class="material-icons">download</span> Descargar
+                        </a>
+                        <a href="#" class="btn-accion-doc view" title="Ver" onclick="event.stopPropagation(); verDocumentoModal('${numeroReferencia}', '${escapedFilename}'); return false;">
+                            <span class="material-icons">visibility</span> Ver
+                        </a>
+                    </div>
+                `;
+                listaDocumentosUI.appendChild(li);
+            });
+            
+            // Si hay un campo de filtro, activar su funcionalidad
+            const filtroDocsInput = modal.querySelector('#filtroDocumentosModal');
+            if (filtroDocsInput) {
+                filtroDocsInput.addEventListener('input', filtrarDocumentosModal);
+                // Limpiar el filtro
+                filtroDocsInput.value = '';
+            }
+        })
+        .catch(error => {
+            console.error("Error al cargar documentos:", error);
+            listaDocumentosUI.innerHTML = '';
+            noDocumentosMensaje.style.display = 'block';
+            noDocumentosMensaje.textContent = 'Error al cargar los documentos: ' + error.message;
+        });
+}
+
+// Función para ver documento (desde el modal)
+function verDocumentoModal(referenciaId, docNombre) {
+    const BACKEND_URL = 'http://localhost:5001';
+    const viewUrl = `${BACKEND_URL}/view/${referenciaId}/${docNombre}`;
+    
+    console.log('Abriendo vista previa:', viewUrl);
+    mostrarAlerta(`Abriendo vista previa de ${decodeURIComponent(docNombre)}...`, 'success');
+    
+    // Abrir el documento en una nueva ventana/pestaña
+    window.open(viewUrl, '_blank');
+}
+
+// Función para descargar documento (desde el modal)
+function descargarDocumentoModal(referenciaId, docNombre) {
+    const BACKEND_URL = 'http://localhost:5001';
+    const downloadUrl = `${BACKEND_URL}/download/${referenciaId}/${docNombre}`;
+    
+    console.log('Descargando documento:', downloadUrl);
+    mostrarAlerta(`Iniciando descarga de ${decodeURIComponent(docNombre)}...`, 'success');
+    
+    // Crear un elemento <a> invisible para iniciar la descarga
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = decodeURIComponent(docNombre);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Función para filtrar documentos DENTRO DEL MODAL
+function filtrarDocumentosModal() {
+    const input = modal.querySelector('#filtroDocumentosModal');
+    if (!input) return;
+
+    const filter = input.value.toUpperCase();
+    const ul = modal.querySelector('#listaDocumentos');
+    if (!ul) return;
+
+    const liItems = ul.getElementsByTagName('li');
+    let count = 0;
+    const noDocumentosMensaje = modal.querySelector('#noDocumentosModalMensaje');
+
+    for (let i = 0; i < liItems.length; i++) {
+        const docNameSpan = liItems[i].querySelector('.document-name');
+        if (docNameSpan) {
+            const txtValue = docNameSpan.textContent || docNameSpan.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                liItems[i].style.display = "";
+                count++;
+            } else {
+                liItems[i].style.display = "none";
+            }
+        }
+    }
+
+    if (noDocumentosMensaje) {
+        if (count === 0 && liItems.length > 0) {
+            noDocumentosMensaje.textContent = "No se encontraron documentos que coincidan.";
+            noDocumentosMensaje.style.display = 'block';
+        } else if (ul.children.length === 0 || (count === 0 && filter === '')) { // Si no hay documentos originalmente o el filtro está vacío y no hay items
+             noDocumentosMensaje.textContent = "No hay documentos disponibles para esta referencia.";
+             noDocumentosMensaje.style.display = 'block';
+        }
+        else {
+            noDocumentosMensaje.style.display = 'none';
+        }
+    }
+}
+
 // --- MODIFICACIONES PARA EL MODAL CON PESTAÑAS ---
 
 // Función principal para mostrar el modal de una referencia con todas sus pestañas
@@ -224,6 +411,11 @@ function mostrarModalReferencia(indexEnListaMostrada) { // Cambiado el nombre de
     if (!referenciaOriginal) {
         mostrarAlerta('No se encontró la referencia completa.', 'error');
         return;
+    }
+
+    // Guardar el índice de la referencia en el modal para uso posterior
+    if (modal) {
+        modal.dataset.referenciaIndex = indexEnListaMostrada;
     }
 
     // Establecer el título del modal
@@ -246,9 +438,9 @@ function mostrarModalReferencia(indexEnListaMostrada) { // Cambiado el nombre de
             `;
     }
 
-
     // --- Pestaña "Biblioteca" ---
-    generarBibliotecaModal(referenciaOriginal); // Llama a la función adaptada
+    // Llamar a la función generarBibliotecaModal con la referencia actual
+    generarBibliotecaModal(referenciaOriginal);
 
     // --- Pestaña "Historial" ---
     const historialDiv = modal.querySelector('#historialContenido');
@@ -300,119 +492,6 @@ function mostrarModalReferencia(indexEnListaMostrada) { // Cambiado el nombre de
     // Mostrar el modal
     if (modal) modal.style.display = "block";
 }
-
-// Función para generar la biblioteca de documentos DENTRO DEL MODAL
-// Adaptada para usar la estructura de modal_document_list_styles
-function generarBibliotecaModal(referencia) {
-    const listaDocumentosUI = modal.querySelector('#listaDocumentos'); // ul#listaDocumentos
-    const noDocumentosMensaje = modal.querySelector('#noDocumentosModalMensaje');
-
-    if (!listaDocumentosUI || !noDocumentosMensaje) {
-        console.error("Elementos de la biblioteca no encontrados en el modal.");
-        return;
-    }
-    listaDocumentosUI.innerHTML = ''; // Limpiar lista anterior
-
-    // Documentos de ejemplo - En un caso real, estos vendrían de la API o de la 'referencia'
-    const documentos = [
-        { id: 1, nombre: 'Factura Comercial.pdf', tipo: 'pdf', size: '256 KB', urlDescarga: '#', urlVistaPrevia: '#' },
-        { id: 2, nombre: 'Bill of Lading (BL).pdf', tipo: 'pdf', size: '1.2 MB', urlDescarga: '#', urlVistaPrevia: '#' },
-        { id: 3, nombre: 'COVE_REF123.xml', tipo: 'xml', size: '458 KB', urlDescarga: '#', urlVistaPrevia: '#' },
-        { id: 4, nombre: 'Pedimento_PAGADO.pdf', tipo: 'pdf', size: '789 KB', urlDescarga: '#', urlVistaPrevia: '#' },
-        // Añade más documentos de ejemplo si es necesario
-    ];
-
-    if (documentos.length === 0) {
-        noDocumentosMensaje.style.display = 'block';
-        listaDocumentosUI.style.display = 'none';
-        return;
-    }
-
-    noDocumentosMensaje.style.display = 'none';
-    listaDocumentosUI.style.display = '';
-
-    documentos.forEach(doc => {
-        const li = document.createElement('li');
-
-        let iconName = 'description'; // Icono por defecto
-        if (doc.nombre.toLowerCase().includes('factura')) iconName = 'receipt';
-        if (doc.nombre.toLowerCase().includes('bl') || doc.nombre.toLowerCase().includes('bill of lading')) iconName = 'article';
-        if (doc.nombre.toLowerCase().includes('cove')) iconName = 'receipt_long';
-        if (doc.tipo.toLowerCase() === 'xml') iconName = 'code';
-        if (doc.tipo.toLowerCase() === 'xlsx') iconName = 'assessment'; // O 'grid_on'
-
-
-        li.innerHTML = `
-            <span class="material-icons">${iconName}</span>
-            <span class="document-name">${doc.nombre} ${doc.size ? '(' + doc.size + ')' : ''}</span>
-            <div class="document-actions">
-                <a href="${doc.urlDescarga}" class="btn-accion-doc download" download="${doc.nombre}" title="Descargar" onclick="event.stopPropagation(); descargarDocumentoModal(${doc.id}, '${doc.nombre}')">
-                    <span class="material-icons">download</span> Descargar
-                </a>
-                <a href="${doc.urlVistaPrevia}" class="btn-accion-doc view" target="_blank" title="Ver" onclick="event.stopPropagation(); verDocumentoModal(${doc.id}, '${doc.nombre}')">
-                    <span class="material-icons">visibility</span> Ver
-                </a>
-            </div>
-        `;
-        listaDocumentosUI.appendChild(li);
-    });
-}
-
-// Función para filtrar documentos DENTRO DEL MODAL
-function filtrarDocumentosModal() {
-    const input = modal.querySelector('#filtroDocumentosModal');
-    if (!input) return;
-
-    const filter = input.value.toUpperCase();
-    const ul = modal.querySelector('#listaDocumentos');
-    if (!ul) return;
-
-    const liItems = ul.getElementsByTagName('li');
-    let count = 0;
-    const noDocumentosMensaje = modal.querySelector('#noDocumentosModalMensaje');
-
-    for (let i = 0; i < liItems.length; i++) {
-        const docNameSpan = liItems[i].querySelector('.document-name');
-        if (docNameSpan) {
-            const txtValue = docNameSpan.textContent || docNameSpan.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                liItems[i].style.display = "";
-                count++;
-            } else {
-                liItems[i].style.display = "none";
-            }
-        }
-    }
-
-    if (noDocumentosMensaje) {
-        if (count === 0 && liItems.length > 0) {
-            noDocumentosMensaje.textContent = "No se encontraron documentos que coincidan.";
-            noDocumentosMensaje.style.display = 'block';
-        } else if (ul.children.length === 0 || (count === 0 && filter === '')) { // Si no hay documentos originalmente o el filtro está vacío y no hay items
-             noDocumentosMensaje.textContent = "No hay documentos disponibles para esta referencia.";
-             noDocumentosMensaje.style.display = 'block';
-        }
-        else {
-            noDocumentosMensaje.style.display = 'none';
-        }
-    }
-}
-
-
-// Función para ver documento (desde el modal)
-function verDocumentoModal(docId, docNombre) {
-    console.log('Viendo documento desde modal:', docNombre, docId);
-    // Simulación: window.open(urlRealDelDocumento, '_blank');
-    mostrarAlerta(`Abriendo vista previa de ${docNombre}...`, 'success');
-}
-
-// Función para descargar documento (desde el modal)
-function descargarDocumentoModal(docId, docNombre) {
-    console.log('Descargando documento desde modal:', docNombre, docId);
-    // Simulación: crear un enlace 'a', asignarle href y download, y hacer click.
-    mostrarAlerta(`Iniciando descarga de ${docNombre}...`, 'success');
-}
-
 
 // Función para obtener la descripción de un estado
 function getEstadoDescripcion(estadoCve) {
@@ -530,7 +609,6 @@ function crearTarjetaReferencia(referencia, indexOriginal, indexEnVistaActual) {
     return card;
 }
 
-
 // Función para obtener la clase de estado
 function obtenerClaseEstado(estadoCve) {
     const clases = {
@@ -538,10 +616,6 @@ function obtenerClaseEstado(estadoCve) {
     };
     return clases[String(estadoCve).toUpperCase()] || 'status-pending'; // Default a pending si no se reconoce
 }
-
-// ELIMINADA: mostrarHistorialCompleto. La lógica se integró en crearTarjetaReferencia
-// para pasar el índice correcto de 'referenciasCompletas' a mostrarModalReferencia.
-
 
 // Validar fechas al perder el foco
 const fechaInicialInput = document.getElementById('fechaInicial');

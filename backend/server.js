@@ -237,6 +237,33 @@ app.get('/download/:filename', async (req, res) => {
     }
 });
 
+// Ruta: Descargar archivo de una referencia específica
+app.get('/download/:referenciaId/:filename', async (req, res) => {
+    const referenciaId = req.params.referenciaId;
+    const filename = decodeURIComponent(req.params.filename);
+    const remotePath = path.join(FTP_BASE_DIR, referenciaId, filename).replace(/\\/g, '/');
+
+    let client;
+    try {
+        client = await connectAndLogin();
+        await client.size(remotePath); // Verifica existencia del archivo
+
+        res.setHeader('Content-Disposition', `attachment; filename="${path.basename(remotePath)}"`);
+        res.setHeader('Content-Type', 'application/octet-stream');
+
+        await client.downloadTo(res, remotePath);
+    } catch (err) {
+        console.error(`Error en /download/${referenciaId}/${filename}:`, err);
+        if (!res.headersSent) {
+            res.status(err.code === 550 ? 404 : 500).json({
+                error: err.code === 550 ? "Archivo no encontrado en el servidor FTPS" : err.message
+            });
+        }
+    } finally {
+        if (client && !client.closed) client.close();
+    }
+});
+
 // Ruta: Ver archivo
 app.get('/view/:filename', async (req, res) => {
     const filename = decodeURIComponent(req.params.filename);
@@ -278,10 +305,56 @@ app.get('/view/:filename', async (req, res) => {
     }
 });
 
+// Ruta: Ver archivo de una referencia específica
+app.get('/view/:referenciaId/:filename', async (req, res) => {
+    const referenciaId = req.params.referenciaId;
+    const filename = decodeURIComponent(req.params.filename);
+    const remotePath = path.join(FTP_BASE_DIR, referenciaId, filename).replace(/\\/g, '/');
+
+    let client;
+    try {
+        client = await connectAndLogin();
+        
+        // Determinar el tipo de contenido basado en la extensión
+        const ext = path.extname(path.basename(remotePath)).toLowerCase();
+        let contentType = 'application/octet-stream';
+        
+        if (ext === '.pdf') contentType = 'application/pdf';
+        else if (['.jpg', '.jpeg'].includes(ext)) contentType = 'image/jpeg';
+        else if (ext === '.png') contentType = 'image/png';
+        else if (ext === '.gif') contentType = 'image/gif';
+        else if (ext === '.txt') contentType = 'text/plain';
+        else if (ext === '.xml') contentType = 'application/xml';
+        else if (['.doc', '.docx'].includes(ext)) contentType = 'application/msword';
+        else if (['.xls', '.xlsx'].includes(ext)) contentType = 'application/vnd.ms-excel';
+        
+        res.setHeader('Content-Type', contentType);
+        
+        // Para imágenes y PDFs, configurar para visualización en línea
+        if (contentType.startsWith('image/') || contentType === 'application/pdf' || contentType === 'application/xml') {
+            res.setHeader('Content-Disposition', `inline; filename="${path.basename(remotePath)}"`);
+        } else {
+            res.setHeader('Content-Disposition', `attachment; filename="${path.basename(remotePath)}"`);
+        }
+
+        await client.downloadTo(res, remotePath);
+    } catch (err) {
+        console.error(`Error en /view/${referenciaId}/${filename}:`, err);
+        if (!res.headersSent) {
+            res.status(err.code === 550 ? 404 : 500).json({
+                error: err.code === 550 ? "Archivo no encontrado en el servidor FTPS" : err.message
+            });
+        }
+    } finally {
+        if (client && !client.closed) client.close();
+    }
+});
+
 // Ruta principal para servir el frontend
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../login_form_moderno.html'));
 });
+
 // Iniciar servidor
 app.listen(SERVER_PORT, '0.0.0.0', () => {
     console.log(`Servidor ejecutándose en http://localhost:${SERVER_PORT}`);
