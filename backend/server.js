@@ -56,14 +56,14 @@ async function connectAndLogin() {
 app.post('/api/auth/login', (req, res) => {
     const { username, password } = req.body;
     
-    if (username === 'usuario' && password === 'password123') {
+    if (username === 'admin' && password === 'admin123') {
         res.status(200).json({
             success: true,
             message: 'Login exitoso',
             user: {
-                username: 'usuario',
-                name: 'Usuario de Prueba',
-                role: 'user'
+                username: 'admin',
+                name: 'Administrador',
+                role: 'admin'
             }
         });
     } else {
@@ -352,7 +352,7 @@ app.get('/view/:referenciaId/:filename', async (req, res) => {
 
 // Ruta principal para servir el frontend
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../login_form_moderno.html'));
+    res.sendFile(path.join(__dirname, '../login.html'));
 });
 
 // Iniciar servidor

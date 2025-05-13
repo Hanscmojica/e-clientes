@@ -123,6 +123,7 @@
   .form-group input {
     width: 100%;
     padding: 14px 16px;
+    padding-right: 45px;
     border: 2px solid var(--border-color);
     border-radius: 10px;
     font-size: 16px;
@@ -139,9 +140,8 @@
   
   .toggle-password {
     position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
+    right: 12px;
+    top: 38px;
     background: none;
     border: none;
     color: var(--light-text);
@@ -150,10 +150,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 2;
+    pointer-events: auto;
   }
   
   .toggle-password:hover {
     color: var(--primary-color);
+  }
+  
+  .toggle-password .material-icons {
+    font-size: 20px;
   }
   
   .form-options {
@@ -332,4 +338,14 @@
   
   .login-info {
     animation: fadeIn 0.8s ease;
+  }
+  
+  /* Oculta el ícono nativo de mostrar/ocultar contraseña en Chrome, Edge, Opera y otros navegadores */
+  input[type="password"]::-ms-reveal,
+  input[type="password"]::-ms-clear,
+  input[type="password"]::-webkit-credentials-auto-fill-button,
+  input[type="password"]::-webkit-input-decoration-container,
+  input[type="password"]::-webkit-input-clear-button,
+  input[type="password"]::-webkit-input-password-toggle-button {
+    display: none !important;
   }
