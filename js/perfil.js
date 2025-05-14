@@ -31,6 +31,49 @@ let userData = {
     // Verificar si hay sesión activa
     verificarSesion();
     
+    // Configurar botón de cambio de tema
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    
+    // Verificar si hay un tema guardado
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+      document.body.classList.add('dark-theme');
+      themeIcon.textContent = 'dark_mode';
+    }
+    
+    // Manejar clic en botón de tema
+    if (themeToggle) {
+      themeToggle.addEventListener('click', function() {
+        // Añadir clase para animación
+        themeToggle.classList.add('rotate');
+        
+        // Cambiar tema
+        if (document.body.classList.contains('dark-theme')) {
+          document.body.classList.remove('dark-theme');
+          themeIcon.textContent = 'light_mode';
+          localStorage.setItem('theme', 'light');
+          
+          // Actualizar select de tema si existe
+          const temaSelect = document.getElementById('tema');
+          if (temaSelect) temaSelect.value = 'light';
+        } else {
+          document.body.classList.add('dark-theme');
+          themeIcon.textContent = 'dark_mode';
+          localStorage.setItem('theme', 'dark');
+          
+          // Actualizar select de tema si existe
+          const temaSelect = document.getElementById('tema');
+          if (temaSelect) temaSelect.value = 'dark';
+        }
+        
+        // Quitar clase de animación después de completarse
+        setTimeout(() => {
+          themeToggle.classList.remove('rotate');
+        }, 500);
+      });
+    }
+    
     // Configurar navegación lateral
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
@@ -232,11 +275,18 @@ let userData = {
     userData.preferencias.itemsPorPagina = document.getElementById('items-por-pagina').value;
   
     // Aplicar tema si cambió
+    const themeIcon = document.getElementById('theme-icon');
+    
     if (userData.preferencias.tema === 'dark') {
       document.body.classList.add('dark-theme');
+      if (themeIcon) themeIcon.textContent = 'dark_mode';
     } else {
       document.body.classList.remove('dark-theme');
+      if (themeIcon) themeIcon.textContent = 'light_mode';
     }
+    
+    // Guardar tema en localStorage
+    localStorage.setItem('theme', userData.preferencias.tema);
   
     mostrarAlerta('Preferencias guardadas correctamente', 'success');
   }

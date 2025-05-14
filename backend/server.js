@@ -6,6 +6,7 @@ const multer = require('multer');
 const stream = require('stream');
 const path = require('path');
 const v1ApiExternaRouter = require("./routes/apiExternaRoutes")
+const authRouter = require('./routes/auth');
 
 // Configuración
 const FTP_CONFIG = {
@@ -52,27 +53,29 @@ async function connectAndLogin() {
     }
 }
 
-// Ruta: Login simplificado
-app.post('/api/auth/login', (req, res) => {
-    const { username, password } = req.body;
-    
-    if (username === 'admin' && password === 'admin123') {
-        res.status(200).json({
-            success: true,
-            message: 'Login exitoso',
-            user: {
-                username: 'admin',
-                name: 'Administrador',
-                role: 'admin'
-            }
-        });
-    } else {
-        res.status(401).json({
-            success: false,
-            message: 'Credenciales incorrectas'
-        });
-    }
+// Ruta de prueba para verificar que el servidor está funcionando
+app.post('/api/test', (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'El servidor está funcionando correctamente'
+    });
 });
+
+// Ruta para probar la autenticación directamente
+app.post('/api/auth/test', (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: 'Servicio de autenticación funciona correctamente',
+        testUser: {
+            username: 'HANS',
+            password: '12345',
+            description: 'Usar esta cuenta para probar el login'
+        }
+    });
+});
+
+// Usar las rutas de autenticación desde el módulo auth en lugar de la ruta de login hardcodeada
+app.use('/api/auth', authRouter);
 
 app.use("/api/v1/apiExterna", v1ApiExternaRouter);
 

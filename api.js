@@ -1,3 +1,74 @@
+// Verificar autenticación al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar si existe sesión
+    const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
+    
+    // Si no hay sesión, redirigir al login
+    if (!userSession) {
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    // Verificar si el token ha expirado
+    const loginTime = new Date(userSession.loginTime);
+    const currentTime = new Date();
+    const hoursSinceLogin = (currentTime - loginTime) / (1000 * 60 * 60);
+    
+    if (hoursSinceLogin > 8) {
+        // Si han pasado más de 8 horas, cerrar sesión
+        logout();
+        return;
+    }
+    
+    // Si llegamos aquí, la sesión es válida
+    console.log('%c✅ Usuario autenticado', 'color: green; font-weight: bold; font-size: 14px');
+    console.log('Nombre:', userSession.name);
+    console.log('Rol:', userSession.role);
+    
+    // Actualizar el nombre de usuario en la interfaz
+    const userNameElement = document.querySelector('.user-name');
+    if (userNameElement) {
+        userNameElement.textContent = userSession.name;
+    }
+    
+    // Configurar el botón de cerrar sesión
+    const logoutBtn = document.querySelector('.logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', logout);
+    }
+});
+
+// Función para verificar el token de autenticación (para el botón)
+function checkAuthToken() {
+    const authStatus = document.getElementById('authStatus');
+    const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
+    
+    if (userSession && userSession.token) {
+        authStatus.textContent = `Autenticado como: ${userSession.name} (${userSession.role})`;
+        authStatus.style.backgroundColor = '#e6ffe6';
+        authStatus.style.border = '1px solid #4CAF50';
+        authStatus.style.color = '#2e7d32';
+    } else {
+        authStatus.textContent = 'No autenticado. Token no encontrado.';
+        authStatus.style.backgroundColor = '#ffebee';
+        authStatus.style.border = '1px solid #f44336';
+        authStatus.style.color = '#c62828';
+    }
+    
+    authStatus.style.display = 'block';
+    console.log('Datos de sesión completos:', userSession);
+}
+
+// Función global para cerrar sesión
+function logout() {
+    // Eliminar datos de sesión
+    localStorage.removeItem('userSession');
+    sessionStorage.removeItem('userSession');
+    
+    // Redirigir a login.html
+    window.location.href = 'login.html';
+}
+
 // Arreglo global para almacenar las referencias
 let referencias = [];
 let referenciasCompletas = []; // Para guardar las referencias con su historial completo
@@ -140,17 +211,40 @@ function consultarReferencias() {
         FechaFinal: fechaFinal
     };
 
+    // Obtener el token de autenticación
+    const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
+    
+    if (!userSession || !userSession.token) {
+        mostrarAlerta('No hay sesión activa. Por favor, inicie sesión nuevamente.', 'error');
+        document.getElementById('loading').style.display = 'none';
+        setTimeout(() => {
+            logout(); // Redirigir al login si no hay token
+        }, 2000);
+        return;
+    }
+
     axios.post('http://localhost:5001/api/v1/apiExterna', datos, {
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userSession.token}`
+        }
     })
     .then(res => {
         document.getElementById('loading').style.display = 'none';
         procesarRespuesta(res.data);
     })
     .catch(err => {
-        console.error(err);
+        console.error('Error en la solicitud:', err);
         document.getElementById('loading').style.display = 'none';
-        mostrarAlerta('Error al llamar a la API: ' + err.message, 'error');
+        
+        if (err.response && err.response.status === 401) {
+            mostrarAlerta('Sesión expirada o inválida. Por favor, inicie sesión nuevamente.', 'error');
+            setTimeout(() => {
+                logout(); // Redirigir al login en caso de error de autenticación
+            }, 2000);
+        } else {
+            mostrarAlerta('Error al llamar a la API: ' + (err.response?.data?.message || err.message), 'error');
+        }
     });
 }
 

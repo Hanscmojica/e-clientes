@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Login Profesional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles can be added here if needed, but Tailwind is preferred */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Background gradient for a subtle modern feel */
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        /* Custom styling for the response box to ensure visibility and padding */
+        #response {
+            white-space: pre-wrap; /* Preserve formatting of JSON response */
+            word-break: break-all; /* Break long strings to prevent overflow */
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen px-4">
+
+    <div class="bg-white p-8 md:p-12 rounded-xl shadow-2xl w-full max-w-md">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">Iniciar Sesión</h1>
+
+        <div class="mb-6">
+            <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Usuario:</label>
+            <input type="text" id="username" value="HANS" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out">
+        </div>
+
+        <div class="mb-8">
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-2">Contraseña:</label>
+            <input type="password" id="password" value="12345" class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out">
+        </div>
+
+        <button onclick="testLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition duration-150 ease-in-out transform hover:scale-105">
+            Acceder
+        </button>
+
+        <div id="response" class="mt-8 p-4 border rounded-lg text-sm" style="display: none;">
+            </div>
+    </div>
+
+    <script>
+        async function testLogin() {
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const responseDiv = document.getElementById('response');
+
+            const username = usernameInput.value;
+            const password = passwordInput.value;
+
+            // Basic client-side validation (optional, but good practice)
+            if (!username || !password) {
+                responseDiv.textContent = 'Por favor, ingrese usuario y contraseña.';
+                responseDiv.className = 'mt-8 p-4 border rounded-lg text-sm bg-red-100 border-red-300 text-red-700'; // Error styling
+                responseDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                responseDiv.textContent = 'Enviando solicitud...';
+                // Neutral/loading styling
+                responseDiv.className = 'mt-8 p-4 border rounded-lg text-sm bg-blue-50 border-blue-200 text-blue-700';
+                responseDiv.style.display = 'block';
+
+                const response = await fetch('http://localhost:5001/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                // Check if the response is JSON before trying to parse it
+                const contentType = response.headers.get("content-type");
+                let data;
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    data = await response.json();
+                } else {
+                    // Handle non-JSON responses (e.g., plain text error from server)
+                    const textData = await response.text();
+                    throw new Error(`Respuesta inesperada del servidor: ${textData}`);
+                }
+
+                responseDiv.textContent = JSON.stringify(data, null, 2); // Pretty print JSON
+
+                if (data.success || response.ok) { // Check for data.success or a general 2xx status
+                    // Success styling
+                    responseDiv.className = 'mt-8 p-4 border rounded-lg text-sm bg-green-50 border-green-300 text-green-700';
+                } else {
+                    // Error styling (based on server's response)
+                    responseDiv.className = 'mt-8 p-4 border rounded-lg text-sm bg-red-100 border-red-300 text-red-700';
+                }
+            } catch (error) {
+                console.error('Login error:', error); // Log the full error for debugging
+                responseDiv.textContent = 'Error: ' + error.message;
+                // General error styling
+                responseDiv.className = 'mt-8 p-4 border rounded-lg text-sm bg-red-100 border-red-300 text-red-700';
+            } finally {
+                // Ensure the response div is always visible after an attempt
+                responseDiv.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

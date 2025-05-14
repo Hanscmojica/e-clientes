@@ -42,8 +42,9 @@
       <div class="page-header">
         <h2>Visualización de Referencias</h2>
         <p>Consulta las referencias disponibles para el cliente especificado</p>
+        <button id="checkAuthBtn" onclick="checkAuthToken()" style="background-color: #4CAF50; color: white; border: none; padding: 8px 15px; border-radius: 4px; margin-top: 10px; cursor: pointer;">Verificar Autenticación</button>
+        <div id="authStatus" style="margin-top: 10px; padding: 8px; border-radius: 4px; display: none;"></div>
       </div>
-
 
       <div id="alert" class="alert" style="display: none;"></div> <div id="search-filter-container" style="margin: 20px 0; display: none;"> <input type="text" id="searchReferencia" placeholder="Buscar en referencias mostradas..." 
         style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px;">

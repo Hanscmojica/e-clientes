@@ -44,19 +44,21 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
   loginButton.innerHTML = '<span class="material-icons">hourglass_empty</span> Iniciando sesión...';
   
   try {
-    // Aquí deberías hacer la llamada a tu API de autenticación
-    // Por ahora simularemos una autenticación básica
-    
-    // Simulación de llamada a API (reemplazar con tu endpoint real)
-    const response = await simulateLogin(username, password);
+    // Llamar a la API real de autenticación
+    const response = await loginUser(username, password);
     
     if (response.success) {
       // Guardar información de sesión
       const sessionData = {
-        username: response.username,
+        username: response.user.username,
         token: response.token,
+        role: response.user.role,
+        name: response.user.name,
+        id: response.user.id,
         loginTime: new Date().toISOString()
       };
+      
+      console.log('Datos de sesión a guardar:', sessionData);
       
       // Guardar en localStorage o sessionStorage según "Recordarme"
       if (rememberMe) {
@@ -82,45 +84,35 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
   }
 });
 
-// Función simulada de login (reemplazar con llamada real a tu API)
-async function simulateLogin(username, password) {
-  // Simular delay de red
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // Validación simple (reemplazar con tu lógica real)
-  if (username === 'admin' && password === 'admin123') {
-    return {
-      success: true,
-      username: username,
-      token: 'fake-jwt-token-' + Date.now()
-    };
-  } else {
-    return {
-      success: false,
-      message: 'Usuario o contraseña incorrectos'
-    };
-  }
-  
-  /* Ejemplo de cómo sería la llamada real a tu API:
-  
+// Función real para autenticación con el backend
+async function loginUser(username, password) {
   try {
-    const response = await axios.post('http://localhost:5001/api/v1/login', {
-      username: username,
-      password: password
+    console.log('Enviando petición de login con:', { username, password });
+    
+    // Hacer la petición a la API real
+    const response = await fetch('http://localhost:5001/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username, password })
     });
     
-    return {
-      success: true,
-      username: response.data.username,
-      token: response.data.token
-    };
+    // Convertir la respuesta a JSON
+    const data = await response.json();
+    console.log('Respuesta del servidor:', data);
+    
+    // Si la respuesta no es exitosa, lanzar error
+    if (!response.ok) {
+      throw new Error(data.message || 'Error al iniciar sesión');
+    }
+    
+    // Devolver los datos de la respuesta
+    return data;
   } catch (error) {
-    return {
-      success: false,
-      message: error.response?.data?.message || 'Error al iniciar sesión'
-    };
+    console.error('Error en loginUser:', error);
+    throw error;
   }
-  */
 }
 
 // Verificar si ya hay una sesión activa al cargar la página
