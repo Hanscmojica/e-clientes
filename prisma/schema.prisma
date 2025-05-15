@@ -85,3 +85,14 @@ model BP_05_PERFIL_PERMISO {
 
   @@map("bp_05_perfil_permiso")
 }
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int?     // Relación opcional al usuario
+  username  String?  // Nombre de usuario (por si userId es null)
+  event     String   // 'login', 'logout', 'failed_login'
+  ip        String?  // IP del cliente
+  timestamp DateTime @default(now())
+  details   String?  // Mensaje adicional o error
+  @@map("AuditLog")
+}

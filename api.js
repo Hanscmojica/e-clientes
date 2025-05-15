@@ -73,7 +73,10 @@ function logout() {
 let referencias = [];
 let referenciasCompletas = []; // Para guardar las referencias con su historial completo
 let referenciasFiltradas = []; // Para guardar las referencias filtradas
-const itemsPorPagina = 8; // Ajustado para las tarjetas
+function getItemsPorPagina() {
+    // Lee la preferencia del usuario, si no existe usa 10 como default
+    return parseInt(localStorage.getItem('itemsPorPagina')) || 10;
+}
 let paginaActual = 1;
 
 // Obtener el modal
@@ -629,9 +632,9 @@ function mostrarReferencias(clienteInfo, referenciasAMostrarParam) {
 
     const gridContainer = document.createElement('div');
     gridContainer.className = 'referencias-grid';
-    const totalPaginas = Math.ceil(referenciasAMostrar.length / itemsPorPagina);
-    const inicio = (paginaActual - 1) * itemsPorPagina;
-    const fin = Math.min(inicio + itemsPorPagina, referenciasAMostrar.length);
+    const totalPaginas = Math.ceil(referenciasAMostrar.length / getItemsPorPagina());
+    const inicio = (paginaActual - 1) * getItemsPorPagina();
+    const fin = Math.min(inicio + getItemsPorPagina(), referenciasAMostrar.length);
 
     for (let i = inicio; i < fin; i++) {
         // IMPORTANTE: El índice que se pasa a crearTarjetaReferencia es 'i', que es el índice en la lista paginada/filtrada.

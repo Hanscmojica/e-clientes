@@ -2,16 +2,19 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const prisma = require('../utils/prisma');
+const { logAudit } = require('../utils/audit');
 
 exports.login = async (req, res, next) => {
     try {
         console.log('Login request received:', req.body);
         const { username, password } = req.body;
+        const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
         
         // Forzar modo desarrollo para pruebas
         // Para este usuario específico, permitir acceso directo
         if (username === 'HANS' && password === '12345') {
             console.log('Modo de prueba para HANS activado - Acceso directo!');
+            await logAudit({ userId: 5, username: 'HANS', event: 'login', ip });
             return res.status(200).json({
                 success: true,
                 message: 'Login exitoso en modo prueba',
@@ -33,6 +36,7 @@ exports.login = async (req, res, next) => {
         if (process.env.NODE_ENV === 'development') {
             if (username === 'usuario' && password === 'password123') {
                 console.log('Usando credenciales de desarrollo');
+                await logAudit({ userId: 0, username: 'usuario', event: 'login', ip });
                 return res.status(200).json({
                     success: true,
                     message: 'Login exitoso',
@@ -70,6 +74,7 @@ exports.login = async (req, res, next) => {
         
         // Verificar si existe el usuario y la contraseña es correcta
         if (!user) {
+            await logAudit({ username, event: 'failed_login', ip, details: 'Credenciales incorrectas' });
             return res.status(401).json({
                 success: false,
                 message: 'Credenciales incorrectas - Usuario no encontrado'
@@ -81,6 +86,7 @@ exports.login = async (req, res, next) => {
         console.log('Verificación de contraseña:', passwordValid ? 'Correcta' : 'Incorrecta');
         
         if (!passwordValid) {
+            await logAudit({ username, event: 'failed_login', ip, details: 'Credenciales incorrectas' });
             return res.status(401).json({
                 success: false,
                 message: 'Credenciales incorrectas - Contraseña inválida'
@@ -89,6 +95,7 @@ exports.login = async (req, res, next) => {
         
         // Verificar si el usuario está activo
         if (!user.bActivo) {
+            await logAudit({ userId: user.nId01Usuario, username: user.sUsuario, event: 'failed_login', ip, details: 'Usuario inactivo' });
             return res.status(401).json({
                 success: false,
                 message: 'Usuario inactivo. Contacte al administrador.'
@@ -109,6 +116,8 @@ exports.login = async (req, res, next) => {
             { expiresIn: '8h' }
         );
         
+        await logAudit({ userId: user.nId01Usuario, username: user.sUsuario, event: 'login', ip });
+        
         // Responder con datos del usuario y token
         return res.status(200).json({
             success: true,
@@ -124,11 +133,15 @@ exports.login = async (req, res, next) => {
         });
     } catch (error) {
         console.error('Error en login:', error);
+        await logAudit({ username: req.body.username, event: 'failed_login', ip: req.ip, details: error.message });
         next(error);
     }
 };
 
 exports.logout = (req, res) => {
+    const user = req.user;
+    const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    logAudit({ userId: user.nId01Usuario, username: user.sUsuario, event: 'logout', ip }).catch(console.error);
     // En un sistema real, podríamos incluir el token en una lista negra
     res.status(200).json({
         success: true,
