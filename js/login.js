@@ -1,3 +1,6 @@
+// Construye la URL base dinámicamente
+const apiBase = `${window.location.protocol}//${window.location.host}`;
+
 // Función para mostrar/ocultar contraseña
 function togglePassword() {
     const passwordInput = document.getElementById('password');
@@ -89,8 +92,8 @@ async function loginUser(username, password) {
   try {
     console.log('Enviando petición de login con:', { username, password });
     
-    // Hacer la petición a la API real
-    const response = await fetch('http://localhost:5001/api/auth/login', {
+    // Usa la URL dinámica
+    const response = await fetch(`${apiBase}/api/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

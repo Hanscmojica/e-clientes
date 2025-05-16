@@ -1,3 +1,36 @@
+// Construye la URL base dinámicamente
+const apiBase = `${window.location.protocol}//${window.location.host}`;
+
+// Ejemplo de login
+async function login(username, password) {
+  try {
+    const response = await fetch(`${apiBase}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error en login:', error);
+    throw error;
+  }
+}
+
+// Ejemplo de obtener datos del perfil
+async function getProfile() {
+  try {
+    const response = await fetch(`${apiBase}/api/profile`, {
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error al obtener perfil:', error);
+    throw error;
+  }
+}
+
 // Datos del usuario (simulado - en producción vendría del backend)
 let userData = {
     nombre: "Hans Carli Rowesonur",

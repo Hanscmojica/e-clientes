@@ -7,6 +7,7 @@ const stream = require('stream');
 const path = require('path');
 const v1ApiExternaRouter = require("./routes/apiExternaRoutes")
 const authRouter = require('./routes/auth');
+const accountAccessRouter = require('./routes/accountAccess');
 
 // Configuración
 const FTP_CONFIG = {
@@ -35,7 +36,6 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../')));
-
 
 // Configurar multer para manejar archivos en memoria
 const storage = multer.memoryStorage();
@@ -74,10 +74,10 @@ app.post('/api/auth/test', (req, res) => {
     });
 });
 
-// Usar las rutas de autenticación desde el módulo auth en lugar de la ruta de login hardcodeada
+// Configurar rutas principales
 app.use('/api/auth', authRouter);
-
-app.use("/api/v1/apiExterna", v1ApiExternaRouter);
+app.use('/api/v1/apiExterna', v1ApiExternaRouter);
+app.use('/api/account-access', accountAccessRouter);
 
 // Ruta: Logout simplificado
 app.post('/api/auth/logout', (req, res) => {
