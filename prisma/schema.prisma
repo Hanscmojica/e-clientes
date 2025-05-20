@@ -96,3 +96,17 @@ model AuditLog {
   details   String?  // Mensaje adicional o error
   @@map("AuditLog")
 }
+
+model UserSession {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  token      String   @unique
+  userAgent  String?
+  ip         String?
+  createdAt  DateTime @default(now())
+  lastActive DateTime @updatedAt
+  active     Boolean  @default(true)
+  user       BP_01_USUARIO @relation(fields: [userId], references: [nId01Usuario])
+
+  @@map("user_session")
+}
