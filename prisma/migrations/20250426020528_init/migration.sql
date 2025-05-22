@@ -63,6 +63,7 @@ CREATE TABLE `BP_05_PERFIL_PERMISO` (
     `nBorrar` BOOLEAN NOT NULL DEFAULT false,
     `dFechaCreacion` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `dFechaActualizacion` DATETIME(3) NULL,
+    
 
     PRIMARY KEY (`nId05PerfilPermiso`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

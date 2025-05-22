@@ -145,7 +145,7 @@ let userData = {
   });
   
   // Función para verificar si hay sesión activa
-  function verificarSesion() {
+  async function verificarSesion() {
     const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
     
     if (!userSession) {
@@ -154,7 +154,6 @@ let userData = {
       return;
     }
     
-    // Actualizar información del usuario en la interfaz
     try {
       const sessionData = JSON.parse(userSession);
       // Actualizar nombre en el header si está disponible
@@ -162,6 +161,9 @@ let userData = {
       if (userNameElement && sessionData.username) {
         userNameElement.textContent = sessionData.username;
       }
+
+      // Verificar caducidad de contraseña
+      await verificarCaducidadContraseña();
     } catch (error) {
       console.error('Error al procesar la sesión:', error);
     }
@@ -268,6 +270,9 @@ let userData = {
       document.getElementById('sistema-alertas').checked = userData.notificaciones.sistemaAlertas;
       document.getElementById('sistema-mantenimiento').checked = userData.notificaciones.sistemaMantenimiento;
     }
+  
+    // Actualizar información de caducidad de contraseña
+    actualizarInfoCaducidad();
   }
   
   // Guardar información personal
@@ -335,57 +340,131 @@ let userData = {
     mostrarAlerta('Configuración de notificaciones actualizada', 'success');
   }
   
-  // Cambiar contraseña
-  function cambiarContraseña() {
+  // Función para verificar la caducidad de la contraseña
+  async function verificarCaducidadContraseña() {
+    try {
+      const response = await fetch(`${apiBase}/api/profile/password-status`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Error al verificar estado de contraseña');
+      }
+
+      const data = await response.json();
+      const { ultimoCambio, diasRestantes, requiereCambio } = data;
+
+      // Actualizar la UI con la información real
+      actualizarInfoCaducidad(ultimoCambio, diasRestantes);
+
+      // Si requiere cambio, forzar el modal
+      if (requiereCambio) {
+        mostrarModalContraseña(true);
+        return true;
+      }
+
+      // Si faltan 15 días o menos, mostrar advertencia
+      if (diasRestantes <= 15) {
+        mostrarAlerta(`Tu contraseña caducará en ${diasRestantes} días. Por favor, cámbiala pronto.`, 'warning');
+      }
+
+      return false;
+    } catch (error) {
+      console.error('Error al verificar caducidad:', error);
+      mostrarAlerta('Error al verificar el estado de tu contraseña', 'error');
+      return false;
+    }
+  }
+
+  // Función para actualizar la información de caducidad en la UI
+  function actualizarInfoCaducidad(ultimoCambio, diasRestantes) {
+    const ultimaActualizacion = document.getElementById('ultima-actualizacion');
+    const expiryInfo = document.getElementById('password-expiry-info');
+
+    if (ultimaActualizacion) {
+      const fecha = new Date(ultimoCambio);
+      const diasTranscurridos = Math.floor((new Date() - fecha) / (1000 * 60 * 60 * 24));
+      ultimaActualizacion.textContent = `hace ${diasTranscurridos} días`;
+    }
+
+    if (expiryInfo) {
+      if (diasRestantes <= 0) {
+        expiryInfo.textContent = 'Tu contraseña ha caducado. Debes cambiarla ahora.';
+        expiryInfo.style.color = '#ef4444';
+      } else if (diasRestantes <= 15) {
+        expiryInfo.textContent = `Tu contraseña caducará en ${diasRestantes} días.`;
+        expiryInfo.style.color = '#f59e0b';
+      } else {
+        expiryInfo.textContent = `Tu contraseña caducará en ${diasRestantes} días.`;
+        expiryInfo.style.color = '#10b981';
+      }
+    }
+  }
+
+  // Función para cambiar contraseña
+  async function cambiarContraseña() {
     const currentPassword = document.getElementById('current-password').value;
     const newPassword = document.getElementById('new-password').value;
     const confirmPassword = document.getElementById('confirm-password').value;
-  
+
     // Validaciones
     if (newPassword !== confirmPassword) {
       mostrarAlerta('Las contraseñas no coinciden', 'error');
       return;
     }
-  
+
     if (newPassword.length < 8) {
       mostrarAlerta('La contraseña debe tener al menos 8 caracteres', 'error');
       return;
     }
-  
-    // Aquí iría la llamada a la API para cambiar la contraseña
-    // Por ahora solo simulamos el éxito
-    mostrarAlerta('Contraseña cambiada correctamente', 'success');
-    cerrarModal();
-    
-    // Limpiar formulario
-    document.getElementById('password-form').reset();
-  }
-  
-  // Validar fortaleza de contraseña
-  function validarFortalezaContraseña() {
-    const password = this.value;
-    const strengthIndicator = document.getElementById('password-strength');
-    
-    if (!strengthIndicator) return;
-    
-    let strength = 0;
-    if (password.length >= 8) strength++;
-    if (password.match(/[a-z]+/)) strength++;
-    if (password.match(/[A-Z]+/)) strength++;
-    if (password.match(/[0-9]+/)) strength++;
-    if (password.match(/[$@#&!]+/)) strength++;
-  
-    strengthIndicator.className = 'password-strength';
-    
-    if (password.length > 0) {
-      if (strength < 3) {
-        strengthIndicator.classList.add('weak');
-      } else if (strength < 4) {
-        strengthIndicator.classList.add('medium');
-      } else {
-        strengthIndicator.classList.add('strong');
+
+    try {
+      const response = await fetch(`${apiBase}/api/profile/change-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          currentPassword,
+          newPassword
+        })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || 'Error al cambiar la contraseña');
       }
+
+      mostrarAlerta('Contraseña cambiada correctamente', 'success');
+      cerrarModal();
+      document.getElementById('password-form').reset();
+
+      // Verificar el nuevo estado de la contraseña
+      await verificarCaducidadContraseña();
+    } catch (error) {
+      console.error('Error al cambiar contraseña:', error);
+      mostrarAlerta(error.message || 'Error al cambiar la contraseña', 'error');
     }
+  }
+
+  // Modificar la función mostrarModalContraseña para aceptar un parámetro de forzado
+  function mostrarModalContraseña(forzado = false) {
+    const modal = document.getElementById('passwordModal');
+    const modalTitle = modal.querySelector('.modal-header h2');
+    const cancelButton = modal.querySelector('.btn-secondary');
+    
+    if (forzado) {
+      modalTitle.textContent = 'Cambio de Contraseña Obligatorio';
+      cancelButton.style.display = 'none';
+      modal.querySelector('.close').style.display = 'none';
+    } else {
+      modalTitle.textContent = 'Cambiar Contraseña';
+      cancelButton.style.display = 'block';
+      modal.querySelector('.close').style.display = 'block';
+    }
+    
+    modal.style.display = 'block';
   }
   
   // Funciones de modal
@@ -547,3 +626,33 @@ let userData = {
     }
   `;
   document.head.appendChild(style);
+
+  // Funciones de prueba para simular diferentes escenarios de caducidad
+  function simularCambioContraseña() {
+    // Simular cambio reciente (hace 1 día)
+    const fecha = new Date();
+    fecha.setDate(fecha.getDate() - 1);
+    localStorage.setItem('ultimoCambioContraseña', fecha.toISOString());
+    actualizarInfoCaducidad();
+    mostrarAlerta('Se ha simulado un cambio de contraseña reciente (hace 1 día)', 'success');
+  }
+
+  function simularContraseñaPorCaducar() {
+    // Simular contraseña por caducar (165 días)
+    const fecha = new Date();
+    fecha.setDate(fecha.getDate() - 165);
+    localStorage.setItem('ultimoCambioContraseña', fecha.toISOString());
+    actualizarInfoCaducidad();
+    mostrarAlerta('Se ha simulado una contraseña por caducar (15 días restantes)', 'warning');
+  }
+
+  function simularContraseñaCaducada() {
+    // Simular contraseña caducada (181 días)
+    const fecha = new Date();
+    fecha.setDate(fecha.getDate() - 181);
+    localStorage.setItem('ultimoCambioContraseña', fecha.toISOString());
+    actualizarInfoCaducidad();
+    mostrarAlerta('Se ha simulado una contraseña caducada', 'error');
+    // Forzar el modal de cambio de contraseña
+    mostrarModalContraseña(true);
+  }

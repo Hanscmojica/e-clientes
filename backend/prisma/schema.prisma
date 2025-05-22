@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = "mysql://root:12345@localhost:3306/test_db"
+  url      = env("DATABASE_URL")
 }
 
 model BP_01_USUARIO {
@@ -19,8 +19,11 @@ model BP_01_USUARIO {
   dFechaCreacion          DateTime                  @default(now())
   dFechaActualizacion     DateTime?
   sUsuarioImg             String?
+  dFechaUltimoCambioPass  DateTime                  @default(now())
   perfilesUsuario         BP_04_PERFIL_USUARIO[]    @relation("UsuarioPerfiles")
   bp_06_registro_consulta bp_06_registro_consulta[]
+  logsAutenticacion       BP_07_LOG_AUTENTICACION[] @relation("UsuarioLogsAuth")
+  sesionesActivas         BP_08_SESION_ACTIVA[]     @relation("UsuarioSesiones")
 
   @@map("bp_01_usuario")
 }
@@ -97,6 +100,49 @@ model bp_06_registro_consulta {
   @@index([nId01Usuario], map: "idx_registro_consulta_usuario")
 }
 
+// Nueva tabla para logs de autenticación (inicio y cierre de sesión)
+model BP_07_LOG_AUTENTICACION {
+  nId07LogAuth        Int           @id @default(autoincrement())
+  nId01Usuario        Int
+  sTipoAccion         String        @db.VarChar(50) // LOGIN, LOGOUT, LOGIN_FAILED
+  dFechaHora          DateTime      @default(now()) @db.DateTime(0)
+  sIpUsuario          String?       @db.VarChar(50)
+  sUserAgent          String?       @db.Text
+  sDispositivo        String?       @db.VarChar(100)
+  sUbicacion          String?       @db.VarChar(255)
+  bExitoso            Boolean       @default(true)
+  sDetalleError       String?       @db.Text
+  sTokenSesion        String?       @db.VarChar(255) // Para relacionar con sesiones activas
+  usuario             BP_01_USUARIO @relation("UsuarioLogsAuth", fields: [nId01Usuario], references: [nId01Usuario], onDelete: NoAction, onUpdate: NoAction, map: "BP_07_LOG_AUTENTICACION_ibfk_1")
+
+  @@index([nId01Usuario], map: "idx_log_auth_usuario")
+  @@index([dFechaHora], map: "idx_log_auth_fecha")
+  @@index([sTipoAccion], map: "idx_log_auth_tipo")
+  @@map("bp_07_log_autenticacion")
+}
+
+// Nueva tabla para sesiones activas
+model BP_08_SESION_ACTIVA {
+  nId08Sesion         Int           @id @default(autoincrement())
+  nId01Usuario        Int
+  sTokenSesion        String        @unique @db.VarChar(255)
+  dFechaInicio        DateTime      @default(now()) @db.DateTime(0)
+  dFechaUltimaActividad DateTime    @default(now()) @db.DateTime(0)
+  dFechaExpiracion    DateTime      @db.DateTime(0)
+  sIpUsuario          String?       @db.VarChar(50)
+  sUserAgent          String?       @db.Text
+  sDispositivo        String?       @db.VarChar(100)
+  bActiva             Boolean       @default(true)
+  usuario             BP_01_USUARIO @relation("UsuarioSesiones", fields: [nId01Usuario], references: [nId01Usuario], onDelete: NoAction, onUpdate: NoAction, map: "BP_08_SESION_ACTIVA_ibfk_1")
+
+  @@index([nId01Usuario], map: "idx_sesion_usuario")
+  @@index([sTokenSesion], map: "idx_sesion_token")
+  @@index([bActiva], map: "idx_sesion_activa")
+  @@index([dFechaExpiracion], map: "idx_sesion_expiracion")
+  @@map("bp_08_sesion_activa")
+}
+
+// Mantener la tabla auditlog existente
 model auditlog {
   id        Int       @id @default(autoincrement())
   userId    Int?

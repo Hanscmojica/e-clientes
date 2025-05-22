@@ -361,4 +361,8 @@ app.get('/', (req, res) => {
 // Iniciar servidor
 app.listen(SERVER_PORT, '0.0.0.0', () => {
     console.log(`Servidor ejecutándose en http://localhost:${SERVER_PORT}`);
+    
+    // === NUEVA FUNCIONALIDAD: INICIAR LIMPIADOR DE SESIONES ===
+    const { startSessionCleaner } = require('./scripts/cleanSessions');
+    startSessionCleaner();
 });

@@ -19,8 +19,49 @@ const verifyToken = async (req, res, next) => {
     // Verificar token
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'clave_secreta_para_jwt');
     
+    // === NUEVA FUNCIONALIDAD: VERIFICAR SESIÓN ACTIVA ===
+    
+    // Verificar si la sesión está activa
+    const sesion = await prisma.bP_08_SESION_ACTIVA.findUnique({
+      where: {
+        sTokenSesion: token
+      }
+    });
+    
+    if (sesion) {
+      // Si existe la sesión, verificar que esté activa
+      if (!sesion.bActiva) {
+        return res.status(401).json({ 
+          success: false, 
+          message: 'Sesión inactiva' 
+        });
+      }
+      
+      // Verificar si no ha expirado
+      if (new Date() > new Date(sesion.dFechaExpiracion)) {
+        // Desactivar sesión expirada
+        await prisma.bP_08_SESION_ACTIVA.update({
+          where: { nId08Sesion: sesion.nId08Sesion },
+          data: { bActiva: false }
+        });
+        
+        return res.status(401).json({ 
+          success: false, 
+          message: 'Sesión expirada' 
+        });
+      }
+      
+      // Actualizar última actividad
+      await prisma.bP_08_SESION_ACTIVA.update({
+        where: { nId08Sesion: sesion.nId08Sesion },
+        data: { dFechaUltimaActividad: new Date() }
+      }).catch(console.error); // No interrumpir si falla la actualización
+    }
+    
+    // === FIN NUEVA FUNCIONALIDAD ===
+    
     // Comprobar si el usuario existe en la base de datos
-    const user = await prisma.BP_01_USUARIO.findUnique({
+    const user = await prisma.bP_01_USUARIO.findUnique({
       where: { 
         nId01Usuario: decoded.id 
       },

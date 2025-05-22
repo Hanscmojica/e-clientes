@@ -1,3 +1,32 @@
+/* Variables de colores según el manual de identidad de Rodall Oseguera */
+:root {
+  /* Azules (identidad marítima) */
+  --primary-dark: #04263f;       /* PANTONE 19-4024 TPG - Azul marino oscuro */
+  --primary-medium: #082f4c;     /* PANTONE 19-4111 TPG - Azul marino medio */
+  --primary-blue: #0e5372;       /* PANTONE 19-4540 TPG */
+  --primary-light: #0b73a0;      /* PANTONE 18-4528 TPG - Azul claro */
+  
+  /* Dorados (color del ingeniero) */
+  --gold-dark: #733000;          /* PANTONE 19-1535 TPG */
+  --gold-medium: #d2972e;        /* PANTONE 15-0953 TPG */
+  --gold: #d7a520;               /* PANTONE 15-0954 TPG - Dorado principal */
+  --gold-light: #f9f9c0;         /* PANTONE 11-0617 TPG */
+  
+  /* Para mantener compatibilidad con estilos existentes */
+  --primary-color: var(--primary-dark);
+  --primary-hover: var(--primary-medium);
+  --accent-color: var(--primary-light);
+  --secondary-color: #f8fafc;
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --danger-color: #ef4444;
+  --dark-text: #1f2937;
+  --light-text: #6b7280;
+  --border-color: #e5e7eb;
+  --light-bg: #ffffff;
+  --shadow: rgba(0,0,0,0.1);
+}
+
 /* Estilos para alertas */
 .alert.success {
   background: #d4edda;
@@ -15,12 +44,12 @@
 
 .reference-card {
   background: white;
-  color: #333; /* Color base para el texto */
+  color: var(--dark-text);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   transition: all 0.3s ease;
-  border: 1px solid #e0e0e0; /* Usando una variable CSS sería mejor: var(--border-color) */
+  border: 1px solid #e0e0e0;
 }
 
 .reference-card:hover {
@@ -38,7 +67,7 @@
 .reference-card .ref-number {
   font-size: 18px;
   font-weight: 600;
-  color: #5e5ff7; /* Considerar usar var(--primary-color) o var(--accent-color) */
+  color: var(--primary-light); /* Azul claro corporativo */
   text-decoration: none;
 }
 
@@ -57,18 +86,18 @@
   display: flex;
   align-items: flex-start;
   font-size: 14px;
-  color: #333; /* var(--dark-text) */
+  color: var(--dark-text);
 }
 
 .reference-card .ref-detail-item strong {
   font-weight: 600;
-  color: #000; /* var(--dark-text) */
-  min-width: 100px; /* Ajustar según necesidad */
+  color: #000;
+  min-width: 100px;
   margin-right: 10px;
 }
 
 .reference-card .ref-detail-item span {
-  color: #333; /* var(--dark-text) */
+  color: var(--dark-text);
 }
 
 .reference-card .ref-status {
@@ -83,20 +112,20 @@
 
 /* Clases de estado específicas */
 .reference-card .ref-status.status-pending {
-  background: #fff3cd; /* var(--warning-bg-light, si la tienes) */
-  color: #856404;    /* var(--warning-text, si la tienes) */
+  background: #fff3cd;
+  color: #856404;
 }
 .reference-card .ref-status.status-processing {
-  background: #cce5ff; /* var(--info-bg-light, si la tienes) */
-  color: #004085;    /* var(--info-text, si la tienes) */
+  background: #cce5ff;
+  color: #004085;
 }
 .reference-card .ref-status.status-completed {
-  background: var(--primary-color); /* var(--success-color) */
-  color: #ffffff;
+  background: #f7f6c1; /* Color dorado para estado completado */
+  color: black;
 }
 .reference-card .ref-status.status-dispatch {
-  background: #f8d7da; /* var(--danger-bg-light, si la tienes) */
-  color: #721c24;    /* var(--danger-text, si la tienes) */
+  background: #f8d7da;
+  color: #721c24;
 }
 
 .reference-card .ref-actions {
@@ -104,7 +133,7 @@
   gap: 10px;
   margin-top: 15px;
   padding-top: 15px;
-  border-top: 1px solid #e0e0e0; /* var(--border-color) */
+  border-top: 1px solid #e0e0e0;
 }
 
 .reference-card .btn-action {
@@ -124,23 +153,23 @@
 }
 
 .reference-card .btn-action.btn-pdf {
-  background: var(--primary-color); /* Usar variable si está definida */
+  background: var(--primary-color);
   color: white;
 }
 .reference-card .btn-action.btn-pdf:hover {
-  background: #218838; /* Un tono más oscuro de --success-color */
+  background: var(--primary-hover);
 }
 
 .reference-card .btn-action.btn-preview {
-  background: var(--secondary-color, #f8f9fa); /* Usar variable */
-  color: var(--dark-text, #333);
-  border: 1px solid var(--border-color, #dee2e6);
+  background: var(--secondary-color);
+  color: var(--dark-text);
+  border: 1px solid var(--border-color);
 }
 .reference-card .btn-action.btn-preview .material-icons {
-  color: var(--dark-text, #333);
+  color: var(--dark-text);
 }
 .reference-card .btn-action.btn-preview:hover {
-  background: #e9ecef; /* Un tono más oscuro de --secondary-color */
+  background: #e9ecef;
 }
 .reference-card .btn-action .material-icons {
   font-size: 18px;
@@ -152,15 +181,15 @@
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* var(--shadow) */
-  color: var(--dark-text, #333);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: var(--dark-text);
 }
 
 .cliente-info h2 {
-  background: var(--primary-color, #5e5ff7);
-  color: white;
+  background: var(--primary-color);
+  color: var(--light-bg); /* Color dorado para el título */
   padding: 10px 15px;
-  margin: -20px -20px 20px -20px; /* Para que el fondo se extienda a los bordes del padding del padre */
+  margin: -20px -20px 20px -20px;
   border-radius: 12px 12px 0 0;
   font-size: 18px;
   font-weight: 600;
@@ -174,12 +203,12 @@
 
 .cliente-detail-item {
   flex: 1;
-  min-width: 200px; /* Asegura que no se compriman demasiado */
+  min-width: 200px;
 }
 
 .cliente-detail-item strong {
   display: block;
-  color: var(--light-text, #6c757d);
+  color: var(--light-text);
   font-size: 12px;
   margin-bottom: 5px;
   text-transform: uppercase;
@@ -187,8 +216,8 @@
 
 .cliente-detail-item span {
   display: block;
-  background: var(--primary-color, #5e5ff7);
-  color: white;
+  background: #9fdae4; /* Azul medio */
+  color: rgb(0, 0, 0);
   padding: 8px 12px;
   border-radius: 6px;
   font-weight: 500;
@@ -200,14 +229,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px; /* Reducido para más compacto */
+  gap: 10px;
 }
 
 .pagination button {
-  padding: 8px 15px; /* Ligeramente más pequeño */
+  padding: 8px 15px;
   border: none;
   border-radius: 6px;
-  background: var(--primary-color, #5e5ff7);
+  background: var(--primary-color);
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -216,24 +245,23 @@
   gap: 5px;
 }
 .pagination button:disabled {
-  background: #ccc; /* Un gris más claro para deshabilitado */
+  background: #ccc;
   color: #888;
   cursor: not-allowed;
 }
 .pagination button:not(:disabled):hover {
-  background: var(--primary-hover, #4a4bd8);
+  background: var(--primary-hover);
 }
-.pagination span { /* Estilo para el texto "Página X de Y" */
-    padding: 8px 12px;
-    font-size: 14px;
-    color: var(--dark-text);
+.pagination span {
+  padding: 8px 12px;
+  font-size: 14px;
+  color: var(--dark-text);
 }
-
 
 /* Results info */
 .results-info {
   text-align: center;
-  color: var(--light-text, #666);
+  color: var(--light-text);
   margin-top: 20px;
   font-size: 14px;
 }
@@ -247,30 +275,30 @@
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto; /* Permite scroll si el modal es más grande que la ventana, aunque el contenido interno también tendrá scroll */
+  overflow: auto;
   background-color: rgba(0,0,0,0.5);
 }
 
 .modal-content {
   background-color: #fff;
   margin: 5% auto;
-  padding: 0; /* El padding se maneja en header y body */
+  padding: 0;
   border-radius: 12px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
   
   /* --- CAMBIOS PARA HACERLO REDIMENSIONABLE Y MÁS GRANDE POR DEFECTO --- */
-  width: 70vw; /* Ancho inicial relativo al viewport width */
-  height: 75vh; /* Alto inicial relativo al viewport height */
-  min-width: 500px; /* Ancho mínimo */
-  min-height: 450px; /* Alto mínimo */
-  max-width: 95vw; /* Para que no exceda el ancho de la pantalla */
-  max-height: 90vh; /* Para que no exceda el alto de la pantalla */
+  width: 70vw;
+  height: 75vh;
+  min-width: 500px;
+  min-height: 450px;
+  max-width: 95vw;
+  max-height: 90vh;
   
-  resize: both; /* Permite redimensionar horizontal y verticalmente */
-  overflow: hidden; /* El scroll principal se manejará dentro de .modal-body o los paneles */
+  resize: both;
+  overflow: hidden;
   
-  display: flex; /* Para controlar la distribución del espacio interno */
-  flex-direction: column; /* El header y el body se apilarán verticalmente */
+  display: flex;
+  flex-direction: column;
   
   animation: slideDownModal 0.3s ease-out;
 }
@@ -282,21 +310,22 @@
 
 .modal-header {
   padding: 15px 25px;
-  background-color: var(--primary-color, #5e5ff7);
+  background-color: var(--primary-color);
   color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--border-color, #dee2e6);
+  border-bottom: 1px solid var(--border-color);
   border-radius: 12px 12px 0 0;
-  flex-shrink: 0; /* Evita que el header se encoja */
-  cursor: move; /* Sugerencia visual de que el modal podría ser movible (aunque no implementado aquí) */
+  flex-shrink: 0;
+  cursor: move;
 }
 
 .modal-header h2 {
   margin: 0;
   font-size: 20px;
   font-weight: 600;
+  color: var(--gold); /* Color dorado para el título */
 }
 
 .modal-header .close {
@@ -311,18 +340,18 @@
 }
 
 .modal-body {
-  padding: 0px 25px 20px 25px; /* Ajustado el padding superior */
-  flex-grow: 1; /* Permite que el cuerpo del modal crezca para llenar el espacio */
+  padding: 0px 25px 20px 25px;
+  flex-grow: 1;
   display: flex;
-  flex-direction: column; /* Las pestañas y el contenido de la pestaña se apilarán */
-  overflow: hidden; /* El scroll se manejará en los paneles internos */
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .tabs {
   display: flex;
-  border-bottom: 2px solid var(--border-color, #e0e0e0);
-  margin-bottom: 15px; /* Reducido el espacio */
-  flex-shrink: 0; /* Evita que la barra de pestañas se encoja */
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 15px;
+  flex-shrink: 0;
 }
 
 .tab-button {
@@ -332,7 +361,7 @@
   cursor: pointer;
   font-size: 15px;
   font-weight: 500;
-  color: var(--light-text, #666);
+  color: var(--light-text);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -345,173 +374,171 @@
   font-size: 20px;
 }
 .tab-button:hover {
-  color: var(--primary-color, #5e5ff7);
+  color: var(--gold); /* Color dorado al pasar el cursor */
 }
 .tab-button.active {
-  color: var(--primary-color, #5e5ff7);
+  color: var(--gold); /* Color dorado para la pestaña activa */
   font-weight: 600;
-  border-bottom-color: var(--primary-color, #5e5ff7);
+  border-bottom-color: var(--gold);
 }
 
-.tab-content { /* Contenedor de TODOS los tab-panel */
-  flex-grow: 1; /* Ocupa el espacio restante en modal-body */
-  display: flex; /* Para que el panel activo pueda usar flex-grow */
-  overflow: hidden; /* El scroll se manejará dentro del panel activo */
+.tab-content {
+  flex-grow: 1;
+  display: flex;
+  overflow: hidden;
 }
 
 .tab-panel {
-  display: none; /* Oculto por defecto */
+  display: none;
   animation: fadeInPanel 0.4s ease;
-  width: 100%; /* Asegura que ocupe todo el ancho del .tab-content */
-  /* --- CAMBIOS PARA QUE EL PANEL ACTIVO CREZCA --- */
-  flex-direction: column; /* Para que el h3 y el contenido interno se apilen */
+  width: 100%;
+  flex-direction: column;
+}
+
+@keyframes fadeInPanel {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .tab-panel.active {
-  display: flex; /* Cambiado a flex para permitir que sus hijos crezcan */
-  flex-grow: 1; /* El panel activo ocupa todo el espacio de .tab-content */
+  display: flex;
+  flex-grow: 1;
 }
 
 .tab-panel h3 {
   font-size: 18px;
   color: var(--primary-color);
   margin-top: 0;
-  margin-bottom: 10px; /* Reducido */
+  margin-bottom: 10px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--border-color);
-  flex-shrink: 0; /* Evita que el título se encoja */
+  flex-shrink: 0;
 }
 
 /* Estilos para la información de detalle de referencia en el modal */
-.referencia-info-modal { /* Este es #detalleReferenciaContenido */
-    flex-grow: 1; /* Permite que esta área crezca */
-    overflow-y: auto; /* Scroll si el contenido del detalle es muy largo */
-    padding-right: 10px; /* Espacio para la barra de scroll */
+.referencia-info-modal {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 10px;
 }
 .referencia-info-modal p {
-    margin-bottom: 8px;
-    font-size: 15px;
-    line-height: 1.6;
+  margin-bottom: 8px;
+  font-size: 15px;
+  line-height: 1.6;
 }
 .referencia-info-modal p strong {
-    font-weight: 600;
-    color: var(--dark-text);
-    min-width: 120px;
-    display: inline-block;
+  font-weight: 600;
+  color: var(--dark-text);
+  min-width: 120px;
+  display: inline-block;
 }
 
-
 /* --- ESTILOS PARA LA LISTA DE DOCUMENTOS EN LA PESTAÑA BIBLIOTECA --- */
-#listaDocumentos { /* Este es el UL */
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    /* --- CAMBIOS PARA QUE LA LISTA CREZCA Y TENGA SCROLL --- */
-    flex-grow: 1; /* Permite que la lista crezca dentro de su panel */
-    overflow-y: auto; /* Scroll si hay muchos documentos */
-    /* padding-right: 10px; ya lo tenías en el HTML, es buena idea */
+#listaDocumentos {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
 #listaDocumentos li {
-    display: flex;
-    align-items: center;
-    padding: 12px 15px;
-    border: 1px solid var(--border-color, #e5e7eb);
-    border-radius: 8px;
-    margin-bottom: 10px;
-    background-color: #fff;
-    transition: box-shadow 0.2s ease;
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  transition: box-shadow 0.2s ease;
 }
 #listaDocumentos li:hover {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 #listaDocumentos li > .material-icons {
-    margin-right: 15px;
-    color: var(--accent-color, #3b82f6);
-    font-size: 24px;
-    flex-shrink: 0;
+  margin-right: 15px;
+  color: var(--gold); /* Color dorado para íconos */
+  font-size: 24px;
+  flex-shrink: 0;
 }
 #listaDocumentos li .document-name {
-    flex-grow: 1;
-    font-size: 15px;
-    color: var(--dark-text, #1f2937);
-    margin-right: 15px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  flex-grow: 1;
+  font-size: 15px;
+  color: var(--dark-text);
+  margin-right: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 #listaDocumentos li .document-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 .btn-accion-doc {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    text-decoration: none;
-    padding: 7px 12px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
-    border: 1px solid transparent;
-    transition: all 0.2s ease;
-    cursor: pointer;
-    white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
 }
 .btn-accion-doc .material-icons {
-    font-size: 18px;
+  font-size: 18px;
 }
 .btn-accion-doc.download {
-    background-color: var(--primary-color, #1e3a8a);
-    color: white;
+  background-color: var(--primary-color);
+  color: white;
 }
 .btn-accion-doc.download:hover {
-    background-color: var(--primary-hover, #1e40af);
+  background-color: var(--primary-hover);
 }
 .btn-accion-doc.download .material-icons {
-    color: white;
+  color: white;
 }
 .btn-accion-doc.view {
-    background-color: var(--secondary-color, #f8fafc);
-    color: var(--primary-color, #1e3a8a);
-    border: 1px solid var(--border-color, #e5e7eb);
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  border: 1px solid var(--border-color);
 }
 .btn-accion-doc.view:hover {
-    background-color: #e9ecef;
-    border-color: #ced4da;
+  background-color: #e9ecef;
+  border-color: #ced4da;
 }
- .btn-accion-doc.view .material-icons {
-    color: var(--primary-color, #1e3a8a);
+.btn-accion-doc.view .material-icons {
+  color: var(--primary-color);
 }
 
 /* Estilos para el input de búsqueda dentro del modal */
-.search-filter-container-modal { /* Contenedor del input de búsqueda en biblioteca */
-    margin-bottom: 10px; /* Reducido */
-    flex-shrink: 0; /* Evita que se encoja */
+.search-filter-container-modal {
+  margin-bottom: 10px;
+  flex-shrink: 0;
 }
 .search-filter-container-modal .search-filter-box-modal input {
-    background-color: transparent;
+  background-color: transparent;
 }
 .search-filter-container-modal .search-filter-box-modal input:focus {
-    box-shadow: none;
+  box-shadow: none;
 }
 
-
 /* Estilos para los items del historial */
-#historialContenido { /* Div que contiene los .historial-item */
-    /* --- CAMBIOS PARA QUE EL HISTORIAL CREZCA Y TENGA SCROLL --- */
-    flex-grow: 1; /* Permite que el área de historial crezca */
-    overflow-y: auto; /* Scroll si hay muchos items de historial */
-    /* padding-right: 10px; ya lo tenías en el HTML */
+#historialContenido {
+  flex-grow: 1;
+  overflow-y: auto;
 }
 #historialContenido .historial-item {
   padding: 15px;
   margin-bottom: 10px;
-  border-left: 4px solid var(--accent-color, #3b82f6);
-  background-color: var(--secondary-color, #f8fafc);
+  border-left: 4px solid var(--gold); /* Color dorado para el borde izquierdo */
+  background-color: var(--secondary-color);
   border-radius: 0 8px 8px 0;
   transition: background-color 0.2s ease;
 }
@@ -530,16 +557,15 @@
   display: inline-block;
 }
 
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .referencias-grid {
     grid-template-columns: 1fr;
   }
   .modal-content {
-    width: 90vw; /* Más ancho en tabletas */
-    height: 85vh; /* Más alto en tabletas */
-    min-width: 90%; /* Ajustar min-width para tabletas */
+    width: 90vw;
+    height: 85vh;
+    min-width: 90%;
   }
   .tabs {
     font-size: 14px;
@@ -562,13 +588,13 @@
     min-width: auto;
   }
   .modal-content {
-    width: 95vw; /* Casi todo el ancho en móviles */
-    height: 88vh; /* Casi todo el alto en móviles */
-    margin: 2.5vh auto; /* Centrado con pequeño margen */
-    min-height: 300px; /* Un mínimo razonable para móviles */
+    width: 95vw;
+    height: 88vh;
+    margin: 2.5vh auto;
+    min-height: 300px;
   }
   .modal-body {
-    padding: 10px 15px 15px 15px; /* Menos padding en móviles */
+    padding: 10px 15px 15px 15px;
   }
   .tab-button {
     padding: 8px 10px;
