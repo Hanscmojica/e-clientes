@@ -8,6 +8,8 @@ const path = require('path');
 const v1ApiExternaRouter = require("./routes/apiExternaRoutes")
 const authRouter = require('./routes/auth');
 const accountAccessRouter = require('./routes/accountAccess');
+require('dotenv').config();
+
 
 // Configuración
 const FTP_CONFIG = {
