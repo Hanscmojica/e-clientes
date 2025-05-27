@@ -1,5 +1,5 @@
-// Construye la URL base dinámicamente
-const apiBase = `${window.location.protocol}//${window.location.host}`;
+// Configuración de la URL base de la API
+const apiBase = `${window.location.protocol}//${window.location.hostname}:5001`;
 
 // Función para mostrar/ocultar contraseña (compatibilidad login y modal)
 function togglePassword(inputId, btn) {
@@ -32,6 +32,7 @@ function togglePassword(inputId, btn) {
 function logout() {
   // Eliminar datos de sesión tanto de localStorage como de sessionStorage
   localStorage.removeItem('userSession');
+  localStorage.removeItem('token');
   sessionStorage.removeItem('userSession');
   
   // Redirigir a la página de login
@@ -41,112 +42,121 @@ function logout() {
 // Hacer la función logout disponible globalmente
 window.logout = logout;
   
-// Manejar el envío del formulario
+// Manejar el envío del formulario de login - ARREGLADO
 document.getElementById('loginForm')?.addEventListener('submit', async function(e) {
-  e.preventDefault();
-  
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-  const rememberMe = document.getElementById('rememberMe').checked;
-  const errorDiv = document.getElementById('loginError');
-  const loginButton = document.querySelector('.login-button');
-  
-  // Limpiar errores previos
-  errorDiv.style.display = 'none';
-  errorDiv.textContent = '';
-  
-  // Deshabilitar el botón durante el proceso
-  loginButton.disabled = true;
-  loginButton.innerHTML = '<span class="material-icons">hourglass_empty</span> Iniciando sesión...';
-  
-  try {
-    // Llamar a la API real de autenticación
-    const response = await loginUser(username, password);
+    e.preventDefault();
     
-    if (response.success) {
-      // Guardar información de sesión
-      const sessionData = {
-        username: response.user.username,
-        token: response.token,
-        role: response.user.role,
-        name: response.user.name,
-        id: response.user.id,
-        loginTime: new Date().toISOString()
-      };
-      
-      console.log('Datos de sesión a guardar:', sessionData);
-      
-      // Guardar en localStorage o sessionStorage según "Recordarme"
-      if (rememberMe) {
-        localStorage.setItem('userSession', JSON.stringify(sessionData));
-      } else {
-        sessionStorage.setItem('userSession', JSON.stringify(sessionData));
-      }
-      
-      // Redirigir a la página principal (api.html)
-      window.location.href = 'api.html';
-    } else {
-      // Si el mensaje es de contraseña expirada/caducada, muestra el modal
-      if (response.message && /(caducad|expirad|expired)/i.test(response.message)) {
-        showPasswordExpiredModal();
-        throw new Error(response.message);
-      }
-      throw new Error(response.message || 'Credenciales inválidas');
-    }
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const rememberMe = document.getElementById('rememberMe').checked;
+    const errorDiv = document.getElementById('loginError');
+    const loginButton = document.querySelector('.login-button');
     
-  } catch (error) {
-    // Si el error es de contraseña expirada/caducada, muestra el modal (por si acaso)
-    if (error.message && /(caducad|expirad|expired)/i.test(error.message)) {
-      showPasswordExpiredModal();
-    }
-    errorDiv.textContent = error.message;
-    errorDiv.style.display = 'block';
-    // Restaurar el botón
-    loginButton.disabled = false;
-    loginButton.innerHTML = '<span class="material-icons">login</span> Iniciar Sesión';
-  }
-});
+    // Limpiar errores previos
+    errorDiv.style.display = 'none';
+    errorDiv.textContent = '';
+    
+    // Deshabilitar el botón durante el proceso
+    loginButton.disabled = true;
+    loginButton.innerHTML = '<span class="material-icons">hourglass_empty</span> Iniciando sesión...';
+    
+    try {
+        console.log('🔍 Intentando login con:', username);
+        
+        const response = await fetch(`${apiBase}/api/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+        });
 
-// Función real para autenticación con el backend
-async function loginUser(username, password) {
-  try {
-    console.log('Enviando petición de login con:', { username, password });
-    
-    // Usa la URL dinámica
-    const response = await fetch(`${apiBase}/api/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ username, password })
-    });
-    
-    // Convertir la respuesta a JSON
-    const data = await response.json();
-    console.log('Respuesta del servidor:', data);
-    
-    // Si la respuesta no es exitosa, lanzar error
-    if (!response.ok) {
-      throw new Error(data.message || 'Error al iniciar sesión');
+        console.log('🔍 Respuesta del servidor - Status:', response.status);
+        
+        const data = await response.json();
+        console.log('🔍 Datos recibidos del servidor:', data);
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Error al iniciar sesión');
+        }
+
+        if (!data.success) {
+            throw new Error(data.message || 'Login falló');
+        }
+
+        if (!data.token) {
+            throw new Error('No se recibió token del servidor');
+        }
+
+        console.log('✅ Login exitoso!');
+        console.log('✅ Token recibido:', data.token);
+        console.log('✅ Usuario:', data.user);
+        
+        // GUARDAR TOKEN Y SESIÓN - AQUÍ ESTABA EL PROBLEMA
+        localStorage.setItem('token', data.token);
+        
+        const sessionData = {
+            id: data.user.id,
+            username: data.user.username,
+            name: data.user.name,
+            role: data.user.role,
+            token: data.token,
+            loginTime: new Date().toISOString()
+        };
+        
+        localStorage.setItem('userSession', JSON.stringify(sessionData));
+        
+        console.log('✅ Token guardado en localStorage');
+        console.log('✅ Sesión guardada:', sessionData);
+        
+        // Verificar que se guardó correctamente
+        const tokenGuardado = localStorage.getItem('token');
+        const sessionGuardada = localStorage.getItem('userSession');
+        
+        console.log('🔍 Verificación - Token guardado:', tokenGuardado ? 'SÍ' : 'NO');
+        console.log('🔍 Verificación - Sesión guardada:', sessionGuardada ? 'SÍ' : 'NO');
+        
+        if (!tokenGuardado || !sessionGuardada) {
+            throw new Error('Error al guardar la sesión localmente');
+        }
+        
+        console.log('✅ Todo guardado correctamente, redirigiendo...');
+        
+        // Redirigir a la página de referencias (no perfil)
+        window.location.href = 'api.html';
+
+    } catch (error) {
+        console.error('❌ Error en login:', error);
+        errorDiv.textContent = error.message;
+        errorDiv.style.display = 'block';
+        
+        // Limpiar cualquier dato parcial
+        localStorage.removeItem('token');
+        localStorage.removeItem('userSession');
+        
+    } finally {
+        // Restaurar botón
+        loginButton.disabled = false;
+        loginButton.innerHTML = '<span class="material-icons">login</span> Iniciar Sesión';
     }
-    
-    // Devolver los datos de la respuesta
-    return data;
-  } catch (error) {
-    console.error('Error en loginUser:', error);
-    throw error;
-  }
-}
+});
 
 // Verificar si ya hay una sesión activa al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
   // Solo ejecutar esta lógica si estamos en la página de login
-  if (window.location.pathname.includes('login.html')) {
-    const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+  if (window.location.pathname.endsWith('login.html') || window.location.pathname === '/') {
+    const token = localStorage.getItem('token');
+    const userSession = localStorage.getItem('userSession');
     
-    if (userSession) {
-      // Si ya hay sesión, redirigir a api.html
-      window.location.href = 'api.html';
+    console.log('🔍 Verificando sesión existente...');
+    console.log('Token encontrado:', token ? 'SÍ' : 'NO');
+    console.log('Sesión encontrada:', userSession ? 'SÍ' : 'NO');
+    
+    if (token && userSession) {
+      console.log('✅ Sesión existente encontrada, redirigiendo...');
+      // Prevenir parpadeo durante la redirección
+      document.body.style.display = 'none';
+      window.location.replace('api.html');
     }
   }
 });

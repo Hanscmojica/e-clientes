@@ -1,10 +1,13 @@
-const db = require('../config/database');
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
 class User {
     static async findById(id) {
         try {
-            const [rows] = await db.query('SELECT * FROM BP_01_USUARIO WHERE nId01Usuario = ?', [id]);
-            return rows[0];
+            const user = await prisma.bP_01_USUARIO.findUnique({
+                where: { nId01Usuario: id }
+            });
+            return user;
         } catch (error) {
             throw error;
         }
@@ -12,11 +15,14 @@ class User {
 
     static async updatePassword(id, hashedPassword) {
         try {
-            const [result] = await db.query(
-                'UPDATE BP_01_USUARIO SET sPassword = ?, dFechaUltimoCambioPass = NOW() WHERE nId01Usuario = ?',
-                [hashedPassword, id]
-            );
-            return result.affectedRows > 0;
+            const result = await prisma.bP_01_USUARIO.update({
+                where: { nId01Usuario: id },
+                data: {
+                    sPassword: hashedPassword,
+                    dFechaUltimoCambioPass: new Date()
+                }
+            });
+            return result ? true : false;
         } catch (error) {
             throw error;
         }

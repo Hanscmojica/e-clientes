@@ -8,6 +8,7 @@ const path = require('path');
 const v1ApiExternaRouter = require("./routes/apiExternaRoutes")
 const authRouter = require('./routes/auth');
 const accountAccessRouter = require('./routes/accountAccess');
+const profileRouter = require('./routes/profile');
 require('dotenv').config();
 
 
@@ -29,14 +30,14 @@ const SERVER_PORT = 5001;
 const app = express();
 
 // Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     origin: '*', // Permitir todos los orígenes durante desarrollo
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true // Para cookies si es necesario
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../')));
 
 // Configurar multer para manejar archivos en memoria
@@ -80,6 +81,8 @@ app.post('/api/auth/test', (req, res) => {
 app.use('/api/auth', authRouter);
 app.use('/api/v1/apiExterna', v1ApiExternaRouter);
 app.use('/api/account-access', accountAccessRouter);
+app.use('/api/profile', profileRouter);
+
 
 // Ruta: Logout simplificado
 app.post('/api/auth/logout', (req, res) => {

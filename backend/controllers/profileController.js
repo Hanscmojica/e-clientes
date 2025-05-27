@@ -1,5 +1,4 @@
 const bcrypt = require('bcryptjs');
-const User = require('../models/User');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const authService = require('../services/authService');
@@ -7,7 +6,18 @@ const authService = require('../services/authService');
 // Obtener estado de la contraseña
 exports.getPasswordStatus = async (req, res) => {
     try {
-        const user = await User.findById(req.user.id);
+        console.log('Obteniendo estado de contraseña para usuario ID:', req.user.id);
+        
+        const user = await prisma.bP_01_USUARIO.findUnique({
+            where: { nId01Usuario: req.user.id },
+            select: { 
+                nId01Usuario: true,
+                sUsuario: true,
+                dFechaUltimoCambioPass: true, 
+                dFechaCreacion: true 
+            }
+        });
+
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -18,8 +28,10 @@ exports.getPasswordStatus = async (req, res) => {
         const ultimoCambio = user.dFechaUltimoCambioPass || user.dFechaCreacion;
         const fechaActual = new Date();
         const diasTranscurridos = Math.floor((fechaActual - new Date(ultimoCambio)) / (1000 * 60 * 60 * 24));
-        const diasRestantes = 180 - diasTranscurridos;
+        const diasRestantes = Math.max(0, 180 - diasTranscurridos); // Asegurar que no sea negativo
         const requiereCambio = diasRestantes <= 0;
+
+        console.log(`Estado de contraseña: ${diasTranscurridos} días transcurridos, ${diasRestantes} días restantes`);
 
         res.json({
             success: true,
@@ -39,8 +51,19 @@ exports.getPasswordStatus = async (req, res) => {
 // Cambiar contraseña
 exports.changePassword = async (req, res) => {
     try {
+        console.log('Solicitud de cambio de contraseña para usuario ID:', req.user.id);
+        
         const { currentPassword, newPassword } = req.body;
-        const user = await User.findById(req.user.id);
+        
+        // Obtener usuario usando Prisma (no User.findById que no existe)
+        const user = await prisma.bP_01_USUARIO.findUnique({
+            where: { nId01Usuario: req.user.id },
+            select: {
+                nId01Usuario: true,
+                sUsuario: true,
+                sPassword: true
+            }
+        });
 
         if (!user) {
             return res.status(404).json({
@@ -49,9 +72,13 @@ exports.changePassword = async (req, res) => {
             });
         }
 
+        console.log('Usuario encontrado:', user.sUsuario);
+
         // Verificar contraseña actual
         const isMatch = await bcrypt.compare(currentPassword, user.sPassword);
         if (!isMatch) {
+            console.log('Contraseña actual incorrecta');
+            
             // Log de intento fallido de cambio de contraseña
             const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'Unknown';
             
@@ -80,9 +107,13 @@ exports.changePassword = async (req, res) => {
             });
         }
 
+        console.log('Contraseña actual verificada, procediendo a hashear nueva contraseña...');
+
         // Encriptar nueva contraseña
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+        console.log('Nueva contraseña hasheada, actualizando en base de datos...');
 
         // Actualizar contraseña y fecha de último cambio
         const updated = await prisma.bP_01_USUARIO.update({
@@ -98,12 +129,14 @@ exports.changePassword = async (req, res) => {
             throw new Error('Error al actualizar la contraseña');
         }
         
+        console.log('Contraseña actualizada exitosamente en la base de datos');
+        
         // Log de cambio de contraseña exitoso
         const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'Unknown';
         
         await authService.createAuthLog({
             nId01Usuario: req.user.id,
-            sTipoAccion: 'CHANGE_PASSWORD',
+            sTipoAcción: 'CHANGE_PASSWORD',
             sIpUsuario: ip,
             sUserAgent: req.headers['user-agent'] || '',
             sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
@@ -119,7 +152,10 @@ exports.changePassword = async (req, res) => {
                 ip: ip,
                 details: 'Cambio de contraseña exitoso'
             }
-        }).catch(console.error);
+        }).catch(err => {
+            console.error('Error al crear auditlog:', err);
+            // No fallar por esto, es solo logging
+        });
 
         res.json({
             success: true,
@@ -129,7 +165,7 @@ exports.changePassword = async (req, res) => {
         console.error('Error al cambiar contraseña:', error);
         res.status(500).json({
             success: false,
-            message: 'Error al cambiar contraseña'
+            message: 'Error al cambiar contraseña: ' + error.message
         });
     }
 };

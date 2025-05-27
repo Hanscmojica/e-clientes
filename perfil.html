@@ -440,7 +440,19 @@ Veracruz, Ver., México</textarea>
             Nueva Contraseña
           </label>
           <input type="password" id="new-password" required>
-          <div class="password-strength" id="password-strength"></div>
+          <div class="password-strength-container">
+            <div id="password-strength" class="strength-indicator"></div>
+            <div class="password-requirements">
+              <p>La contraseña debe contener:</p>
+              <ul>
+                <li id="req-length">Al menos 8 caracteres</li>
+                <li id="req-uppercase">Una letra mayúscula</li>
+                <li id="req-lowercase">Una letra minúscula</li>
+                <li id="req-number">Un número</li>
+                <li id="req-special">Un carácter especial (@$!%*?&)</li>
+              </ul>
+            </div>
+          </div>
         </div>
         <div class="form-group">
           <label for="confirm-password">

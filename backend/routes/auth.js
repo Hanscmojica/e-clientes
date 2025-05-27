@@ -11,6 +11,7 @@ router.post('/login', authController.login);
 router.get('/login', authController.login);
 router.post('/logout', authController.logout);
 
+
 // Rutas protegidas que requieren autenticación
 router.get('/profile', verifyToken, authController.getProfile);
 
