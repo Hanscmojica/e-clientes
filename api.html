@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/css/api-cards.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  </head>
+</head>
 <body>
   <header class="main-header">
     <div class="header-container">
@@ -22,13 +22,16 @@
       <nav class="header-nav">
         <ul>
           <li><a href="api.html" class="active">Referencias</a></li>
-          <li><a href="perfil.html">Perfil</a></li> </ul>
+          <li><a href="perfil.html">Perfil</a></li>
+          <li><a href="admin.html" id="admin-link" style="display: none;">Administrar</a></li>
+        </ul>
       </nav>
       
       <div class="header-right">
         <div class="user-info">
           <span class="material-icons">account_circle</span>
           <span class="user-name">Usuario</span>
+          <span class="user-id" style="font-size: 12px; color: #aaa; margin-left: 8px;">(ID: )</span>
         </div>
         <button class="logout-btn" title="Cerrar sesión">
           <span class="material-icons">logout</span>
@@ -40,30 +43,24 @@
   <main class="main-content">
     <div class="container">
       <div class="page-header">
-        <h2>Visualización de Referencias</h2>
-        <p>Consulta las referencias disponibles para el cliente especificado</p>
+        <h2>Consulta de Referencias</h2>
+        <p>Consulta tus referencias disponibles en el sistema</p>
         <button id="checkAuthBtn" onclick="checkAuthToken()" style="background-color: #4CAF50; color: white; border: none; padding: 8px 15px; border-radius: 4px; margin-top: 10px; cursor: pointer;">Verificar Autenticación</button>
         <div id="authStatus" style="margin-top: 10px; padding: 8px; border-radius: 4px; display: none;"></div>
       </div>
 
-      <div id="alert" class="alert" style="display: none;"></div> <div id="search-filter-container" style="margin: 20px 0; display: none;"> <input type="text" id="searchReferencia" placeholder="Buscar en referencias mostradas..." 
-        style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px;">
- <span id="searchCount" style="display: block; text-align: right; font-size: 14px; color: var(--light-text); margin-top: 5px;"></span>
-</div>
+      <div id="alert" class="alert" style="display: none;"></div>
       
-
-
+      <div id="search-filter-container" style="margin: 20px 0; display: none;">
+        <input type="text" id="searchReferencia" placeholder="Buscar en referencias mostradas..." 
+          style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 16px;">
+        <span id="searchCount" style="display: block; text-align: right; font-size: 14px; color: var(--light-text); margin-top: 5px;"></span>
+      </div>
 
       <div class="search-card">
         <h3>Parámetros de Búsqueda</h3>
         <div class="form-container">
-          <div class="form-group">
-            <label for="clienteNo">
-              <span class="material-icons">person</span>
-              Número de Cliente
-            </label>
-            <input type="number" id="clienteNo" value="6359" min="1" placeholder="Ingrese el número">
-          </div>
+          <!-- CAMPO DE CLIENTE ELIMINADO - SE USA AUTOMÁTICAMENTE EL ID DEL USUARIO -->
           
           <div class="form-group">
             <label for="tipoFecha">
@@ -95,79 +92,86 @@
         </div>
         
         <div class="button-container">
-          <button id="btnConsultar"> <span class="material-icons">search</span>
+          <button id="btnConsultar">
+            <span class="material-icons">search</span>
             Consultar Referencias
           </button>
-          <button id="btnLimpiar"> <span class="material-icons">clear</span>
+          <button id="btnLimpiar">
+            <span class="material-icons">clear</span>
             Limpiar
           </button>
-          <div id="loading" class="loading" style="display: none;"> <div class="spinner"></div>
+          <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
             <span>Cargando...</span>
           </div>
         </div>
       </div>
 
-    <div id="referencias-container" class="referencias-container">
-       </div>
+      <div id="referencias-container" class="referencias-container">
+      </div>
       
-   </div>
+    </div>
   </main>
- 
 
   <footer class="main-footer">
     <div class="footer-container">
       <div class="footer-section">
-        </div>
+      </div>
     </div>
     <div class="footer-bottom">
       <p>&copy; 2025 Agencia Aduanal Rodall Oseguera. Todos los derechos reservados.</p>
     </div>
   </footer>
 
-  <div id="historialModal" class="modal" style="display: none;"> <div class="modal-content">
+  <!-- MODAL UNCHANGED -->
+  <div id="historialModal" class="modal" style="display: none;">
+    <div class="modal-content">
       <div class="modal-header">
         <h2 id="refHistorialTitulo">Detalle de Referencia</h2>
         <span class="close">&times;</span>
       </div>
-      <div class="modal-body"> <div class="tabs">
-            <button class="tab-button active" data-tab="detalle">
-              <span class="material-icons">info_outline</span> Detalle
-            </button>
-            <button class="tab-button" data-tab="biblioteca">
-              <span class="material-icons">folder_open</span> Biblioteca
-            </button>
-            <button class="tab-button" data-tab="historial">
-              <span class="material-icons">history</span> Historial
-            </button>
+      <div class="modal-body">
+        <div class="tabs">
+          <button class="tab-button active" data-tab="detalle">
+            <span class="material-icons">info_outline</span> Detalle
+          </button>
+          <button class="tab-button" data-tab="biblioteca">
+            <span class="material-icons">folder_open</span> Biblioteca
+          </button>
+          <button class="tab-button" data-tab="historial">
+            <span class="material-icons">history</span> Historial
+          </button>
+        </div>
+        
+        <div id="detalle-tab" class="tab-panel active">
+          <h3>Información de la Referencia</h3>
+          <div id="detalleReferenciaContenido" class="referencia-info-modal" style="padding: 10px;">
+            <p>Cargando detalle...</p>
           </div>
-          
-          <div id="detalle-tab" class="tab-panel active">
-              <h3>Información de la Referencia</h3>
-              <div id="detalleReferenciaContenido" class="referencia-info-modal" style="padding: 10px;">
-                  <p>Cargando detalle...</p>
-              </div>
-          </div>
+        </div>
 
         <div id="biblioteca-tab" class="tab-panel">
-    <h3>Biblioteca de Documentos</h3>
-    <div class="search-filter-container-modal" style="margin-bottom: 15px; max-width: 100%; padding: 0;">
-        <div class="search-filter-box-modal" style="display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: 6px; padding: 5px 10px;">
-            <span class="material-icons" style="color: var(--light-text); font-size:22px; margin-right: 5px;">search</span>
-            <input type="text" id="filtroDocumentosModal" placeholder="Buscar documento por nombre..." style="flex:1; border:none; outline:none; font-size:15px;">
-        </div>
-    </div>
-    <ul id="listaDocumentos" style="max-height: 300px; overflow-y: auto; padding-right: 10px;">
-        <li>Cargando documentos...</li>
-    </ul>
-    <p id="noDocumentosModalMensaje" style="display:none; text-align:center; padding: 20px; color: var(--light-text);">No hay documentos disponibles para esta referencia.</p>
-</div>
-
-          <div id="historial-tab" class="tab-panel">
-               <h3>Historial de la Referencia</h3>
-              <div id="historialContenido" style="max-height: 300px; overflow-y: auto; padding-right: 10px;"> <p>Cargando historial...</p>
-              </div>
+          <h3>Biblioteca de Documentos</h3>
+          <div class="search-filter-container-modal" style="margin-bottom: 15px; max-width: 100%; padding: 0;">
+            <div class="search-filter-box-modal" style="display: flex; align-items: center; border: 1px solid var(--border-color); border-radius: 6px; padding: 5px 10px;">
+              <span class="material-icons" style="color: var(--light-text); font-size:22px; margin-right: 5px;">search</span>
+              <input type="text" id="filtroDocumentosModal" placeholder="Buscar documento por nombre..." style="flex:1; border:none; outline:none; font-size:15px;">
+            </div>
           </div>
-      </div> </div>
+          <ul id="listaDocumentos" style="max-height: 300px; overflow-y: auto; padding-right: 10px;">
+            <li>Cargando documentos...</li>
+          </ul>
+          <p id="noDocumentosModalMensaje" style="display:none; text-align:center; padding: 20px; color: var(--light-text);">No hay documentos disponibles para esta referencia.</p>
+        </div>
+
+        <div id="historial-tab" class="tab-panel">
+          <h3>Historial de la Referencia</h3>
+          <div id="historialContenido" style="max-height: 300px; overflow-y: auto; padding-right: 10px;">
+            <p>Cargando historial...</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

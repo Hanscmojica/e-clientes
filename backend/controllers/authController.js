@@ -3,89 +3,41 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const prisma = require('../utils/prisma');
 const { logAudit } = require('../utils/audit');
-// const authService = require('../services/authService'); // COMENTADO TEMPORALMENTE
 
 exports.login = async (req, res, next) => {
     try {
         console.log('Login request received:', req.body);
         const { username, password } = req.body;
+        console.log('🔍 Username recibido:', username);
+        console.log('🔍 Password recibido:', password);
+        console.log('🔍 Username uppercase:', username.toUpperCase());
+        console.log('🔍 Comparación username:', username.toUpperCase() === 'HANS');
+         
+        console.log('🔍 Comparación password:', password === '12345');
         const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
         
-        // Forzar modo desarrollo para pruebas
-        // Para este usuario específico, permitir acceso directo
-        if (username === 'HANS' && password === '12345') {
-            console.log('✅ Modo de prueba para HANS activado - Acceso directo!');
+        // USUARIO DE PRUEBA HANS - SIEMPRE DISPONIBLE
+        if (username.toUpperCase() === 'HANS' && password === '12345') {
+            console.log('✅ Login de prueba para HANS (ID: 5951)');
             
-            // Generar token para HANS
             const token = jwt.sign(
-                { id: 5, username: 'HANS', role: 'ADMIN' },
+                { id: 5951, username: 'HANS', role: 'ADMIN' },
                 process.env.JWT_SECRET || 'clave_secreta_para_jwt',
-                { expiresIn: '24h' }
+                { expiresIn: process.env.JWT_EXPIRE || '24h' }
             );
-            
-            console.log('✅ Token generado para HANS:', token);
-            
-            // COMENTADO TEMPORALMENTE - ESTOS SERVICIOS ESTÁN FALLANDO
-            /*
-            // Crear sesión activa para HANS
-            await authService.createActiveSession(5, token, req);
-            
-            // Log de login exitoso
-            await authService.createAuthLog({
-                nId01Usuario: 5,
-                sTipoAccion: 'LOGIN',
-                sIpUsuario: ip,
-                sUserAgent: req.headers['user-agent'] || '',
-                sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
-                bExitoso: true,
-                sTokenSesion: token
-            });
-            
-            await logAudit({ userId: 5, username: 'HANS', event: 'login', ip });
-            */
             
             return res.status(200).json({
                 success: true,
-                message: 'Login exitoso en modo prueba',
+                message: 'Login exitoso',
                 token: token,
                 user: {
-                    id: 5,
+                    id: 5951,
                     username: 'HANS',
                     name: 'Hans Hansen Mojica',
-                    role: 'ADMIN'
+                    role: 'ADMIN',
+                    email: 'hans@hotmail.com'
                 }
             });
-        }
-        
-        // Para modo de prueba, usar usuario y contraseña fijos
-        if (process.env.NODE_ENV === 'development') {
-            if (username === 'usuario' && password === 'password123') {
-                console.log('Usando credenciales de desarrollo');
-                
-                const token = jwt.sign(
-                    { id: 0, username: 'usuario', role: 'USER' },
-                    process.env.JWT_SECRET || 'clave_secreta_para_jwt',
-                    { expiresIn: '24h' }
-                );
-                
-                // COMENTADO TEMPORALMENTE
-                /*
-                await authService.createActiveSession(0, token, req);
-                await logAudit({ userId: 0, username: 'usuario', event: 'login', ip });
-                */
-                
-                return res.status(200).json({
-                    success: true,
-                    message: 'Login exitoso',
-                    token: token,
-                    user: {
-                        id: 0,
-                        username: 'usuario',
-                        name: 'Usuario de Prueba',
-                        role: 'USER'
-                    }
-                });
-            }
         }
         
         // Buscar usuario en la base de datos utilizando Prisma
@@ -95,7 +47,7 @@ exports.login = async (req, res, next) => {
         try {
             user = await prisma.BP_01_USUARIO.findUnique({
                 where: { 
-                    sUsuario: username 
+                    sUsuario: username.toUpperCase()
                 },
                 include: {
                     perfilesUsuario: {
@@ -107,13 +59,14 @@ exports.login = async (req, res, next) => {
             });
         } catch (dbError) {
             console.error('❌ Error de base de datos:', dbError);
+            
             // Fallback para HANS en caso de error de BD
-            if (username === 'HANS' && password === '12345') {
+            if (username.toUpperCase() === 'HANS' && password === '12345') {
                 console.log('⚠️ Error de BD, usando fallback para HANS');
                 const token = jwt.sign(
-                    { id: 5, username: 'HANS', role: 'ADMIN' },
+                    { id: 5951, username: 'HANS', role: 'ADMIN' },
                     process.env.JWT_SECRET || 'clave_secreta_para_jwt',
-                    { expiresIn: '24h' }
+                    { expiresIn: process.env.JWT_EXPIRE || '24h' }
                 );
                 
                 return res.status(200).json({
@@ -121,10 +74,11 @@ exports.login = async (req, res, next) => {
                     message: 'Login exitoso (fallback)',
                     token: token,
                     user: {
-                        id: 5,
+                        id: 5951,
                         username: 'HANS',
                         name: 'Hans Hansen Mojica',
-                        role: 'ADMIN'
+                        role: 'ADMIN',
+                        email: 'hans@hotmail.com'
                     }
                 });
             }
@@ -137,27 +91,11 @@ exports.login = async (req, res, next) => {
         
         console.log('Usuario encontrado:', user ? `ID: ${user.nId01Usuario}, Activo: ${user.bActivo}` : 'No encontrado');
         
-        // Verificar si existe el usuario y la contraseña es correcta
+        // Verificar si existe el usuario
         if (!user) {
-            // COMENTADO TEMPORALMENTE - ESTOS LOGS ESTÁN FALLANDO
-            /*
-            // Log de intento fallido
-            await authService.createAuthLog({
-                nId01Usuario: 1, // ID genérico para usuarios no encontrados
-                sTipoAccion: 'LOGIN_FAILED',
-                sIpUsuario: ip,
-                sUserAgent: req.headers['user-agent'] || '',
-                sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
-                bExitoso: false,
-                sDetalleError: 'Usuario no encontrado'
-            });
-            
-            await logAudit({ username, event: 'failed_login', ip, details: 'Credenciales incorrectas' });
-            */
-            
             return res.status(401).json({
                 success: false,
-                message: 'Credenciales incorrectas - Usuario no encontrado'
+                message: 'Credenciales incorrectas'
             });
         }
         
@@ -166,46 +104,14 @@ exports.login = async (req, res, next) => {
         console.log('Verificación de contraseña:', passwordValid ? 'Correcta' : 'Incorrecta');
         
         if (!passwordValid) {
-            // COMENTADO TEMPORALMENTE
-            /*
-            // Log de intento fallido
-            await authService.createAuthLog({
-                nId01Usuario: user.nId01Usuario,
-                sTipoAccion: 'LOGIN_FAILED',
-                sIpUsuario: ip,
-                sUserAgent: req.headers['user-agent'] || '',
-                sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
-                bExitoso: false,
-                sDetalleError: 'Contraseña incorrecta'
-            });
-            
-            await logAudit({ username, event: 'failed_login', ip, details: 'Credenciales incorrectas' });
-            */
-            
             return res.status(401).json({
                 success: false,
-                message: 'Credenciales incorrectas - Contraseña inválida'
+                message: 'Credenciales incorrectas'
             });
         }
         
         // Verificar si el usuario está activo
         if (!user.bActivo) {
-            // COMENTADO TEMPORALMENTE
-            /*
-            // Log de intento fallido
-            await authService.createAuthLog({
-                nId01Usuario: user.nId01Usuario,
-                sTipoAccion: 'LOGIN_FAILED',
-                sIpUsuario: ip,
-                sUserAgent: req.headers['user-agent'] || '',
-                sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
-                bExitoso: false,
-                sDetalleError: 'Usuario inactivo'
-            });
-            
-            await logAudit({ userId: user.nId01Usuario, username: user.sUsuario, event: 'failed_login', ip, details: 'Usuario inactivo' });
-            */
-            
             return res.status(401).json({
                 success: false,
                 message: 'Usuario inactivo. Contacte al administrador.'
@@ -215,60 +121,29 @@ exports.login = async (req, res, next) => {
         // Obtener el perfil del usuario
         const perfil = user.perfilesUsuario[0]?.perfil?.sNombre || 'USER';
         
+        // MAPEO ESPECIAL PARA USUARIOS CON IDs PERSONALIZADOS
+        let clienteId = user.nId01Usuario;
+        
+        // Si es HANS desde la BD, usar el ID 5951 para las referencias
+        if (user.sUsuario.toUpperCase() === 'HANS') {
+            clienteId = 5951;
+            console.log('✅ Mapeando HANS de BD (ID original: ' + user.nId01Usuario + ') a ID cliente: 5951');
+        }
+        
         // Generar token JWT
         const token = jwt.sign(
             { 
-                id: user.nId01Usuario,
+                id: clienteId,
                 username: user.sUsuario,
-                role: perfil
+                role: perfil,
+                originalId: user.nId01Usuario
             },
             process.env.JWT_SECRET || 'clave_secreta_para_jwt',
-            { expiresIn: '8h' }
+            { expiresIn: process.env.JWT_EXPIRE || '8h' }
         );
         
-        // === COMENTADO TEMPORALMENTE - ESTAS FUNCIONALIDADES ESTÁN FALLANDO ===
-        /*
-        // Verificar caducidad de contraseña
-        const passwordStatus = await authService.checkPasswordExpiry(user.nId01Usuario);
-        if (passwordStatus && passwordStatus.caducada) {
-            // Log de intento con contraseña caducada
-            await authService.createAuthLog({
-                nId01Usuario: user.nId01Usuario,
-                sTipoAccion: 'LOGIN_FAILED',
-                sIpUsuario: ip,
-                sUserAgent: req.headers['user-agent'] || '',
-                sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
-                bExitoso: false,
-                sDetalleError: 'Contraseña caducada'
-            });
-            
-            return res.status(403).json({
-                success: false,
-                requirePasswordChange: true,
-                message: 'Su contraseña ha caducado. Por favor, cámbiela.',
-                diasTranscurridos: passwordStatus.diasTranscurridos
-            });
-        }
-        
-        // Crear sesión activa
-        await authService.createActiveSession(user.nId01Usuario, token, req);
-        
-        // Log de login exitoso
-        await authService.createAuthLog({
-            nId01Usuario: user.nId01Usuario,
-            sTipoAccion: 'LOGIN',
-            sIpUsuario: ip,
-            sUserAgent: req.headers['user-agent'] || '',
-            sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
-            bExitoso: true,
-            sTokenSesion: token
-        });
-        
-        await logAudit({ userId: user.nId01Usuario, username: user.sUsuario, event: 'login', ip });
-        */
-        
         console.log('✅ Login exitoso para:', user.sUsuario);
-        console.log('✅ Token generado:', token);
+        console.log('✅ ID Cliente para referencias:', clienteId);
         
         // Responder con datos del usuario y token
         return res.status(200).json({
@@ -276,10 +151,11 @@ exports.login = async (req, res, next) => {
             message: 'Login exitoso',
             token,
             user: {
-                id: user.nId01Usuario,
+                id: clienteId,
                 username: user.sUsuario,
                 name: `${user.sNombre} ${user.sApellidoPaterno} ${user.sApellidoMaterno}`,
                 role: perfil,
+                email: user.sEmail,
                 image: user.sUsuarioImg
             }
         });
@@ -287,12 +163,12 @@ exports.login = async (req, res, next) => {
         console.error('❌ Error en login:', error);
         
         // Fallback final para HANS
-        if (req.body.username === 'HANS' && req.body.password === '12345') {
+        if (req.body.username?.toUpperCase() === 'HANS' && req.body.password === '12345') {
             console.log('⚠️ Error general, usando fallback final para HANS');
             const token = jwt.sign(
-                { id: 5, username: 'HANS', role: 'ADMIN' },
+                { id: 5951, username: 'HANS', role: 'ADMIN' },
                 process.env.JWT_SECRET || 'clave_secreta_para_jwt',
-                { expiresIn: '24h' }
+                { expiresIn: process.env.JWT_EXPIRE || '24h' }
             );
             
             return res.status(200).json({
@@ -300,16 +176,13 @@ exports.login = async (req, res, next) => {
                 message: 'Login exitoso (modo emergencia)',
                 token: token,
                 user: {
-                    id: 5,
+                    id: 5951,
                     username: 'HANS',
                     name: 'Hans Hansen Mojica',
                     role: 'ADMIN'
                 }
             });
         }
-        
-        // COMENTADO TEMPORALMENTE
-        // await logAudit({ username: req.body.username, event: 'failed_login', ip: req.ip, details: error.message });
         
         return res.status(500).json({
             success: false,
@@ -320,7 +193,6 @@ exports.login = async (req, res, next) => {
 
 exports.logout = async (req, res) => {
     try {
-        // SIMPLIFICADO - SIN SERVICIOS PROBLEMÁTICOS
         res.status(200).json({
             success: true,
             message: 'Sesión cerrada correctamente'
@@ -336,8 +208,23 @@ exports.logout = async (req, res) => {
 
 exports.getProfile = async (req, res, next) => {
     try {
-        // req.user es establecido por el middleware de autenticación
-        const userId = req.user.id;
+        // Para HANS de prueba, devolver datos directamente
+        if (req.user.username === 'HANS' && req.user.id === 5951) {
+            return res.status(200).json({
+                success: true,
+                user: {
+                    id: 5951,
+                    username: 'HANS',
+                    name: 'Hans Hansen Mojica',
+                    email: 'hans@hotmail.com',
+                    role: 'ADMIN',
+                    active: true,
+                    createdAt: new Date().toISOString()
+                }
+            });
+        }
+        
+        const userId = req.user.originalId || req.user.id;
         
         const user = await prisma.BP_01_USUARIO.findUnique({
             where: { 
@@ -361,10 +248,15 @@ exports.getProfile = async (req, res, next) => {
         
         const perfil = user.perfilesUsuario[0]?.perfil?.sNombre || 'USER';
         
+        let clienteId = user.nId01Usuario;
+        if (user.sUsuario.toUpperCase() === 'HANS') {
+            clienteId = 5951;
+        }
+        
         res.status(200).json({
             success: true,
             user: {
-                id: user.nId01Usuario,
+                id: clienteId,
                 username: user.sUsuario,
                 name: `${user.sNombre} ${user.sApellidoPaterno} ${user.sApellidoMaterno}`,
                 email: user.sEmail,

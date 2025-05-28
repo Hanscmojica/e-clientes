@@ -22,15 +22,26 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Si llegamos aquí, la sesión es válida
     console.log('%c✅ Usuario autenticado', 'color: green; font-weight: bold; font-size: 14px');
+    console.log('ID Cliente:', userSession.id);
     console.log('Nombre:', userSession.name);
     console.log('Rol:', userSession.role);
     
-    // Actualizar el nombre de usuario en la interfaz
+    // Actualizar el nombre de usuario y ID en la interfaz
     const userNameElement = document.querySelector('.user-name');
+    const userIdElement = document.querySelector('.user-id');
     if (userNameElement) {
         userNameElement.textContent = userSession.name;
     }
-    
+    if (userIdElement) {
+        userIdElement.textContent = `(ID: ${userSession.id})`;
+    }
+
+     // Mostrar enlace de admin si es administrador
+    if  (userSession.role === 'ADMIN' || userSession.role === 'ADMINISTRADOR') {
+          const adminLink = document.getElementById('admin-link');
+          if (adminLink) adminLink.style.display = 'block';
+   }
+ 
     // Configurar el botón de cerrar sesión
     const logoutBtn = document.querySelector('.logout-btn');
     if (logoutBtn) {
@@ -44,7 +55,7 @@ function checkAuthToken() {
     const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
     
     if (userSession && userSession.token) {
-        authStatus.textContent = `Autenticado como: ${userSession.name} (${userSession.role})`;
+        authStatus.textContent = `Autenticado como: ${userSession.name} (ID: ${userSession.id}) - ${userSession.role}`;
         authStatus.style.backgroundColor = '#e6ffe6';
         authStatus.style.border = '1px solid #4CAF50';
         authStatus.style.color = '#2e7d32';
@@ -64,6 +75,7 @@ function logout() {
     // Eliminar datos de sesión
     localStorage.removeItem('userSession');
     sessionStorage.removeItem('userSession');
+    localStorage.removeItem('token');
     
     // Redirigir a login.html
     window.location.href = 'login.html';
@@ -71,20 +83,19 @@ function logout() {
 
 // Arreglo global para almacenar las referencias
 let referencias = [];
-let referenciasCompletas = []; // Para guardar las referencias con su historial completo
-let referenciasFiltradas = []; // Para guardar las referencias filtradas
+let referenciasCompletas = [];
+let referenciasFiltradas = [];
 function getItemsPorPagina() {
-    // Lee la preferencia del usuario, si no existe usa 10 como default
     return parseInt(localStorage.getItem('itemsPorPagina')) || 10;
 }
 let paginaActual = 1;
 
 // Obtener el modal
-const modal = document.getElementById('historialModal'); // Asegúrate que este ID coincida con tu HTML
-const span = document.getElementsByClassName('close')[0]; // Asume que es el primer elemento con clase 'close' en el modal
+const modal = document.getElementById('historialModal');
+const span = document.getElementsByClassName('close')[0];
 
 // Cuando el usuario hace clic en la X, cerrar el modal
-if (span) { // Verificar que span exista
+if (span) {
     span.onclick = function() {
         if (modal) modal.style.display = "none";
     }
@@ -99,15 +110,13 @@ window.onclick = function(event) {
 
 // Manejar las pestañas del modal
 document.addEventListener('click', function(e) {
-    const button = e.target.closest('.tab-button'); // Maneja click en el botón o su contenido (ej. icono)
-    if (button && modal && modal.contains(button)) { // Asegurarse que el botón está dentro del modal activo
+    const button = e.target.closest('.tab-button');
+    if (button && modal && modal.contains(button)) {
         const tabName = button.dataset.tab;
 
-        // Remover active de todos los botones y paneles DENTRO DEL MODAL
         modal.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
         modal.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
 
-        // Agregar active al botón y panel seleccionado
         button.classList.add('active');
         const tabPanel = modal.querySelector(`#${tabName}-tab`);
         if (tabPanel) {
@@ -116,7 +125,6 @@ document.addEventListener('click', function(e) {
             console.warn(`No se encontró el panel de pestaña: #${tabName}-tab`);
         }
         
-        // Si se selecciona la pestaña biblioteca, cargar los documentos
         if (tabName === "biblioteca") {
             const referenciaIndex = parseInt(modal.dataset.referenciaIndex || "0");
             if (referenciasCompletas[referenciaIndex]) {
@@ -126,8 +134,7 @@ document.addEventListener('click', function(e) {
     }
 });
 
-
-// Función para filtrar referencias por búsqueda (en la página principal)
+// Función para filtrar referencias por búsqueda
 function filtrarReferencias() {
     const searchTerm = document.getElementById('searchReferencia').value.toLowerCase();
 
@@ -143,7 +150,7 @@ function filtrarReferencias() {
     mostrarReferencias(getCurrentClienteInfo(), referenciasFiltradas);
 }
 
-// Función para actualizar el contador de búsqueda (en la página principal)
+// Función para actualizar el contador de búsqueda
 function actualizarContadorBusqueda() {
     const searchCount = document.getElementById('searchCount');
     if (searchCount) {
@@ -159,16 +166,17 @@ function actualizarContadorBusqueda() {
 
 // Función para obtener la información actual del cliente
 function getCurrentClienteInfo() {
+    const userSession = JSON.parse(localStorage.getItem('userSession') || 'null');
     return referencias.length > 0 ? {
+        id: userSession ? userSession.id : 'N/A',
         nombre: referencias[0].Cliente || '',
         importador: referencias[0].Importador || '',
         aduana: referencias[0].Aduana || ''
-    } : {};
+    } : { id: userSession ? userSession.id : 'N/A' };
 }
 
 // Función para limpiar el formulario
 function limpiarFormulario() {
-    document.getElementById('clienteNo').value = '';
     document.getElementById('tipoFecha').value = '1';
     document.getElementById('fechaInicial').value = '';
     document.getElementById('fechaFinal').value = '';
@@ -187,20 +195,30 @@ function limpiarFormulario() {
     paginaActual = 1;
 }
 
-// Función principal para consultar referencias
+// Función principal para consultar referencias - MODIFICADA PARA USAR ID AUTOMÁTICO
 function consultarReferencias() {
-    const clienteNo = document.getElementById('clienteNo').value;
     const fechaInicial = document.getElementById('fechaInicial').value;
     const fechaFinal = document.getElementById('fechaFinal').value;
 
-    if (!clienteNo) {
-        mostrarAlerta('Por favor, ingrese un número de cliente.', 'error');
+    // Obtener el ID del usuario logueado automáticamente
+    const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
+    
+    if (!userSession || !userSession.id) {
+        mostrarAlerta('No hay sesión activa. Por favor, inicie sesión nuevamente.', 'error');
+        setTimeout(() => {
+            logout();
+        }, 2000);
         return;
     }
+
+    const clienteNo = userSession.id; // USAR EL ID DEL USUARIO AUTOMÁTICAMENTE
+
     if (!fechaInicial || !fechaFinal) {
         mostrarAlerta('Por favor, complete las fechas.', 'error');
         return;
     }
+
+    console.log(`🔍 Consultando referencias para cliente ID: ${clienteNo}`);
 
     document.getElementById('loading').style.display = 'flex';
     const alertEl = document.getElementById('alert');
@@ -208,20 +226,17 @@ function consultarReferencias() {
     document.getElementById('referencias-container').innerHTML = '';
 
     const datos = {
-        ClienteNo: parseInt(clienteNo),
+        ClienteNo: parseInt(clienteNo), // Usar el ID del usuario logueado
         TipoFecha: parseInt(document.getElementById('tipoFecha').value),
         FechaInicial: fechaInicial,
         FechaFinal: fechaFinal
     };
 
-    // Obtener el token de autenticación
-    const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
-    
-    if (!userSession || !userSession.token) {
-        mostrarAlerta('No hay sesión activa. Por favor, inicie sesión nuevamente.', 'error');
+    if (!userSession.token) {
+        mostrarAlerta('Token de sesión no encontrado. Por favor, inicie sesión nuevamente.', 'error');
         document.getElementById('loading').style.display = 'none';
         setTimeout(() => {
-            logout(); // Redirigir al login si no hay token
+            logout();
         }, 2000);
         return;
     }
@@ -243,7 +258,7 @@ function consultarReferencias() {
         if (err.response && err.response.status === 401) {
             mostrarAlerta('Sesión expirada o inválida. Por favor, inicie sesión nuevamente.', 'error');
             setTimeout(() => {
-                logout(); // Redirigir al login en caso de error de autenticación
+                logout();
             }, 2000);
         } else {
             mostrarAlerta('Error al llamar a la API: ' + (err.response?.data?.message || err.message), 'error');
@@ -256,7 +271,7 @@ function mostrarAlerta(mensaje, tipo = 'error') {
     const alertEl = document.getElementById('alert');
     if (!alertEl) return;
     alertEl.textContent = mensaje;
-    alertEl.className = `alert ${tipo}`; // Cuidado con sobreescribir otras clases si las tuviera
+    alertEl.className = `alert ${tipo}`;
     alertEl.style.display = 'block';
     setTimeout(() => {
         alertEl.style.display = 'none';
@@ -283,7 +298,7 @@ function procesarRespuesta(data) {
                 const refPlana = {...ref};
                 delete refPlana.Hist;
                 if (ref.Hist && ref.Hist.length > 0) {
-                    const ultimoHistorial = ref.Hist[0]; // Asume que el primero es el más reciente o se ordenará luego
+                    const ultimoHistorial = ref.Hist[0];
                     refPlana.UltimoEstado = ultimoHistorial.Estado;
                     refPlana.UltimaFecha = formatearFecha(ultimoHistorial.Fecha);
                     refPlana.UltimaCausa = ultimoHistorial.Causa;
@@ -311,7 +326,7 @@ function formatearFecha(fechaStr) {
     try {
         if (String(fechaStr).match(/^\d{2}\/\d{2}\/\d{4}$/)) return fechaStr;
         const fecha = new Date(fechaStr);
-        if (isNaN(fecha.getTime())) return fechaStr; // Devuelve original si no es válida
+        if (isNaN(fecha.getTime())) return fechaStr;
         return fecha.toLocaleDateString('es-MX', {
             year: 'numeric', month: '2-digit', day: '2-digit'
         });
@@ -330,11 +345,9 @@ function generarBibliotecaModal(referenciaOriginal) {
         return;
     }
     
-    // Mostrar indicador de carga
     listaDocumentosUI.innerHTML = '<li style="text-align:center; padding:20px;">Cargando documentos...</li>';
     noDocumentosMensaje.style.display = 'none';
     
-    // Obtener el número de referencia
     const numeroReferencia = referenciaOriginal.Referencia || '';
     
     console.log(`Generando biblioteca para referencia: ${numeroReferencia}`);
@@ -346,13 +359,11 @@ function generarBibliotecaModal(referenciaOriginal) {
         return;
     }
 
-    // URL del backend para obtener los documentos de esta referencia
     const BACKEND_URL = 'http://localhost:5001';
     const endpointUrl = `${BACKEND_URL}/list/${numeroReferencia}`;
     
     console.log(`Consultando endpoint: ${endpointUrl}`);
     
-    // Llamada al servidor para obtener la lista de documentos
     fetch(endpointUrl)
         .then(response => {
             console.log(`Respuesta del servidor: status=${response.status}`);
@@ -364,7 +375,6 @@ function generarBibliotecaModal(referenciaOriginal) {
         .then(documentos => {
             console.log(`Documentos recibidos:`, documentos);
             
-            // Limpiar contenedor
             listaDocumentosUI.innerHTML = '';
 
             if (!documentos || documentos.length === 0) {
@@ -377,16 +387,13 @@ function generarBibliotecaModal(referenciaOriginal) {
             noDocumentosMensaje.style.display = 'none';
             listaDocumentosUI.style.display = '';
 
-            // Mostrar cada documento en la lista
             documentos.forEach((doc, index) => {
                 const li = document.createElement('li');
                 
-                // Obtener información del documento con manejo de valores nulos/undefined
                 const nombreArchivo = doc.title || doc.nombre || doc.filename || `Documento ${index + 1}`;
                 const tamanioArchivo = doc.size || '';
                 
-                // Determinar el icono adecuado según el tipo de archivo
-                let iconName = 'description'; // Icono por defecto
+                let iconName = 'description';
                 
                 if (nombreArchivo.toLowerCase().includes('factura')) iconName = 'receipt';
                 else if (nombreArchivo.toLowerCase().includes('bl') || nombreArchivo.toLowerCase().includes('lading')) iconName = 'article';
@@ -395,7 +402,6 @@ function generarBibliotecaModal(referenciaOriginal) {
                 else if (nombreArchivo.toLowerCase().includes('.xlsx') || nombreArchivo.toLowerCase().includes('.xls')) iconName = 'assessment';
                 else if (nombreArchivo.toLowerCase().includes('pedimento')) iconName = 'assignment';
                 
-                // Filename seguro para URLs
                 const safeFilename = doc.filename || doc.title || doc.nombre || nombreArchivo;
                 const escapedFilename = encodeURIComponent(safeFilename);
                 
@@ -414,11 +420,9 @@ function generarBibliotecaModal(referenciaOriginal) {
                 listaDocumentosUI.appendChild(li);
             });
             
-            // Si hay un campo de filtro, activar su funcionalidad
             const filtroDocsInput = modal.querySelector('#filtroDocumentosModal');
             if (filtroDocsInput) {
                 filtroDocsInput.addEventListener('input', filtrarDocumentosModal);
-                // Limpiar el filtro
                 filtroDocsInput.value = '';
             }
         })
@@ -438,7 +442,6 @@ function verDocumentoModal(referenciaId, docNombre) {
     console.log('Abriendo vista previa:', viewUrl);
     mostrarAlerta(`Abriendo vista previa de ${decodeURIComponent(docNombre)}...`, 'success');
     
-    // Abrir el documento en una nueva ventana/pestaña
     window.open(viewUrl, '_blank');
 }
 
@@ -450,7 +453,6 @@ function descargarDocumentoModal(referenciaId, docNombre) {
     console.log('Descargando documento:', downloadUrl);
     mostrarAlerta(`Iniciando descarga de ${decodeURIComponent(docNombre)}...`, 'success');
     
-    // Crear un elemento <a> invisible para iniciar la descarga
     const link = document.createElement('a');
     link.href = downloadUrl;
     link.download = decodeURIComponent(docNombre);
@@ -489,7 +491,7 @@ function filtrarDocumentosModal() {
         if (count === 0 && liItems.length > 0) {
             noDocumentosMensaje.textContent = "No se encontraron documentos que coincidan.";
             noDocumentosMensaje.style.display = 'block';
-        } else if (ul.children.length === 0 || (count === 0 && filter === '')) { // Si no hay documentos originalmente o el filtro está vacío y no hay items
+        } else if (ul.children.length === 0 || (count === 0 && filter === '')) {
              noDocumentosMensaje.textContent = "No hay documentos disponibles para esta referencia.";
              noDocumentosMensaje.style.display = 'block';
         }
@@ -499,27 +501,23 @@ function filtrarDocumentosModal() {
     }
 }
 
-// --- MODIFICACIONES PARA EL MODAL CON PESTAÑAS ---
-
 // Función principal para mostrar el modal de una referencia con todas sus pestañas
-function mostrarModalReferencia(indexEnListaMostrada) { // Cambiado el nombre de mostrarHistorial
-    const referenciaOriginal = referenciasCompletas[indexEnListaMostrada]; // Usar el índice original de referenciasCompletas
+function mostrarModalReferencia(indexEnListaMostrada) {
+    const referenciaOriginal = referenciasCompletas[indexEnListaMostrada];
 
     if (!referenciaOriginal) {
         mostrarAlerta('No se encontró la referencia completa.', 'error');
         return;
     }
 
-    // Guardar el índice de la referencia en el modal para uso posterior
     if (modal) {
         modal.dataset.referenciaIndex = indexEnListaMostrada;
     }
 
-    // Establecer el título del modal
     const modalTitulo = modal.querySelector('#refHistorialTitulo');
     if (modalTitulo) modalTitulo.textContent = `Referencia: ${referenciaOriginal.Referencia || 'N/A'}`;
 
-    // --- Pestaña "Detalle" ---
+    // Pestaña "Detalle"
     const detalleContenidoDiv = modal.querySelector('#detalleReferenciaContenido');
     if (detalleContenidoDiv) {
         detalleContenidoDiv.innerHTML = `
@@ -535,21 +533,20 @@ function mostrarModalReferencia(indexEnListaMostrada) { // Cambiado el nombre de
             `;
     }
 
-    // --- Pestaña "Biblioteca" ---
-    // Llamar a la función generarBibliotecaModal con la referencia actual
+    // Pestaña "Biblioteca"
     generarBibliotecaModal(referenciaOriginal);
 
-    // --- Pestaña "Historial" ---
+    // Pestaña "Historial"
     const historialDiv = modal.querySelector('#historialContenido');
     if (historialDiv) {
-        historialDiv.innerHTML = ''; // Limpiar
+        historialDiv.innerHTML = '';
         if (!referenciaOriginal.Hist || referenciaOriginal.Hist.length === 0) {
             historialDiv.innerHTML = '<p style="text-align:center; padding:10px; color:var(--light-text);">No hay registros en el historial.</p>';
         } else {
             const historialOrdenado = [...referenciaOriginal.Hist].sort((a, b) => new Date(b.Fecha) - new Date(a.Fecha));
             historialOrdenado.forEach(item => {
                 const itemDiv = document.createElement('div');
-                itemDiv.className = `historial-item estado-${(item.Estado || '').toLowerCase()}`; // Asegurar clase válida
+                itemDiv.className = `historial-item estado-${(item.Estado || '').toLowerCase()}`;
                 itemDiv.innerHTML = `
                     <p><strong>Estado:</strong> ${item.Estado || '-'} (${getEstadoDescripcion(item.Estado)})</p>
                     <p><strong>Fecha:</strong> ${formatearFecha(item.Fecha) || '-'}</p>
@@ -571,7 +568,6 @@ function mostrarModalReferencia(indexEnListaMostrada) { // Cambiado el nombre de
         detalleButton.classList.add('active');
         detallePanel.classList.add('active');
     } else {
-        // Fallback a la primera pestaña si "detalle" no existe por alguna razón
         const firstButton = modal.querySelector('.tab-button');
         if (firstButton) {
             firstButton.classList.add('active');
@@ -581,12 +577,10 @@ function mostrarModalReferencia(indexEnListaMostrada) { // Cambiado el nombre de
         }
     }
     
-    // Limpiar filtro de documentos del modal
     const filtroDocsInput = modal.querySelector('#filtroDocumentosModal');
     if (filtroDocsInput) filtroDocsInput.value = '';
-    filtrarDocumentosModal(); // Para mostrar todos inicialmente
+    filtrarDocumentosModal();
 
-    // Mostrar el modal
     if (modal) modal.style.display = "block";
 }
 
@@ -594,12 +588,11 @@ function mostrarModalReferencia(indexEnListaMostrada) { // Cambiado el nombre de
 function getEstadoDescripcion(estadoCve) {
     const estados = {
         'P': 'Pendiente', 'C': 'En Proceso', 'D': 'Despacho', 'T': 'Terminado',
-        // Añade más si es necesario
     };
     return estados[String(estadoCve).toUpperCase()] || estadoCve || 'Desconocido';
 }
 
-// Función para mostrar las referencias en formato de tarjetas (en la página principal)
+// Función para mostrar las referencias en formato de tarjetas - MODIFICADA
 function mostrarReferencias(clienteInfo, referenciasAMostrarParam) {
     const container = document.getElementById('referencias-container');
     let referenciasAMostrar = referenciasAMostrarParam;
@@ -607,14 +600,14 @@ function mostrarReferencias(clienteInfo, referenciasAMostrarParam) {
     if (!referenciasAMostrar) {
         referenciasAMostrar = referenciasFiltradas.length > 0 || (document.getElementById('searchReferencia')?.value) ? referenciasFiltradas : referencias;
     }
-    container.innerHTML = ''; // Limpiar
+    container.innerHTML = '';
 
     const clienteDiv = document.createElement('div');
     clienteDiv.className = 'cliente-info';
     clienteDiv.innerHTML = `
         <h2>Información del Cliente</h2>
         <div class="cliente-details">
-            <div class="cliente-detail-item"><strong>Cliente No:</strong><span>${document.getElementById('clienteNo').value}</span></div>
+            <div class="cliente-detail-item"><strong>Cliente ID:</strong><span>${clienteInfo.id}</span></div>
             ${clienteInfo.nombre ? `<div class="cliente-detail-item"><strong>Nombre:</strong><span>${clienteInfo.nombre}</span></div>` : ''}
             ${clienteInfo.importador ? `<div class="cliente-detail-item"><strong>Importador:</strong><span>${clienteInfo.importador}</span></div>` : ''}
             ${clienteInfo.aduana ? `<div class="cliente-detail-item"><strong>Aduana:</strong><span>${clienteInfo.aduana}</span></div>` : ''}
@@ -637,12 +630,9 @@ function mostrarReferencias(clienteInfo, referenciasAMostrarParam) {
     const fin = Math.min(inicio + getItemsPorPagina(), referenciasAMostrar.length);
 
     for (let i = inicio; i < fin; i++) {
-        // IMPORTANTE: El índice que se pasa a crearTarjetaReferencia es 'i', que es el índice en la lista paginada/filtrada.
-        // Pero para mostrarModalReferencia, necesitamos el índice en 'referenciasCompletas'.
-        // Buscaremos la referencia completa por su ID único (ej. Referencia)
         const refActualEnLista = referenciasAMostrar[i];
         const indiceEnCompletas = referenciasCompletas.findIndex(rc => rc.Referencia === refActualEnLista.Referencia);
-        const card = crearTarjetaReferencia(refActualEnLista, indiceEnCompletas, i); // Pasamos ambos índices
+        const card = crearTarjetaReferencia(refActualEnLista, indiceEnCompletas, i);
         gridContainer.appendChild(card);
     }
     container.appendChild(gridContainer);
@@ -671,7 +661,6 @@ function mostrarReferencias(clienteInfo, referenciasAMostrarParam) {
 }
 
 // Función para crear una tarjeta de referencia
-// Modificada para aceptar 'indexOriginal' para el modal y 'indexEnVistaActual' para otros usos si es necesario
 function crearTarjetaReferencia(referencia, indexOriginal, indexEnVistaActual) {
     const card = document.createElement('div');
     card.className = 'reference-card';
@@ -711,7 +700,7 @@ function obtenerClaseEstado(estadoCve) {
     const clases = {
         'P': 'status-pending', 'C': 'status-processing', 'D': 'status-dispatch', 'T': 'status-completed'
     };
-    return clases[String(estadoCve).toUpperCase()] || 'status-pending'; // Default a pending si no se reconoce
+    return clases[String(estadoCve).toUpperCase()] || 'status-pending';
 }
 
 // Validar fechas al perder el foco
@@ -721,34 +710,30 @@ const fechaFinalInput = document.getElementById('fechaFinal');
 if (fechaInicialInput) fechaInicialInput.addEventListener('blur', validarFormatoFechaInput);
 if (fechaFinalInput) fechaFinalInput.addEventListener('blur', validarFormatoFechaInput);
 
-function validarFormatoFechaInput(e) { // Renombrada para evitar conflicto
+function validarFormatoFechaInput(e) {
     const input = e.target;
-    // Mejor regex para DD/MM/AAAA que considera años válidos y meses/días
     const regex = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/;
 
     if (input.value !== '' && !regex.test(input.value)) {
-        input.style.borderColor = 'var(--danger-color)'; // Asume que tienes --danger-color en CSS
+        input.style.borderColor = 'var(--danger-color)';
         mostrarAlerta('Formato de fecha inválido. Use DD/MM/AAAA.', 'error');
     } else {
-        input.style.borderColor = ''; // O a var(--border-color)
+        input.style.borderColor = '';
     }
 }
 
-// Inicializar listeners o configuraciones al cargar el script
+// Inicializar listeners al cargar el script
 document.addEventListener('DOMContentLoaded', () => {
-    // Si tienes un botón de limpiar, asígnale la función
     const btnLimpiar = document.getElementById('btnLimpiar');
     if (btnLimpiar) {
         btnLimpiar.addEventListener('click', limpiarFormulario);
     }
 
-    // Si tienes un botón de consultar, asígnale la función
-    const btnConsultar = document.getElementById('btnConsultar'); // Asume que tu botón de búsqueda tiene id="btnConsultar"
+    const btnConsultar = document.getElementById('btnConsultar');
     if (btnConsultar) {
         btnConsultar.addEventListener('click', consultarReferencias);
     }
     
-    // Listener para el input de búsqueda de referencias principal
     const searchInput = document.getElementById('searchReferencia');
     if (searchInput) {
         searchInput.addEventListener('keyup', filtrarReferencias);

@@ -3,119 +3,254 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>E-Clientes - Iniciar Sesión</title>
-  <link rel="stylesheet" href="/css/login.css">
-  <!-- Iconos de Google Material -->
+  <title>E-Clientes - Iniciar Sesión</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <!-- Tipografía moderna -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  
-  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      width: 100%;
+      max-width: 450px;
+      margin: 20px;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2.5rem;
+    }
+
+    .login-header h1 {
+      color: #2c3e50;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .login-header p {
+      color: #7f8c8d;
+      font-size: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #34495e;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .input-wrapper {
+      position: relative;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid #ecf0f1;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #3498db;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #7f8c8d;
+      transition: color 0.3s ease;
+    }
+
+    .toggle-password:hover {
+      color: #3498db;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .remember-me input[type="checkbox"] {
+      width: auto;
+      margin-right: 10px;
+    }
+
+    .remember-me label {
+      margin: 0;
+      color: #7f8c8d;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .login-button {
+      width: 100%;
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      color: white;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .login-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+    }
+
+    .login-button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .login-button .material-icons {
+      margin-right: 8px;
+    }
+
+    .error-alert {
+      background: #ffebee;
+      color: #c62828;
+      padding: 12px 15px;
+      border-radius: 8px;
+      border: 1px solid #ffcdd2;
+      margin-bottom: 20px;
+      display: none;
+      font-size: 0.9rem;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #bdc3c7;
+      font-size: 0.85rem;
+    }
+
+    .help-text {
+      text-align: center;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #ecf0f1;
+      color: #7f8c8d;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        padding: 20px;
+        margin: 10px;
+      }
+      
+      .login-header h1 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="login-container">
-    <div class="login-card">
-      <div class="login-header">
-        <div class="logo">
-            <img src="assets/logo-white.png" alt="Tu Logo" style="height: 60px; margin-right: 30px; vertical-align: center;">
-          <span class="material-icons">analytics</span>
-        </div>
-        <h1>E-Clientes</h1>
-        <p>Sistema de Referencias Aduaneras</p>
-      </div>    
-
-      <form id="loginForm" class="login-form">
-        <div class="form-group">
-          <label for="username">
-            <span class="material-icons">person</span>
-            Usuario
-          </label>
-          <input 
-            type="text" 
-            id="username" 
-            name="username" 
-            placeholder="Ingrese su usuario"
-            required
-            autocomplete="username"
-          >
-        </div>
-
-        <div class="form-group">
-          <label for="password">
-            <span class="material-icons">lock</span>
-            Contraseña
-          </label>
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            placeholder="Ingrese su contraseña"
-            required
-            autocomplete="current-password"
-          >
-          <button type="button" class="toggle-password" onclick="togglePassword()">
-            <span class="material-icons">visibility</span>
-          </button>
-        </div>
-
-        <div class="form-options">
-          <label class="remember-me">
-            <input type="checkbox" id="rememberMe">
-            <span>Recordarme</span>
-          </label>
-          <a href="forgot-password.html" class="forgot-password">¿Olvidó su contraseña?</a>
-        </div>
-
-        <button type="submit" class="login-button">
-          <span class="material-icons">login</span>
-          Iniciar Sesión
-        </button>
-
-        <div id="loginError" class="error-message"></div>
-      </form>
-
-      <div class="login-footer">
-        <p>¿No tiene una cuenta? <a href="#">Contacte al administrador</a></p>
+    <div class="login-header">
+      <div class="logo">
+        <span class="material-icons">business</span>
       </div>
+      <h1>E-Clientes</h1>
+      <p>Acceso al Sistema de Referencias</p>
     </div>
 
-    <div class="login-info">
-      <h2>Bienvenido a E-Clientes</h2>
-      <p>Acceda al sistema de gestión de referencias aduaneras para consultar y administrar la información de sus clientes.</p>
-      <ul>
-        <li><span class="material-icons">check_circle</span> Consulta de referencias</li>
-        <li><span class="material-icons">check_circle</span> Historial de operaciones</li>
-        <li><span class="material-icons">check_circle</span> Facil y sencillo</li>
-      </ul>
+    <form id="loginForm">
+      <div id="loginError" class="error-alert"></div>
+
+      <div class="form-group">
+        <label for="username">Usuario</label>
+        <input type="text" id="username" name="username" required autocomplete="username">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <div class="password-wrapper">
+          <input type="password" id="password" name="password" required autocomplete="current-password">
+          <span class="toggle-password" onclick="togglePassword()">
+            <span class="material-icons">visibility</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="remember-me">
+        <input type="checkbox" id="rememberMe" name="rememberMe">
+        <label for="rememberMe">Recordar sesión</label>
+      </div>
+
+      <button type="submit" class="login-button">
+        <span class="material-icons">login</span>
+        Iniciar Sesión
+      </button>
+    </form>
+
+    <div class="help-text">
+      <p>Si no tienes credenciales de acceso, contacta al administrador del sistema.</p>
+    </div>
+
+    <div class="footer">
+      <p>&copy; 2025 Agencia Aduanal Rodall Oseguera</p>
     </div>
   </div>
 
-  <div id="passwordExpiredModal" class="modal">
-    <div class="modal-content">
-      <span class="close-button" onclick="closeModal()">&times;</span>
-      <h2>Cambiar Contraseña</h2>
-      <p>Su contraseña ha expirado. Por favor, cambie su contraseña para continuar.</p>
-      <form id="changePasswordForm">
-        <div class="form-group">
-          <label for="newPassword">Nueva Contraseña</label>
-          <input type="password" id="newPassword" name="newPassword" required>
-          <button type="button" class="toggle-password" onclick="togglePassword('newPassword', this)">
-            <span class="material-icons">visibility</span>
-          </button>
-        </div>
-        <div class="form-group">
-          <label for="confirmPassword">Confirmar Contraseña</label>
-          <input type="password" id="confirmPassword" name="confirmPassword" required>
-          <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword', this)">
-            <span class="material-icons">visibility</span>
-          </button>
-        </div>
-        <button type="submit" class="modal-button">Cambiar Contraseña</button>
-      </form>
-    </div>
-  </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="/js/login.js"></script>  
+  <script src="login.js"></script>
 </body>
 </html>
