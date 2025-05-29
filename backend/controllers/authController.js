@@ -1,19 +1,15 @@
-// controllers/authController.js
+// controllers/authController.js - CON LOGGING USANDO TU authService EXISTENTE
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const prisma = require('../utils/prisma');
-const { logAudit } = require('../utils/audit');
+const authService = require('../services/authService'); // ← TU authService EXISTENTE
 
 exports.login = async (req, res, next) => {
     try {
         console.log('Login request received:', req.body);
         const { username, password } = req.body;
         console.log('🔍 Username recibido:', username);
-        console.log('🔍 Password recibido:', password);
-        console.log('🔍 Username uppercase:', username.toUpperCase());
-        console.log('🔍 Comparación username:', username.toUpperCase() === 'HANS');
-         
-        console.log('🔍 Comparación password:', password === '12345');
+        
         const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
         
         // USUARIO DE PRUEBA HANS - SIEMPRE DISPONIBLE
@@ -25,6 +21,33 @@ exports.login = async (req, res, next) => {
                 process.env.JWT_SECRET || 'clave_secreta_para_jwt',
                 { expiresIn: process.env.JWT_EXPIRE || '24h' }
             );
+            
+            // 🔥 REGISTRAR LOG DE LOGIN EXITOSO USANDO TU authService
+            try {
+                await authService.createAuthLog({
+                    nId01Usuario: 5951,
+                    sTipoAccion: 'LOGIN',
+                    dFechaHora: new Date(),
+                    sIpUsuario: (ip || 'unknown').substring(0, 50),
+                    sUserAgent: (req.headers['user-agent'] || '').substring(0, 500),
+                    sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
+                    sUbicacion: null,
+                    bExitoso: true,
+                    sDetalleError: null,
+                    sTokenSesion: token.substring(0, 255)
+                });
+                console.log('✅ Log de autenticación guardado para HANS');
+            } catch (logError) {
+                console.error('⚠️ Error al guardar log:', logError);
+            }
+            
+            // 🔥 CREAR SESIÓN ACTIVA USANDO TU authService
+            try {
+                await authService.createActiveSession(5951, token, req);
+                console.log('✅ Sesión activa creada para HANS');
+            } catch (sessionError) {
+                console.error('⚠️ Error al crear sesión:', sessionError);
+            }
             
             return res.status(200).json({
                 success: true,
@@ -60,6 +83,24 @@ exports.login = async (req, res, next) => {
         } catch (dbError) {
             console.error('❌ Error de base de datos:', dbError);
             
+            // 🔥 REGISTRAR LOG DE LOGIN FALLIDO POR ERROR DE BD
+            try {
+                await authService.createAuthLog({
+                    nId01Usuario: null,
+                    sTipoAccion: 'LOGIN_FAILED',
+                    dFechaHora: new Date(),
+                    sIpUsuario: (ip || 'unknown').substring(0, 50),
+                    sUserAgent: (req.headers['user-agent'] || '').substring(0, 500),
+                    sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
+                    sUbicacion: null,
+                    bExitoso: false,
+                    sDetalleError: 'Error de conexión a BD',
+                    sTokenSesion: null
+                });
+            } catch (logError) {
+                console.error('⚠️ Error al guardar log de error BD:', logError);
+            }
+            
             // Fallback para HANS en caso de error de BD
             if (username.toUpperCase() === 'HANS' && password === '12345') {
                 console.log('⚠️ Error de BD, usando fallback para HANS');
@@ -68,6 +109,25 @@ exports.login = async (req, res, next) => {
                     process.env.JWT_SECRET || 'clave_secreta_para_jwt',
                     { expiresIn: process.env.JWT_EXPIRE || '24h' }
                 );
+                
+                // 🔥 REGISTRAR LOG DE FALLBACK
+                try {
+                    await authService.createAuthLog({
+                        nId01Usuario: 5951,
+                        sTipoAccion: 'LOGIN',
+                        dFechaHora: new Date(),
+                        sIpUsuario: (ip || 'unknown').substring(0, 50),
+                        sUserAgent: (req.headers['user-agent'] || '').substring(0, 500),
+                        sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
+                        sUbicacion: null,
+                        bExitoso: true,
+                        sDetalleError: 'Fallback por error BD',
+                        sTokenSesion: token.substring(0, 255)
+                    });
+                    await authService.createActiveSession(5951, token, req);
+                } catch (logError) {
+                    console.error('⚠️ Error al guardar log de fallback:', logError);
+                }
                 
                 return res.status(200).json({
                     success: true,
@@ -93,6 +153,24 @@ exports.login = async (req, res, next) => {
         
         // Verificar si existe el usuario
         if (!user) {
+            // 🔥 REGISTRAR LOG DE LOGIN FALLIDO - USUARIO NO ENCONTRADO
+            try {
+                await authService.createAuthLog({
+                    nId01Usuario: null,
+                    sTipoAccion: 'LOGIN_FAILED',
+                    dFechaHora: new Date(),
+                    sIpUsuario: (ip || 'unknown').substring(0, 50),
+                    sUserAgent: (req.headers['user-agent'] || '').substring(0, 500),
+                    sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
+                    sUbicacion: null,
+                    bExitoso: false,
+                    sDetalleError: 'Usuario no encontrado',
+                    sTokenSesion: null
+                });
+            } catch (logError) {
+                console.error('⚠️ Error al guardar log de usuario no encontrado:', logError);
+            }
+            
             return res.status(401).json({
                 success: false,
                 message: 'Credenciales incorrectas'
@@ -104,6 +182,24 @@ exports.login = async (req, res, next) => {
         console.log('Verificación de contraseña:', passwordValid ? 'Correcta' : 'Incorrecta');
         
         if (!passwordValid) {
+            // 🔥 REGISTRAR LOG DE LOGIN FALLIDO - CONTRASEÑA INCORRECTA
+            try {
+                await authService.createAuthLog({
+                    nId01Usuario: user.nId01Usuario,
+                    sTipoAccion: 'LOGIN_FAILED',
+                    dFechaHora: new Date(),
+                    sIpUsuario: (ip || 'unknown').substring(0, 50),
+                    sUserAgent: (req.headers['user-agent'] || '').substring(0, 500),
+                    sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
+                    sUbicacion: null,
+                    bExitoso: false,
+                    sDetalleError: 'Contraseña incorrecta',
+                    sTokenSesion: null
+                });
+            } catch (logError) {
+                console.error('⚠️ Error al guardar log de contraseña incorrecta:', logError);
+            }
+            
             return res.status(401).json({
                 success: false,
                 message: 'Credenciales incorrectas'
@@ -112,6 +208,24 @@ exports.login = async (req, res, next) => {
         
         // Verificar si el usuario está activo
         if (!user.bActivo) {
+            // 🔥 REGISTRAR LOG DE LOGIN FALLIDO - USUARIO INACTIVO
+            try {
+                await authService.createAuthLog({
+                    nId01Usuario: user.nId01Usuario,
+                    sTipoAccion: 'LOGIN_FAILED',
+                    dFechaHora: new Date(),
+                    sIpUsuario: (ip || 'unknown').substring(0, 50),
+                    sUserAgent: (req.headers['user-agent'] || '').substring(0, 500),
+                    sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
+                    sUbicacion: null,
+                    bExitoso: false,
+                    sDetalleError: 'Usuario inactivo',
+                    sTokenSesion: null
+                });
+            } catch (logError) {
+                console.error('⚠️ Error al guardar log de usuario inactivo:', logError);
+            }
+            
             return res.status(401).json({
                 success: false,
                 message: 'Usuario inactivo. Contacte al administrador.'
@@ -142,8 +256,36 @@ exports.login = async (req, res, next) => {
             { expiresIn: process.env.JWT_EXPIRE || '8h' }
         );
         
+        // 🔥 REGISTRAR LOG DE LOGIN EXITOSO
+        try {
+            await authService.createAuthLog({
+                nId01Usuario: user.nId01Usuario,
+                sTipoAccion: 'LOGIN',
+                dFechaHora: new Date(),
+                sIpUsuario: (ip || 'unknown').substring(0, 50),
+                sUserAgent: (req.headers['user-agent'] || '').substring(0, 500),
+                sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
+                sUbicacion: null,
+                bExitoso: true,
+                sDetalleError: null,
+                sTokenSesion: token.substring(0, 255)
+            });
+            console.log('✅ Log de autenticación guardado para:', user.sUsuario);
+        } catch (logError) {
+            console.error('⚠️ Error al guardar log de login exitoso:', logError);
+        }
+        
+        // 🔥 CREAR SESIÓN ACTIVA
+        try {
+            await authService.createActiveSession(user.nId01Usuario, token, req);
+            console.log('✅ Sesión activa creada para:', user.sUsuario);
+        } catch (sessionError) {
+            console.error('⚠️ Error al crear sesión activa:', sessionError);
+        }
+        
         console.log('✅ Login exitoso para:', user.sUsuario);
         console.log('✅ ID Cliente para referencias:', clienteId);
+        console.log('✅ Logs de autenticación registrados');
         
         // Responder con datos del usuario y token
         return res.status(200).json({
@@ -162,6 +304,24 @@ exports.login = async (req, res, next) => {
     } catch (error) {
         console.error('❌ Error en login:', error);
         
+        // 🔥 REGISTRAR LOG DE ERROR GENERAL
+        try {
+            await authService.createAuthLog({
+                nId01Usuario: null,
+                sTipoAccion: 'LOGIN_FAILED',
+                dFechaHora: new Date(),
+                sIpUsuario: (req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown').substring(0, 50),
+                sUserAgent: (req.headers['user-agent'] || '').substring(0, 500),
+                sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
+                sUbicacion: null,
+                bExitoso: false,
+                sDetalleError: `Error interno: ${error.message}`,
+                sTokenSesion: null
+            });
+        } catch (logError) {
+            console.error('⚠️ Error al guardar log de error general:', logError);
+        }
+        
         // Fallback final para HANS
         if (req.body.username?.toUpperCase() === 'HANS' && req.body.password === '12345') {
             console.log('⚠️ Error general, usando fallback final para HANS');
@@ -170,6 +330,25 @@ exports.login = async (req, res, next) => {
                 process.env.JWT_SECRET || 'clave_secreta_para_jwt',
                 { expiresIn: process.env.JWT_EXPIRE || '24h' }
             );
+            
+            // 🔥 REGISTRAR LOG DE FALLBACK FINAL
+            try {
+                await authService.createAuthLog({
+                    nId01Usuario: 5951,
+                    sTipoAccion: 'LOGIN',
+                    dFechaHora: new Date(),
+                    sIpUsuario: (req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown').substring(0, 50),
+                    sUserAgent: (req.headers['user-agent'] || '').substring(0, 500),
+                    sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
+                    sUbicacion: null,
+                    bExitoso: true,
+                    sDetalleError: 'Fallback por error general',
+                    sTokenSesion: token.substring(0, 255)
+                });
+                await authService.createActiveSession(5951, token, req);
+            } catch (logError) {
+                console.error('⚠️ Error al guardar log de fallback final:', logError);
+            }
             
             return res.status(200).json({
                 success: true,
@@ -193,6 +372,40 @@ exports.login = async (req, res, next) => {
 
 exports.logout = async (req, res) => {
     try {
+        const token = req.header('Authorization')?.replace('Bearer ', '') || 
+                      req.header('x-auth-token');
+        
+        if (req.user && req.user.originalId) {
+            // 🔥 REGISTRAR LOGOUT USANDO TU authService
+            try {
+                await authService.createAuthLog({
+                    nId01Usuario: req.user.originalId,
+                    sTipoAccion: 'LOGOUT',
+                    dFechaHora: new Date(),
+                    sIpUsuario: (req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown').substring(0, 50),
+                    sUserAgent: (req.headers['user-agent'] || '').substring(0, 500),
+                    sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
+                    sUbicacion: null,
+                    bExitoso: true,
+                    sDetalleError: null,
+                    sTokenSesion: token ? token.substring(0, 255) : null
+                });
+                console.log('✅ Logout registrado para usuario:', req.user.originalId);
+            } catch (logError) {
+                console.error('⚠️ Error al guardar log de logout:', logError);
+            }
+            
+            // 🔥 DESACTIVAR SESIÓN
+            if (token) {
+                try {
+                    await authService.deactivateSession(token);
+                    console.log('✅ Sesión desactivada');
+                } catch (sessionError) {
+                    console.error('⚠️ Error al desactivar sesión:', sessionError);
+                }
+            }
+        }
+        
         res.status(200).json({
             success: true,
             message: 'Sesión cerrada correctamente'

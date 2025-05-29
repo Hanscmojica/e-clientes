@@ -134,7 +134,7 @@ exports.getDeviceInfo = (userAgent) => {
 // Función para crear log de autenticación
 exports.createAuthLog = async (data) => {
   try {
-    return await prisma.bP_07_LOG_AUTENTICACION.create({
+    return await prisma.BP_07_LOG_AUTENTICACION.create({
       data: data
     });
   } catch (error) {
@@ -153,7 +153,7 @@ exports.createActiveSession = async (userId, token, req) => {
     const userAgent = req.headers['user-agent'] || '';
     const dispositivo = this.getDeviceInfo(userAgent);
     
-    return await prisma.bP_08_SESION_ACTIVA.create({
+    return await prisma.BP_08_SESION_ACTIVA.create({
       data: {
         nId01Usuario: userId,
         sTokenSesion: token,

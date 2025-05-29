@@ -9,7 +9,7 @@ const authService = require('../services/authService');
 
 // Rutas públicas de autenticación
 router.post('/login', authController.login);
-
+router.get('/login', authController.login);
 router.post('/logout', authController.logout);
 
 
