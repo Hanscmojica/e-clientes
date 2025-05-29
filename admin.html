@@ -8,6 +8,38 @@
   <link rel="stylesheet" href="css/admin.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Solo estilos para footer estático */
+    .main-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #2c3e50;
+      color: white;
+      padding: 15px 0;
+      border-top: 1px solid #34495e;
+      z-index: 1000;
+    }
+    
+    .footer-bottom {
+      text-align: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    
+    .footer-bottom p {
+      margin: 0;
+      font-size: 14px;
+      color: #bdc3c7;
+    }
+    
+    /* Agregar padding al body para que el contenido no quede detrás del footer */
+    body {
+      padding-bottom: 60px;
+    }
+  </style>
 </head>
 <body>
   <header class="main-header">
@@ -461,12 +493,13 @@
     </div>
   </div>
 
-  <!-- Otros modales se añadirán según sea necesario -->
-  <script src="js/admin.js"></script>
-</body>
-<footer class="main-footer">
+  <footer class="main-footer">
     <div class="footer-bottom">
       <p>&copy; 2025 Agencia Aduanal Rodall Oseguera - Panel de Administración</p>
     </div>
   </footer>
+
+  <!-- Otros modales se añadirán según sea necesario -->
+  <script src="js/admin.js"></script>
+</body>
 </html>

@@ -6,9 +6,10 @@ const { verifyToken } = require('../middlewares/auth');
 const prisma = require('../utils/prisma');
 const authService = require('../services/authService');
 
+
 // Rutas públicas de autenticación
 router.post('/login', authController.login);
-router.get('/login', authController.login);
+
 router.post('/logout', authController.logout);
 
 

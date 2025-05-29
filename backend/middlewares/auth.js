@@ -22,7 +22,8 @@ const verifyToken = async (req, res, next) => {
     req.user = {
       id: decoded.id,
       username: decoded.username,
-      role: decoded.role
+      role: decoded.role,
+      originalId: decoded.originalId || decoded.id // Para compatibilidad con admin
     };
     
     next();
@@ -33,6 +34,37 @@ const verifyToken = async (req, res, next) => {
       message: 'Token inválido o expirado' 
     });
   }
+};
+
+// NUEVA FUNCIÓN - Para compatibilidad con rutas de admin
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+
+  if (!token) {
+    return res.status(401).json({
+      success: false,
+      message: 'Token de acceso requerido'
+    });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET || 'clave_secreta_para_jwt', (err, user) => {
+    if (err) {
+      console.error('❌ Token inválido:', err.message);
+      return res.status(403).json({
+        success: false,
+        message: 'Token inválido'
+      });
+    }
+
+    req.user = {
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      originalId: user.originalId || user.id
+    };
+    next();
+  });
 };
 
 // Middleware para verificar roles
@@ -75,6 +107,7 @@ const checkPermission = (permissionName, action = 'leer') => {
 
 module.exports = {
   verifyToken,
+  authenticateToken, // ← NUEVA EXPORTACIÓN
   checkRole,
   checkPermission
 };

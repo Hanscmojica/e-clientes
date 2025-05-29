@@ -1,16 +1,18 @@
-// server.js
+// server.js - Versión corregida
 const express = require('express');
 const cors = require('cors');
 const ftp = require('basic-ftp');
 const multer = require('multer');
 const stream = require('stream');
 const path = require('path');
-const v1ApiExternaRouter = require("./routes/apiExternaRoutes")
+require('dotenv').config();
+
+// Importar rutas
+const v1ApiExternaRouter = require("./routes/apiExternaRoutes");
 const authRouter = require('./routes/auth');
 const accountAccessRouter = require('./routes/accountAccess');
 const profileRouter = require('./routes/profile');
-require('dotenv').config();
-
+const adminRoutes = require('./routes/admin');
 
 // Configuración
 const FTP_CONFIG = {
@@ -34,7 +36,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     origin: '*', // Permitir todos los orígenes durante desarrollo
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // ← AGREGUÉ PATCH
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true // Para cookies si es necesario
 }));
@@ -56,7 +58,23 @@ async function connectAndLogin() {
     }
 }
 
-// Ruta de prueba para verificar que el servidor está funcionando
+// CONFIGURAR RUTAS DE API (ORDEN IMPORTANTE)
+console.log('🔍 Cargando rutas de admin...');
+try {
+    console.log('✅ Archivo admin.js encontrado y cargado');
+    console.log('✅ Registrando rutas /api/admin/*');
+    app.use('/api/admin', adminRoutes); // ← RUTAS DE ADMIN PRIMERO
+} catch (error) {
+    console.error('❌ ERROR cargando admin.js:', error.message);
+}
+
+// Configurar rutas principales
+app.use('/api/auth', authRouter);
+app.use('/api/v1/apiExterna', v1ApiExternaRouter);
+app.use('/api/account-access', accountAccessRouter);
+app.use('/api/profile', profileRouter);
+
+// Rutas de prueba
 app.post('/api/test', (req, res) => {
     res.status(200).json({
         success: true,
@@ -64,7 +82,6 @@ app.post('/api/test', (req, res) => {
     });
 });
 
-// Ruta para probar la autenticación directamente
 app.post('/api/auth/test', (req, res) => {
     res.status(200).json({
         success: true,
@@ -76,13 +93,6 @@ app.post('/api/auth/test', (req, res) => {
         }
     });
 });
-
-// Configurar rutas principales
-app.use('/api/auth', authRouter);
-app.use('/api/v1/apiExterna', v1ApiExternaRouter);
-app.use('/api/account-access', accountAccessRouter);
-app.use('/api/profile', profileRouter);
-
 
 // Ruta: Logout simplificado
 app.post('/api/auth/logout', (req, res) => {
@@ -363,11 +373,40 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../login.html'));
 });
 
+// Middleware de manejo de errores
+app.use((err, req, res, next) => {
+    console.error('❌ Error no manejado:', err);
+    res.status(500).json({
+        success: false,
+        message: 'Error interno del servidor'
+    });
+});
+
+// Middleware para rutas no encontradas
+app.use('*', (req, res) => {
+    console.log('❌ Ruta no encontrada:', req.method, req.originalUrl);
+    res.status(404).json({
+        success: false,
+        message: 'Ruta no encontrada'
+    });
+});
+
 // Iniciar servidor
 app.listen(SERVER_PORT, '0.0.0.0', () => {
-    console.log(`Servidor ejecutándose en http://localhost:${SERVER_PORT}`);
+    console.log(`🚀 Servidor ejecutándose en http://localhost:${SERVER_PORT}`);
+    console.log('📋 Rutas API registradas:');
+    console.log('   - /api/auth/*');
+    console.log('   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN');
+    console.log('   - /api/profile/*');
+    console.log('   - /api/account-access/*');
+    console.log('   - /api/v1/apiExterna/*');
     
-    // === NUEVA FUNCIONALIDAD: INICIAR LIMPIADOR DE SESIONES ===
-    const { startSessionCleaner } = require('./scripts/cleanSessions');
-    startSessionCleaner();
+    // === INICIAR LIMPIADOR DE SESIONES (OPCIONAL) ===
+    try {
+        const { startSessionCleaner } = require('./scripts/cleanSessions');
+        startSessionCleaner();
+        console.log('✅ Limpiador de sesiones iniciado');
+    } catch (error) {
+        console.log('⚠️ No se pudo iniciar limpiador de sesiones:', error.message);
+    }
 });

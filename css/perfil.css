@@ -1,6 +1,6 @@
 /* Variables de colores */
 :root {
-    --primary-color: #1e3a8a;
+    --primary-color: #04263f;
     --primary-hover: #1e40af;
     --secondary-color: #f8fafc;
     --accent-color: #3b82f6;
@@ -61,7 +61,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    color: var(--primary-color);
+    color: #d7a520;
     text-decoration: none;
     cursor: pointer;
   }

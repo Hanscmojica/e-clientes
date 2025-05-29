@@ -135,22 +135,22 @@ document.addEventListener('DOMContentLoaded', function() {
         loginButton.innerHTML = '<span class="material-icons">hourglass_empty</span> Iniciando sesión...';
       }
       
-      try {
-        console.log('🔍 Enviando petición a:', `${apiBase}/api/auth/login`);
-        
-        const response = await fetch(`${apiBase}/api/auth/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({ 
-            username: username.trim(), 
-            password: password 
-          })
-        });
+        try {
+          console.log('🔍 Enviando petición a:', `${apiBase}/api/auth/login`);
+          
+          const response = await fetch(`${apiBase}/api/auth/login`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({ 
+              username: username.trim(), 
+              password: password 
+            })
+          });
 
-        console.log('🔍 Status de respuesta:', response.status);
+          console.log('🔍 Status de respuesta:', response.status);
         
         let data;
         try {
