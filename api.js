@@ -335,7 +335,7 @@ function formatearFecha(fechaStr) {
     }
 }
 
-// Función para generar la biblioteca de documentos DENTRO DEL MODAL
+// ✅ FUNCIÓN CORREGIDA - Generarar biblioteca de documentos DENTRO DEL MODAL
 function generarBibliotecaModal(referenciaOriginal) {
     const listaDocumentosUI = modal.querySelector('#listaDocumentos');
     const noDocumentosMensaje = modal.querySelector('#noDocumentosModalMensaje');
@@ -360,7 +360,8 @@ function generarBibliotecaModal(referenciaOriginal) {
     }
 
     const BACKEND_URL = 'http://localhost:5001';
-    const endpointUrl = `${BACKEND_URL}/list/${numeroReferencia}`;
+    // ✅ URL CORREGIDA - Cambio de /list/ a /api/referencias/.../documentos
+    const endpointUrl = `${BACKEND_URL}/api/referencias/${numeroReferencia}/documentos`;
     
     console.log(`Consultando endpoint: ${endpointUrl}`);
     
@@ -372,14 +373,26 @@ function generarBibliotecaModal(referenciaOriginal) {
             }
             return response.json();
         })
-        .then(documentos => {
-            console.log(`Documentos recibidos:`, documentos);
+        .then(respuestaAPI => {
+            // ✅ MANEJO DE RESPUESTA CORREGIDO - Ahora maneja la nueva estructura JSON
+            console.log(`Respuesta completa del API:`, respuestaAPI);
             
             listaDocumentosUI.innerHTML = '';
 
-            if (!documentos || documentos.length === 0) {
+            // Verificar si la respuesta es exitosa
+            if (!respuestaAPI.success) {
                 noDocumentosMensaje.style.display = 'block';
-                noDocumentosMensaje.textContent = 'No hay documentos disponibles para esta referencia.';
+                noDocumentosMensaje.textContent = respuestaAPI.data?.message || 'Error al consultar documentos';
+                listaDocumentosUI.style.display = 'none';
+                return;
+            }
+
+            const data = respuestaAPI.data;
+            
+            // Verificar si hay documentos
+            if (!data.hasDocuments || !data.documents || data.documents.length === 0) {
+                noDocumentosMensaje.style.display = 'block';
+                noDocumentosMensaje.textContent = data.message || 'No hay documentos disponibles para esta referencia.';
                 listaDocumentosUI.style.display = 'none';
                 return;
             }
@@ -387,7 +400,8 @@ function generarBibliotecaModal(referenciaOriginal) {
             noDocumentosMensaje.style.display = 'none';
             listaDocumentosUI.style.display = '';
 
-            documentos.forEach((doc, index) => {
+            // ✅ PROCESAR LOS DOCUMENTOS - Ahora accede a data.documents
+            data.documents.forEach((doc, index) => {
                 const li = document.createElement('li');
                 
                 const nombreArchivo = doc.title || doc.nombre || doc.filename || `Documento ${index + 1}`;
@@ -425,6 +439,8 @@ function generarBibliotecaModal(referenciaOriginal) {
                 filtroDocsInput.addEventListener('input', filtrarDocumentosModal);
                 filtroDocsInput.value = '';
             }
+
+            console.log(`✅ Se cargaron ${data.documents.length} documentos exitosamente`);
         })
         .catch(error => {
             console.error("Error al cargar documentos:", error);
@@ -434,9 +450,11 @@ function generarBibliotecaModal(referenciaOriginal) {
         });
 }
 
+// ✅ FUNCIONES DE DESCARGA Y VISTA ACTUALIZADAS - Usando las nuevas URLs
 // Función para ver documento (desde el modal)
 function verDocumentoModal(referenciaId, docNombre) {
     const BACKEND_URL = 'http://localhost:5001';
+    // 🔧 Actualizar URL según tu backend - ajustar si es necesario
     const viewUrl = `${BACKEND_URL}/view/${referenciaId}/${docNombre}`;
     
     console.log('Abriendo vista previa:', viewUrl);
@@ -448,6 +466,7 @@ function verDocumentoModal(referenciaId, docNombre) {
 // Función para descargar documento (desde el modal)
 function descargarDocumentoModal(referenciaId, docNombre) {
     const BACKEND_URL = 'http://localhost:5001';
+    // 🔧 Actualizar URL según tu backend - ajustar si es necesario
     const downloadUrl = `${BACKEND_URL}/download/${referenciaId}/${docNombre}`;
     
     console.log('Descargando documento:', downloadUrl);

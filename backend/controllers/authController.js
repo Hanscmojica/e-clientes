@@ -17,7 +17,13 @@ exports.login = async (req, res, next) => {
             console.log('✅ Login de prueba para HANS (ID: 5951)');
             
             const token = jwt.sign(
-                { id: 5951, username: 'HANS', role: 'ADMIN' },
+                { 
+                    id: 5951, 
+                    username: 'HANS', 
+                    role: 'ADMIN',
+                    originalId: 5951,
+                    idCliente: 5951  // ✅ AGREGAR idCliente
+                },
                 process.env.JWT_SECRET || 'clave_secreta_para_jwt',
                 { expiresIn: process.env.JWT_EXPIRE || '24h' }
             );
@@ -58,7 +64,8 @@ exports.login = async (req, res, next) => {
                     username: 'HANS',
                     name: 'Hans Hansen Mojica',
                     role: 'ADMIN',
-                    email: 'hans@hotmail.com'
+                    email: 'hans@hotmail.com',
+                    idCliente: 5951  // ✅ AGREGAR idCliente en respuesta
                 }
             });
         }
@@ -105,7 +112,13 @@ exports.login = async (req, res, next) => {
             if (username.toUpperCase() === 'HANS' && password === '12345') {
                 console.log('⚠️ Error de BD, usando fallback para HANS');
                 const token = jwt.sign(
-                    { id: 5951, username: 'HANS', role: 'ADMIN' },
+                    { 
+                        id: 5951, 
+                        username: 'HANS', 
+                        role: 'ADMIN',
+                        originalId: 5951,
+                        idCliente: 5951  // ✅ AGREGAR idCliente
+                    },
                     process.env.JWT_SECRET || 'clave_secreta_para_jwt',
                     { expiresIn: process.env.JWT_EXPIRE || '24h' }
                 );
@@ -138,7 +151,8 @@ exports.login = async (req, res, next) => {
                         username: 'HANS',
                         name: 'Hans Hansen Mojica',
                         role: 'ADMIN',
-                        email: 'hans@hotmail.com'
+                        email: 'hans@hotmail.com',
+                        idCliente: 5951  // ✅ AGREGAR idCliente en respuesta
                     }
                 });
             }
@@ -236,7 +250,7 @@ exports.login = async (req, res, next) => {
         const perfil = user.perfilesUsuario[0]?.perfil?.sNombre || 'USER';
         
         // MAPEO ESPECIAL PARA USUARIOS CON IDs PERSONALIZADOS
-        let clienteId = user.nId01Usuario;
+         let clienteId = user.nIdCliente || user.nId01Usuario;  // ✅ Correcto
         
         // Si es HANS desde la BD, usar el ID 5951 para las referencias
         if (user.sUsuario.toUpperCase() === 'HANS') {
@@ -250,7 +264,8 @@ exports.login = async (req, res, next) => {
                 id: clienteId,
                 username: user.sUsuario,
                 role: perfil,
-                originalId: user.nId01Usuario
+                originalId: user.nId01Usuario,
+                idCliente: clienteId  // ✅ AGREGAR idCliente
             },
             process.env.JWT_SECRET || 'clave_secreta_para_jwt',
             { expiresIn: process.env.JWT_EXPIRE || '8h' }
@@ -298,7 +313,8 @@ exports.login = async (req, res, next) => {
                 name: `${user.sNombre} ${user.sApellidoPaterno} ${user.sApellidoMaterno}`,
                 role: perfil,
                 email: user.sEmail,
-                image: user.sUsuarioImg
+                image: user.sUsuarioImg,
+                idCliente: clienteId  // ✅ AGREGAR idCliente en respuesta
             }
         });
     } catch (error) {
@@ -326,7 +342,13 @@ exports.login = async (req, res, next) => {
         if (req.body.username?.toUpperCase() === 'HANS' && req.body.password === '12345') {
             console.log('⚠️ Error general, usando fallback final para HANS');
             const token = jwt.sign(
-                { id: 5951, username: 'HANS', role: 'ADMIN' },
+                { 
+                    id: 5951, 
+                    username: 'HANS', 
+                    role: 'ADMIN',
+                    originalId: 5951,
+                    idCliente: 5951  // ✅ AGREGAR idCliente
+                },
                 process.env.JWT_SECRET || 'clave_secreta_para_jwt',
                 { expiresIn: process.env.JWT_EXPIRE || '24h' }
             );
@@ -358,7 +380,8 @@ exports.login = async (req, res, next) => {
                     id: 5951,
                     username: 'HANS',
                     name: 'Hans Hansen Mojica',
-                    role: 'ADMIN'
+                    role: 'ADMIN',
+                    idCliente: 5951  // ✅ AGREGAR idCliente en respuesta
                 }
             });
         }
@@ -432,7 +455,8 @@ exports.getProfile = async (req, res, next) => {
                     email: 'hans@hotmail.com',
                     role: 'ADMIN',
                     active: true,
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    idCliente: 5951  // ✅ AGREGAR idCliente en respuesta
                 }
             });
         }
@@ -476,7 +500,8 @@ exports.getProfile = async (req, res, next) => {
                 role: perfil,
                 image: user.sUsuarioImg,
                 active: user.bActivo,
-                createdAt: user.dFechaCreacion
+                createdAt: user.dFechaCreacion,
+                idCliente: clienteId  // ✅ AGREGAR idCliente en respuesta
             }
         });
     } catch (error) {

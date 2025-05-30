@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 const consultarApiExterna = async (body) => {
-  const url = "https://rodall.com:444/SagaWS.NetEnvironmet/rest/sagaWSRef/";
+  const url = "https://www.rodall.com:444/SagaWS.NetEnvironmet/rest/sagaWSRef/";
 
   const headers = {
     "Content-Type": "application/json",

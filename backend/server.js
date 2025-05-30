@@ -1,4 +1,4 @@
-// server.js - Versión corregida
+// server.js - Versión corregida con DocumentacionPublica
 const express = require('express');
 const cors = require('cors');
 const ftp = require('basic-ftp');
@@ -7,6 +7,10 @@ const stream = require('stream');
 const path = require('path');
 require('dotenv').config();
 
+// ✅ IMPORTAR CONFIGURACIÓN Y SERVICIOS FTP
+const ftpConfig = require('./config/ftp');           // ← USAR CONFIG DINÁMICA
+const ftpService = require('./services/ftpService'); // ← USAR SERVICIO MEJORADO
+
 // Importar rutas
 const v1ApiExternaRouter = require("./routes/apiExternaRoutes");
 const authRouter = require('./routes/auth');
@@ -14,19 +18,16 @@ const accountAccessRouter = require('./routes/accountAccess');
 const profileRouter = require('./routes/profile');
 const adminRoutes = require('./routes/admin');
 
-// Configuración
-const FTP_CONFIG = {
-    host: "127.0.0.1",
-    port: 21,
-    user: "eclientes",
-    password: "12345",
-    secure: true,
-    secureOptions: {
-        rejectUnauthorized: false 
-    }
-};
-const FTP_BASE_DIR = "/";
-const SERVER_PORT = 5001;
+// ✅ CONFIGURACIÓN CORREGIDA - USAR .ENV
+const SERVER_PORT = process.env.PORT || 5001;
+
+// ✅ MOSTRAR CONFIGURACIÓN AL INICIO
+console.log('🔧 Configuración FTP:');
+console.log(`   Host: ${ftpConfig.host}`);
+console.log(`   Puerto: ${ftpConfig.port}`);
+console.log(`   Usuario: ${ftpConfig.user}`);
+console.log(`   Seguro: ${ftpConfig.secure}`);
+console.log(`   Ruta base: ${ftpConfig.basePath}`);
 
 // Inicializar app
 const app = express();
@@ -36,7 +37,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     origin: '*', // Permitir todos los orígenes durante desarrollo
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // ← AGREGUÉ PATCH
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true // Para cookies si es necesario
 }));
@@ -46,15 +47,31 @@ app.use(express.static(path.join(__dirname, '../')));
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// Función de conexión a FTPS
+// ✅ FUNCIÓN DE CONEXIÓN MEJORADA (COMPATIBILIDAD)
 async function connectAndLogin() {
     const client = new ftp.Client();
+    client.ftp.timeout = 60000; // 60 segundos timeout
+    
     try {
-        await client.access(FTP_CONFIG);
+        console.log(`🔄 Conectando a FTP: ${ftpConfig.host}:${ftpConfig.port}`);
+        console.log(`🔐 Usuario: ${ftpConfig.user}, Seguro: ${ftpConfig.secure}`);
+        
+        await client.access({
+            host: ftpConfig.host,
+            port: ftpConfig.port,
+            user: ftpConfig.user,
+            password: ftpConfig.password,
+            secure: ftpConfig.secure,
+            secureOptions: ftpConfig.secureOptions
+        });
+        
+        console.log('✅ Conexión FTP establecida exitosamente!');
         return client;
+        
     } catch (error) {
         if (!client.closed) client.close();
-        throw new Error("Error al conectar o autenticar con el servidor FTPS: " + error.message);
+        console.error('❌ Error de conexión FTP:', error.message);
+        throw new Error("Error al conectar con el servidor FTP: " + error.message);
     }
 }
 
@@ -73,6 +90,62 @@ app.use('/api/auth', authRouter);
 app.use('/api/v1/apiExterna', v1ApiExternaRouter);
 app.use('/api/account-access', accountAccessRouter);
 app.use('/api/profile', profileRouter);
+
+// ✅ NUEVAS RUTAS FTP MEJORADAS
+
+// Ruta: Test de conexión FTP
+app.get('/api/ftp/test', async (req, res) => {
+    try {
+        console.log('🧪 Ejecutando test de conexión FTP...');
+        const result = await ftpService.testConnection();
+        res.json(result);
+    } catch (error) {
+        console.error('❌ Error en test FTP:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error en test de conexión: ' + error.message
+        });
+    }
+});
+
+// Ruta: Verificar documentos para una referencia específica
+app.get('/api/referencias/:id/documentos', async (req, res) => {
+    const { id: referenciaId } = req.params;
+    
+    try {
+        console.log(`🔍 Consultando documentos para referencia: ${referenciaId}`);
+        
+        const result = await ftpService.checkReferenceExists(referenciaId);
+        
+        if (result.exists) {
+            res.json({
+                success: true,
+                data: {
+                    hasDocuments: true,
+                    filesCount: result.filesCount,
+                    documents: result.files,
+                    message: `Se encontraron ${result.filesCount} documento(s)`
+                }
+            });
+        } else {
+            res.json({
+                success: true,
+                data: {
+                    hasDocuments: false,
+                    filesCount: 0,
+                    message: result.message
+                }
+            });
+        }
+        
+    } catch (error) {
+        console.error('❌ Error consultando documentos:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al consultar documentos: ' + error.message
+        });
+    }
+});
 
 // Rutas de prueba
 app.post('/api/test', (req, res) => {
@@ -102,12 +175,12 @@ app.post('/api/auth/logout', (req, res) => {
     });
 });
 
-// Ruta: Listar archivos en la raíz
+// ✅ RUTA MEJORADA: Listar archivos en la raíz
 app.get('/list', async (req, res) => {
     let client;
     try {
         client = await connectAndLogin();
-        const list = await client.list(FTP_BASE_DIR);
+        const list = await client.list(ftpConfig.basePath);
 
         const formattedList = list.map(item => {
             let dateAdded = item.modifiedAt?.toISOString().split('T')[0] || 'N/A';
@@ -128,6 +201,7 @@ app.get('/list', async (req, res) => {
                 else if (['xls', 'xlsx'].includes(ext)) docType = 'Excel';
                 else if (['txt', 'log', 'csv'].includes(ext)) docType = 'Texto';
                 else if (['zip', 'rar', '7z'].includes(ext)) docType = 'Comprimido';
+                else if (['xml'].includes(ext)) docType = 'XML';
             }
 
             return {
@@ -142,22 +216,32 @@ app.get('/list', async (req, res) => {
             };
         });
 
+        console.log(`✅ Lista de archivos obtenida: ${formattedList.length} elementos`);
         res.json(formattedList);
     } catch (err) {
-        console.error("Error en /list:", err);
-        res.status(500).json({ error: err.message });
+        console.error("❌ Error en /list:", err.message);
+        res.status(500).json({ 
+            error: `Error al listar archivos: ${err.message}`,
+            config: {
+                host: ftpConfig.host,
+                port: ftpConfig.port,
+                secure: ftpConfig.secure
+            }
+        });
     } finally {
         if (client && !client.closed) client.close();
     }
 });
 
-// Ruta: Listar archivos en un subdirectorio
+// ✅ RUTA CORREGIDA: Listar archivos en un subdirectorio
 app.get('/list/:subdirectory', async (req, res) => {
     const subdirectory = decodeURIComponent(req.params.subdirectory);
-    const remotePath = path.join(FTP_BASE_DIR, subdirectory).replace(/\\/g, '/');
+    // ✅ USAR DocumentacionPublica como base
+    const remotePath = path.join(ftpConfig.basePath, 'DocumentacionPublica', subdirectory).replace(/\\/g, '/');
     
     let client;
     try {
+        console.log(`📁 Listando directorio CORREGIDO: ${remotePath}`);
         client = await connectAndLogin();
         const list = await client.list(remotePath);
 
@@ -180,6 +264,7 @@ app.get('/list/:subdirectory', async (req, res) => {
                 else if (['xls', 'xlsx'].includes(ext)) docType = 'Excel';
                 else if (['txt', 'log', 'csv'].includes(ext)) docType = 'Texto';
                 else if (['zip', 'rar', '7z'].includes(ext)) docType = 'Comprimido';
+                else if (['xml'].includes(ext)) docType = 'XML';
             }
 
             return {
@@ -194,48 +279,70 @@ app.get('/list/:subdirectory', async (req, res) => {
             };
         });
 
+        console.log(`✅ Directorio ${subdirectory} listado CORRECTAMENTE: ${formattedList.length} elementos`);
         res.json(formattedList);
     } catch (err) {
-        console.error(`Error en /list/${subdirectory}:`, err);
+        console.error(`❌ Error en /list/${subdirectory}:`, err.message);
         if (err.code === 550) {  // Código FTP para "Archivo o directorio no encontrado"
-            return res.status(404).json({ error: "No se encontró la carpeta de documentos para esta referencia en el servidor." });
+            return res.status(404).json({ 
+                error: "No se encontró la carpeta de documentos para esta referencia en el servidor.",
+                message: "No existen documentos para esta referencia",
+                searchedPath: remotePath
+            });
         }
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ 
+            error: `Error al listar directorio: ${err.message}`,
+            config: {
+                host: ftpConfig.host,
+                port: ftpConfig.port,
+                secure: ftpConfig.secure
+            }
+        });
     } finally {
         if (client && !client.closed) client.close();
     }
 });
 
-// Ruta: Subir archivo
+// ✅ RUTA MEJORADA: Subir archivo
 app.post('/upload', upload.single('file'), async (req, res) => {
     if (!req.file) return res.status(400).json({ error: "No se recibió ningún archivo" });
 
     const filename = req.file.originalname;
-    const remotePath = path.join(FTP_BASE_DIR, filename).replace(/\\/g, '/');
+    const remotePath = path.join(ftpConfig.basePath, filename).replace(/\\/g, '/');
 
     let client;
     try {
+        console.log(`📤 Subiendo archivo: ${filename}`);
         client = await connectAndLogin();
         const readableStream = new stream.PassThrough();
         readableStream.end(req.file.buffer);
 
         await client.uploadFrom(readableStream, remotePath);
+        console.log(`✅ Archivo ${filename} subido correctamente`);
         res.json({ message: `Archivo '${filename}' subido correctamente` });
     } catch (err) {
-        console.error("Error en /upload:", err);
-        res.status(500).json({ error: err.message || "Error al subir el archivo" });
+        console.error("❌ Error en /upload:", err.message);
+        res.status(500).json({ 
+            error: `Error al subir archivo: ${err.message}`,
+            config: {
+                host: ftpConfig.host,
+                port: ftpConfig.port,
+                secure: ftpConfig.secure
+            }
+        });
     } finally {
         if (client && !client.closed) client.close();
     }
 });
 
-// Ruta: Descargar archivo
+// ✅ RUTA MEJORADA: Descargar archivo
 app.get('/download/:filename', async (req, res) => {
     const filename = decodeURIComponent(req.params.filename);
-    const remotePath = path.join(FTP_BASE_DIR, filename).replace(/\\/g, '/');
+    const remotePath = path.join(ftpConfig.basePath, filename).replace(/\\/g, '/');
 
     let client;
     try {
+        console.log(`📥 Descargando archivo: ${filename}`);
         client = await connectAndLogin();
         await client.size(remotePath); // Verifica existencia del archivo
 
@@ -243,11 +350,17 @@ app.get('/download/:filename', async (req, res) => {
         res.setHeader('Content-Type', 'application/octet-stream');
 
         await client.downloadTo(res, remotePath);
+        console.log(`✅ Archivo ${filename} descargado correctamente`);
     } catch (err) {
-        console.error("Error en /download:", err);
+        console.error("❌ Error en /download:", err.message);
         if (!res.headersSent) {
             res.status(err.code === 550 ? 404 : 500).json({
-                error: err.code === 550 ? "Archivo no encontrado en el servidor FTPS" : err.message
+                error: err.code === 550 ? "Archivo no encontrado en el servidor FTP" : `Error al descargar: ${err.message}`,
+                config: {
+                    host: ftpConfig.host,
+                    port: ftpConfig.port,
+                    secure: ftpConfig.secure
+                }
             });
         }
     } finally {
@@ -255,14 +368,17 @@ app.get('/download/:filename', async (req, res) => {
     }
 });
 
-// Ruta: Descargar archivo de una referencia específica
+// ✅ RUTA CORREGIDA: Descargar archivo de una referencia específica
 app.get('/download/:referenciaId/:filename', async (req, res) => {
     const referenciaId = req.params.referenciaId;
     const filename = decodeURIComponent(req.params.filename);
-    const remotePath = path.join(FTP_BASE_DIR, referenciaId, filename).replace(/\\/g, '/');
+    // ✅ USAR DocumentacionPublica como base
+    const remotePath = path.join(ftpConfig.basePath, 'DocumentacionPublica', referenciaId, filename).replace(/\\/g, '/');
 
     let client;
     try {
+        console.log(`📥 Descargando archivo CORREGIDO de referencia ${referenciaId}: ${filename}`);
+        console.log(`📁 Ruta completa: ${remotePath}`);
         client = await connectAndLogin();
         await client.size(remotePath); // Verifica existencia del archivo
 
@@ -270,11 +386,18 @@ app.get('/download/:referenciaId/:filename', async (req, res) => {
         res.setHeader('Content-Type', 'application/octet-stream');
 
         await client.downloadTo(res, remotePath);
+        console.log(`✅ Archivo ${filename} de referencia ${referenciaId} descargado`);
     } catch (err) {
-        console.error(`Error en /download/${referenciaId}/${filename}:`, err);
+        console.error(`❌ Error en /download/${referenciaId}/${filename}:`, err.message);
         if (!res.headersSent) {
             res.status(err.code === 550 ? 404 : 500).json({
-                error: err.code === 550 ? "Archivo no encontrado en el servidor FTPS" : err.message
+                error: err.code === 550 ? "Archivo no encontrado en el servidor FTP" : `Error al descargar: ${err.message}`,
+                searchedPath: remotePath,
+                config: {
+                    host: ftpConfig.host,
+                    port: ftpConfig.port,
+                    secure: ftpConfig.secure
+                }
             });
         }
     } finally {
@@ -282,13 +405,14 @@ app.get('/download/:referenciaId/:filename', async (req, res) => {
     }
 });
 
-// Ruta: Ver archivo
+// ✅ RUTA MEJORADA: Ver archivo
 app.get('/view/:filename', async (req, res) => {
     const filename = decodeURIComponent(req.params.filename);
-    const remotePath = path.join(FTP_BASE_DIR, filename).replace(/\\/g, '/');
+    const remotePath = path.join(ftpConfig.basePath, filename).replace(/\\/g, '/');
 
     let client;
     try {
+        console.log(`👁️ Visualizando archivo: ${filename}`);
         client = await connectAndLogin();
         
         // Determinar el tipo de contenido basado en la extensión
@@ -300,22 +424,29 @@ app.get('/view/:filename', async (req, res) => {
         else if (ext === '.png') contentType = 'image/png';
         else if (ext === '.gif') contentType = 'image/gif';
         else if (ext === '.txt') contentType = 'text/plain';
+        else if (ext === '.xml') contentType = 'application/xml';
         
         res.setHeader('Content-Type', contentType);
         
-        // Para imágenes y PDFs, configurar para visualización en línea
-        if (contentType.startsWith('image/') || contentType === 'application/pdf') {
+        // Para imágenes, PDFs y XML, configurar para visualización en línea
+        if (contentType.startsWith('image/') || contentType === 'application/pdf' || contentType === 'application/xml') {
             res.setHeader('Content-Disposition', `inline; filename="${path.basename(remotePath)}"`);
         } else {
             res.setHeader('Content-Disposition', `attachment; filename="${path.basename(remotePath)}"`);
         }
 
         await client.downloadTo(res, remotePath);
+        console.log(`✅ Archivo ${filename} visualizado correctamente`);
     } catch (err) {
-        console.error("Error en /view:", err);
+        console.error("❌ Error en /view:", err.message);
         if (!res.headersSent) {
             res.status(err.code === 550 ? 404 : 500).json({
-                error: err.code === 550 ? "Archivo no encontrado en el servidor FTPS" : err.message
+                error: err.code === 550 ? "Archivo no encontrado en el servidor FTP" : `Error al visualizar: ${err.message}`,
+                config: {
+                    host: ftpConfig.host,
+                    port: ftpConfig.port,
+                    secure: ftpConfig.secure
+                }
             });
         }
     } finally {
@@ -323,14 +454,17 @@ app.get('/view/:filename', async (req, res) => {
     }
 });
 
-// Ruta: Ver archivo de una referencia específica
+// ✅ RUTA CORREGIDA: Ver archivo de una referencia específica
 app.get('/view/:referenciaId/:filename', async (req, res) => {
     const referenciaId = req.params.referenciaId;
     const filename = decodeURIComponent(req.params.filename);
-    const remotePath = path.join(FTP_BASE_DIR, referenciaId, filename).replace(/\\/g, '/');
+    // ✅ USAR DocumentacionPublica como base
+    const remotePath = path.join(ftpConfig.basePath, 'DocumentacionPublica', referenciaId, filename).replace(/\\/g, '/');
 
     let client;
     try {
+        console.log(`👁️ Visualizando archivo CORREGIDO de referencia ${referenciaId}: ${filename}`);
+        console.log(`📁 Ruta completa: ${remotePath}`);
         client = await connectAndLogin();
         
         // Determinar el tipo de contenido basado en la extensión
@@ -348,7 +482,7 @@ app.get('/view/:referenciaId/:filename', async (req, res) => {
         
         res.setHeader('Content-Type', contentType);
         
-        // Para imágenes y PDFs, configurar para visualización en línea
+        // Para imágenes, PDFs y XML, configurar para visualización en línea
         if (contentType.startsWith('image/') || contentType === 'application/pdf' || contentType === 'application/xml') {
             res.setHeader('Content-Disposition', `inline; filename="${path.basename(remotePath)}"`);
         } else {
@@ -356,11 +490,18 @@ app.get('/view/:referenciaId/:filename', async (req, res) => {
         }
 
         await client.downloadTo(res, remotePath);
+        console.log(`✅ Archivo ${filename} de referencia ${referenciaId} visualizado`);
     } catch (err) {
-        console.error(`Error en /view/${referenciaId}/${filename}:`, err);
+        console.error(`❌ Error en /view/${referenciaId}/${filename}:`, err.message);
         if (!res.headersSent) {
             res.status(err.code === 550 ? 404 : 500).json({
-                error: err.code === 550 ? "Archivo no encontrado en el servidor FTPS" : err.message
+                error: err.code === 550 ? "Archivo no encontrado en el servidor FTP" : `Error al visualizar: ${err.message}`,
+                searchedPath: remotePath,
+                config: {
+                    host: ftpConfig.host,
+                    port: ftpConfig.port,
+                    secure: ftpConfig.secure
+                }
             });
         }
     } finally {
@@ -382,15 +523,6 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Middleware para rutas no encontradas
-app.use('*', (req, res) => {
-    console.log('❌ Ruta no encontrada:', req.method, req.originalUrl);
-    res.status(404).json({
-        success: false,
-        message: 'Ruta no encontrada'
-    });
-});
-
 // Iniciar servidor
 app.listen(SERVER_PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor ejecutándose en http://localhost:${SERVER_PORT}`);
@@ -400,12 +532,29 @@ app.listen(SERVER_PORT, '0.0.0.0', () => {
     console.log('   - /api/profile/*');
     console.log('   - /api/account-access/*');
     console.log('   - /api/v1/apiExterna/*');
+    console.log('   - /api/ftp/test  ← TEST DE CONEXIÓN FTP');
+    console.log('   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS');
+    
+    // === TEST DE CONEXIÓN FTP AL INICIO ===
+    setTimeout(async () => {
+        try {
+            console.log('\n🧪 Probando conexión FTP al inicio...');
+            const testResult = await ftpService.testConnection();
+            if (testResult.success) {
+                console.log('✅ FTP: Conexión inicial exitosa!');
+            } else {
+                console.log('❌ FTP: Error en conexión inicial:', testResult.message);
+            }
+        } catch (error) {
+            console.log('❌ FTP: Error probando conexión:', error.message);
+        }
+    }, 2000);
     
     // === INICIAR LIMPIADOR DE SESIONES (OPCIONAL) ===
     try {
         const { startSessionCleaner } = require('./scripts/cleanSessions');
         startSessionCleaner();
-        console.log('✅ Limpiador de sesiones iniciado');
+        console.log('🧹 Limpiador de sesiones iniciado');
     } catch (error) {
         console.log('⚠️ No se pudo iniciar limpiador de sesiones:', error.message);
     }

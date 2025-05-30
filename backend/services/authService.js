@@ -1,5 +1,4 @@
-// services/authService.js
-// Servicio de autenticación simplificado (sin dependencia de modelo User)
+// services/authService.js - VERSIÓN LIMPIA 100% DINÁMICO
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -7,27 +6,11 @@ const prisma = require('../utils/prisma');
 
 exports.authenticate = async (username, password) => {
   try {
-    // Autenticación simple para desarrollo
-    if (process.env.NODE_ENV === 'development' && username === 'usuario' && password === 'password123') {
-      return {
-        success: true,
-        token: jwt.sign(
-          { id: 0, username: 'usuario', role: 'ADMIN' },
-          process.env.JWT_SECRET || 'clave_secreta_para_jwt',
-          { expiresIn: '8h' }
-        ),
-        user: {
-          id: 0,
-          username: 'usuario',
-          name: 'Usuario de Prueba',
-          role: 'ADMIN'
-        }
-      };
-    }
+    console.log(`🔐 Intentando autenticar usuario: ${username}`);
 
-    // Buscar usuario en la base de datos
+    // ✅ BUSCAR USUARIO EN BASE DE DATOS (única fuente de verdad)
     const user = await prisma.BP_01_USUARIO.findUnique({
-      where: { sUsuario: username },
+      where: { sUsuario: username.toUpperCase() },
       include: {
         perfilesUsuario: {
           include: {
@@ -37,8 +20,19 @@ exports.authenticate = async (username, password) => {
       }
     });
 
-    // Verificar si existe el usuario y si la contraseña es correcta
-    if (!user || !await bcrypt.compare(password, user.sPassword)) {
+    // Verificar si existe el usuario
+    if (!user) {
+      console.log(`❌ Usuario no encontrado: ${username}`);
+      return {
+        success: false,
+        message: 'Credenciales incorrectas'
+      };
+    }
+
+    // Verificar contraseña
+    const passwordValid = await bcrypt.compare(password, user.sPassword);
+    if (!passwordValid) {
+      console.log(`❌ Contraseña incorrecta para: ${username}`);
       return {
         success: false,
         message: 'Credenciales incorrectas'
@@ -47,40 +41,66 @@ exports.authenticate = async (username, password) => {
 
     // Verificar si el usuario está activo
     if (!user.bActivo) {
+      console.log(`❌ Usuario inactivo: ${username}`);
       return {
         success: false,
         message: 'Usuario inactivo. Contacte al administrador.'
       };
     }
 
-    // Obtener el perfil del usuario
-    const perfil = user.perfilesUsuario[0]?.perfil?.sNombre || 'usuario';
+    // Verificar que tenga ID Cliente asignado
+    if (!user.nIdCliente) {
+      console.log(`❌ Usuario sin ID Cliente: ${username}`);
+      return {
+        success: false,
+        message: 'Usuario sin ID Cliente asignado. Contacte al administrador.'
+      };
+    }
 
-    // Generar token JWT
+    // Obtener perfil desde BD
+    const perfil = user.perfilesUsuario[0]?.perfil?.sNombre || 'USER';
+
+    // ✅ TOKEN COMPLETAMENTE DINÁMICO DESDE BD
+    const tokenData = {
+      id: user.nId01Usuario,
+      originalId: user.nId01Usuario,
+      username: user.sUsuario,
+      role: perfil,
+      idCliente: user.nIdCliente
+    };
+
+    // Usar JWT_SECRET desde variables de entorno
     const token = jwt.sign(
-      { 
-        id: user.nId01Usuario, 
-        username: user.sUsuario,
-        role: perfil
-      },
-      process.env.JWT_SECRET || 'clave_secreta_para_jwt',
-      { expiresIn: '8h' }
+      tokenData,
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRE || '24h' }
     );
 
-    // Retornar información del usuario autenticado
+    console.log(`✅ Login exitoso:`, {
+      usuario: user.sUsuario,
+      idOriginal: user.nId01Usuario,
+      idCliente: user.nIdCliente,
+      role: perfil
+    });
+
+    // ✅ RESPUESTA COMPLETAMENTE DESDE BD
     return {
       success: true,
       token,
       user: {
         id: user.nId01Usuario,
+        originalId: user.nId01Usuario,
         username: user.sUsuario,
-        name: `${user.sNombre} ${user.sApellidoPaterno} ${user.sApellidoMaterno}`,
+        name: `${user.sNombre} ${user.sApellidoPaterno} ${user.sApellidoMaterno}`.trim(),
+        email: user.sEmail,
         role: perfil,
-        image: user.sUsuarioImg
+        image: user.sUsuarioImg,
+        idCliente: user.nIdCliente
       }
     };
+
   } catch (error) {
-    console.error('Error en authenticate:', error);
+    console.error('❌ Error en authenticate:', error);
     return {
       success: false,
       message: 'Error interno del servidor'
@@ -88,18 +108,16 @@ exports.authenticate = async (username, password) => {
   }
 };
 
-// Función para hashear contraseñas
+// ✅ RESTO DE FUNCIONES SIN CAMBIOS - YA ESTÁN DINÁMICAS
 exports.hashPassword = async (password) => {
   const salt = await bcrypt.genSalt(10);
   return bcrypt.hash(password, salt);
 };
 
-// Función para verificar contraseñas
 exports.verifyPassword = async (inputPassword, hashedPassword) => {
   return bcrypt.compare(inputPassword, hashedPassword);
 };
 
-// Función para actualizar contraseña de usuario
 exports.updatePassword = async (userId, newPassword) => {
   try {
     const hashedPassword = await this.hashPassword(newPassword);
@@ -108,7 +126,7 @@ exports.updatePassword = async (userId, newPassword) => {
       where: { nId01Usuario: userId },
       data: { 
         sPassword: hashedPassword,
-        dFechaActualizacion: new Date()
+        dFechaUltimoCambioPass: new Date()
       }
     });
     
@@ -122,8 +140,6 @@ exports.updatePassword = async (userId, newPassword) => {
   }
 };
 
-
-// Función para obtener información del dispositivo
 exports.getDeviceInfo = (userAgent) => {
   if (!userAgent) return 'Unknown';
   if (userAgent.includes('Mobile')) return 'Mobile';
@@ -131,7 +147,6 @@ exports.getDeviceInfo = (userAgent) => {
   return 'Desktop';
 };
 
-// Función para crear log de autenticación
 exports.createAuthLog = async (data) => {
   try {
     return await prisma.BP_07_LOG_AUTENTICACION.create({
@@ -139,11 +154,9 @@ exports.createAuthLog = async (data) => {
     });
   } catch (error) {
     console.error('Error al crear log de autenticación:', error);
-    // No lanzar error para no interrumpir el flujo
   }
 };
 
-// Función para crear sesión activa
 exports.createActiveSession = async (userId, token, req) => {
   try {
     const fechaExpiracion = new Date();
@@ -169,10 +182,9 @@ exports.createActiveSession = async (userId, token, req) => {
   }
 };
 
-// Función para desactivar sesión
 exports.deactivateSession = async (token) => {
   try {
-    return await prisma.bP_08_SESION_ACTIVA.updateMany({
+    return await prisma.BP_08_SESION_ACTIVA.updateMany({
       where: {
         sTokenSesion: token,
         bActiva: true
@@ -186,16 +198,15 @@ exports.deactivateSession = async (token) => {
   }
 };
 
-// Función para verificar caducidad de contraseña
 exports.checkPasswordExpiry = async (userId) => {
   try {
-    const user = await prisma.bP_01_USUARIO.findUnique({
+    const user = await prisma.BP_01_USUARIO.findUnique({
       where: { nId01Usuario: userId }
     });
     
     if (!user) return null;
     
-    const diasCaducidad = 90; // 90 días según tu requerimiento
+    const diasCaducidad = 90;
     const fechaUltimoCambio = new Date(user.dFechaUltimoCambioPass);
     const fechaActual = new Date();
     const diasTranscurridos = Math.floor((fechaActual.getTime() - fechaUltimoCambio.getTime()) / (1000 * 60 * 60 * 24));
@@ -211,10 +222,9 @@ exports.checkPasswordExpiry = async (userId) => {
   }
 };
 
-// Función para obtener sesiones activas de un usuario
 exports.getActiveSessions = async (userId) => {
   try {
-    return await prisma.bP_08_SESION_ACTIVA.findMany({
+    return await prisma.BP_08_SESION_ACTIVA.findMany({
       where: {
         nId01Usuario: userId,
         bActiva: true,
@@ -232,10 +242,9 @@ exports.getActiveSessions = async (userId) => {
   }
 };
 
-// Función para obtener logs de autenticación
 exports.getAuthLogs = async (userId, limit = 10) => {
   try {
-    return await prisma.bP_07_LOG_AUTENTICACION.findMany({
+    return await prisma.BP_07_LOG_AUTENTICACION.findMany({
       where: {
         nId01Usuario: userId
       },
@@ -250,10 +259,9 @@ exports.getAuthLogs = async (userId, limit = 10) => {
   }
 };
 
-// Función para limpiar sesiones expiradas
 exports.cleanExpiredSessions = async () => {
   try {
-    const result = await prisma.bP_08_SESION_ACTIVA.updateMany({
+    const result = await prisma.BP_08_SESION_ACTIVA.updateMany({
       where: {
         bActiva: true,
         dFechaExpiracion: {

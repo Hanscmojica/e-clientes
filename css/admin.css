@@ -1337,4 +1337,11 @@
       border: 1px solid #000;
       padding: 8px;
     }
+
+
+    .role-badge.role-ejecutivo-de-cuenta {
+      background: linear-gradient(45deg, #8b5cf6, #a855f7);
+      color: white;
+      font-weight: 500;
+    }
   }

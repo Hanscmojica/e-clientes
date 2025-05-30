@@ -322,7 +322,7 @@ function filtrarUsuarios() {
 // ACCIONES DE USUARIOS - CON API REAL
 // ===============================
 
-// Editar usuario
+// ✅ FUNCIÓN CORREGIDA: Editar usuario
 function editarUsuario(userId) {
   const usuario = usuarios.find(u => u.id === userId);
   if (!usuario) {
@@ -333,12 +333,16 @@ function editarUsuario(userId) {
   editingUserId = userId;
   
   // Pre-llenar el formulario con los datos del usuario
-  document.getElementById('nuevo-nombre').value = usuario.name.split(' ')[0] || '';
-  document.getElementById('nuevo-apellido-paterno').value = usuario.name.split(' ')[1] || '';
-  document.getElementById('nuevo-apellido-materno').value = usuario.name.split(' ').slice(2).join(' ') || '';
+  const nombreCompleto = usuario.name.split(' ');
+  document.getElementById('nuevo-nombre').value = nombreCompleto[0] || '';
+  document.getElementById('nuevo-apellido-paterno').value = nombreCompleto[1] || '';
+  document.getElementById('nuevo-apellido-materno').value = nombreCompleto.slice(2).join(' ') || '';
   document.getElementById('nuevo-usuario').value = usuario.username;
   document.getElementById('nuevo-email').value = usuario.email;
+  
+  // ✅ CORREGIDO: Usar el ID del usuario para el campo ID Cliente
   document.getElementById('nuevo-id-cliente').value = usuario.id;
+  
   document.getElementById('nuevo-perfil').value = usuario.role;
   document.getElementById('nuevo-activo').checked = usuario.active;
   
@@ -575,7 +579,11 @@ function configurarFormularios() {
   }
 }
 
-// Manejar submit del formulario (crear o editar)
+// ✅ FUNCIÓN CORREGIDA: Manejar submit del formulario (crear o editar)
+
+   // ✅ MANTENER 'perfil' como está (el backend lo espera así)
+// ✅ AGREGAR debug completo para encontrar el problema real
+
 async function manejarSubmitUsuario(e) {
   e.preventDefault();
   
@@ -586,7 +594,7 @@ async function manejarSubmitUsuario(e) {
     username: document.getElementById('nuevo-usuario').value.trim(),
     email: document.getElementById('nuevo-email').value.trim(),
     idCliente: parseInt(document.getElementById('nuevo-id-cliente').value) || null,
-    perfil: document.getElementById('nuevo-perfil').value,
+    perfil: document.getElementById('nuevo-perfil').value, // ✅ MANTENER como 'perfil'
     activo: document.getElementById('nuevo-activo').checked
   };
   
@@ -612,12 +620,27 @@ async function manejarSubmitUsuario(e) {
     return;
   }
   
+  if (!formData.idCliente) {
+    mostrarAlerta('El ID Cliente es requerido para vincular con las referencias', 'error');
+    return;
+  }
+  
+  // ✅ DEBUG: Ver usuario ANTES de actualizar
+  if (editingUserId) {
+    const usuarioAntes = usuarios.find(u => u.id === editingUserId);
+    console.log('👤 Usuario ANTES de actualizar:', usuarioAntes);
+    console.log('🔄 Perfil actual:', usuarioAntes?.role);
+    console.log('➡️ Nuevo perfil a aplicar:', formData.perfil);
+  }
+  
   try {
     const token = getAuthToken();
     let response;
     
+    console.log('📤 Enviando datos al backend:', formData);
+    
     if (editingUserId) {
-      // Actualizar usuario existente
+      console.log(`🔄 Actualizando usuario ID: ${editingUserId}`);
       response = await fetch(`${apiBase}/api/admin/usuarios/${editingUserId}`, {
         method: 'PUT',
         headers: {
@@ -627,7 +650,7 @@ async function manejarSubmitUsuario(e) {
         body: JSON.stringify(formData)
       });
     } else {
-      // Crear nuevo usuario
+      console.log('➕ Creando nuevo usuario');
       response = await fetch(`${apiBase}/api/admin/usuarios`, {
         method: 'POST',
         headers: {
@@ -644,16 +667,59 @@ async function manejarSubmitUsuario(e) {
     }
     
     const result = await response.json();
+    console.log('✅ Respuesta completa del servidor:', result);
     
     mostrarAlerta(result.message || `Usuario ${editingUserId ? 'actualizado' : 'creado'} exitosamente`, 'success');
+    
+    // Cerrar modal
     cerrarModal();
     
-    // Recargar lista de usuarios
-    cargarUsuarios();
+    // ✅ RECARGAR con debug paso a paso
+    console.log('🔄 Iniciando recarga de usuarios...');
+    console.log('📋 Lista actual antes de recargar:', usuarios.length, 'usuarios');
+    
+    await cargarUsuarios();
+    
+    // ✅ VERIFICAR cambios después de recargar
+    if (editingUserId) {
+      const usuarioDespues = usuarios.find(u => u.id === editingUserId);
+      console.log('👤 Usuario DESPUÉS de recargar:', usuarioDespues);
+      console.log('🆔 ID buscado:', editingUserId);
+      console.log('🔍 Usuario encontrado:', usuarioDespues ? 'SÍ' : 'NO');
+      
+      if (usuarioDespues) {
+        console.log('🎭 Rol/Perfil después de actualizar:', usuarioDespues.role);
+        console.log('✅ ¿El rol cambió?', usuarioDespues.role === formData.perfil ? 'SÍ' : 'NO');
+      }
+    }
+    
+    // ✅ FORZAR actualización de la tabla
+    console.log('🔄 Forzando actualización de tabla...');
+    mostrarUsuarios(usuarios);
     
   } catch (error) {
     console.error(`❌ Error ${editingUserId ? 'actualizando' : 'creando'} usuario:`, error);
     mostrarAlerta('Error: ' + error.message, 'error');
+  }
+}
+
+// ✅ AGREGAR función debug para verificar estado
+function debugEstadoUsuarios() {
+  console.log('🔍 DEBUG COMPLETO:');
+  console.log('📋 Total usuarios en memoria:', usuarios.length);
+  console.log('👥 Lista completa:', usuarios);
+  
+  const testUser = usuarios.find(u => u.username === 'TESTUSER');
+  if (testUser) {
+    console.log('🎯 Usuario TESTUSER encontrado:');
+    console.log('   - ID:', testUser.id);
+    console.log('   - Nombre:', testUser.name);
+    console.log('   - Username:', testUser.username);
+    console.log('   - Email:', testUser.email);
+    console.log('   - Rol/Role:', testUser.role);
+    console.log('   - Activo:', testUser.active);
+  } else {
+    console.log('❌ Usuario TESTUSER no encontrado en la lista');
   }
 }
 

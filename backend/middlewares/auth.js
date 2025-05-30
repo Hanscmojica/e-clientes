@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-// Middleware para verificar token JWT - VERSIÓN SIMPLE ORIGINAL
+// Middleware para verificar token JWT - VERSIÓN ACTUALIZADA
 const verifyToken = async (req, res, next) => {
   try {
     // Obtener token del encabezado
@@ -16,14 +16,22 @@ const verifyToken = async (req, res, next) => {
     }
     
     // Verificar token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'clave_secreta_para_jwt');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // DEBUG temporal
+console.log('🔍 Token decodificado:', {
+  id: decoded.id,
+  username: decoded.username,
+  idCliente: decoded.idCliente
+});
     
-    // Añadir usuario al objeto request
+    // ✅ Añadir usuario al objeto request CON idCliente
     req.user = {
       id: decoded.id,
       username: decoded.username,
       role: decoded.role,
-      originalId: decoded.originalId || decoded.id // Para compatibilidad con admin
+      originalId: decoded.originalId || decoded.id,
+      idCliente: decoded.idCliente || decoded.id  // ✅ USAR id SI NO HAY idCliente
     };
     
     next();
@@ -36,7 +44,7 @@ const verifyToken = async (req, res, next) => {
   }
 };
 
-// NUEVA FUNCIÓN - Para compatibilidad con rutas de admin
+// FUNCIÓN PARA ADMIN - También actualizada
 const authenticateToken = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
@@ -48,7 +56,8 @@ const authenticateToken = (req, res, next) => {
     });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET || 'clave_secreta_para_jwt', (err, user) => {
+  // ✅ Quitar el fallback y usar solo process.env.JWT_SECRET
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) {
       console.error('❌ Token inválido:', err.message);
       return res.status(403).json({
@@ -57,25 +66,32 @@ const authenticateToken = (req, res, next) => {
       });
     }
 
+    // ✅ Incluir idCliente también aquí
     req.user = {
       id: user.id,
       username: user.username,
       role: user.role,
-      originalId: user.originalId || user.id
+      originalId: user.originalId || user.id,
+      idCliente: user.idCliente || user.id  // ✅ USAR id SI NO HAY idCliente
     };
     next();
   });
 };
 
-// Middleware para verificar roles
+// Middleware para verificar roles (sin cambios)
 const checkRole = (roles = []) => {
   return (req, res, next) => {
+
+    console.log('🔍 CheckRole - Usuario:', req.user?.username, 'Rol:', req.user?.role, 'Roles permitidos:', roles); // DEBUG
+
+
     if (!req.user) {
       return res.status(401).json({
         success: false,
         message: 'No autenticado'
       });
     }
+
 
     const userRole = req.user.role;
     
@@ -90,7 +106,7 @@ const checkRole = (roles = []) => {
   };
 };
 
-// Middleware para verificar permisos específicos
+// Middleware para verificar permisos específicos (sin cambios)
 const checkPermission = (permissionName, action = 'leer') => {
   return (req, res, next) => {
     if (!req.user) {
@@ -107,7 +123,7 @@ const checkPermission = (permissionName, action = 'leer') => {
 
 module.exports = {
   verifyToken,
-  authenticateToken, // ← NUEVA EXPORTACIÓN
+  authenticateToken,
   checkRole,
   checkPermission
 };

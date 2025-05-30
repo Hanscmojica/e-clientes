@@ -61,7 +61,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    color: #d7a520;
+    color: #d7a520; 
     text-decoration: none;
     cursor: pointer;
   }

@@ -8,7 +8,7 @@ const { verifyToken, checkRole } = require('../middlewares/auth');
 router.post(
   "/",
   verifyToken, // Verificar token JWT
-  checkRole(["ADMIN", "USER"]), // Verificar que el usuario tenga rol ADMIN o USER
+  checkRole(["ADMIN", "USER", "CLIENTE", "EJECUTIVO_CUENTA"]), // Verificar que el usuario tenga rol ADMIN o USER
   apiExternaController.consultarApiExterna
 );
 
