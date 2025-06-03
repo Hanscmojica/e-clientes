@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
   
   const userSession = userSessionLocal || userSessionSession;
   
-  console.log('🔍 Token encontrado:', token ? 'SÍ' : 'NO');
-  console.log('🔍 Sesión encontrada:', userSession ? 'SÍ' : 'NO');
+  //console.log('🔍 Token encontrado:', token ? 'SÍ' : 'NO');
+  //console.log('🔍 Sesión encontrada:', userSession ? 'SÍ' : 'NO');
   
   if (!token || !userSession) {
     console.log('❌ No hay sesión válida, redirigiendo a login...');
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
   try {
     // Parsear los datos de sesión
     const sessionData = JSON.parse(userSession);
-    console.log('✅ Datos de sesión:', sessionData);
+    //console.log('✅ Datos de sesión:', sessionData);
     
     // Verificar expiración (opcional, más flexible)
     const loginTime = new Date(sessionData.loginTime);
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     };
     
-    console.log('✅ UserData configurado:', userData);
+    //console.log('✅ UserData configurado:', userData);
     
     // Configurar la página
     configurarPagina();

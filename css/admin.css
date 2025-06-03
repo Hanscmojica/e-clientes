@@ -505,7 +505,7 @@
   }
   
   .profile-header {
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    background: linear-gradient(135deg, var(), var(--primary-dark));
     color: var(--text-white);
     padding: 1.5rem;
     display: flex;

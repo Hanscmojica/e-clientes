@@ -1,9 +1,83 @@
-// Configuración de la URL base de la API
-const apiBase = 'http://localhost:5001';
+// ===============================
+// SISTEMA DE LOGGING SEGURO (COMPARTIDO)
+// ===============================
+class SecureLogger {
+  constructor() {
+    this.isDevelopment = this.detectEnvironment();
+    this.levels = { ERROR: 0, WARN: 1, INFO: 2, DEBUG: 3 };
+    this.currentLevel = this.isDevelopment ? this.levels.DEBUG : this.levels.ERROR;
+  }
+  
+  detectEnvironment() {
+    return (
+      window.location.hostname === 'localhost' ||
+      window.location.hostname === '127.0.0.1' ||
+      window.location.hostname.includes('dev') ||
+      window.location.hostname.includes('test') ||
+      window.location.port !== '' ||
+      window.location.protocol === 'file:'
+    );
+  }
+  
+  error(message, data = null) {
+    if (this.currentLevel >= this.levels.ERROR) {
+      console.error(`🚨 [ERROR] ${message}`, data || '');
+    }
+  }
+  
+  warn(message, data = null) {
+    if (this.currentLevel >= this.levels.WARN) {
+      console.warn(`⚠️ [WARN] ${message}`, data || '');
+    }
+  }
+  
+  info(message, data = null) {
+    if (this.currentLevel >= this.levels.INFO) {
+      console.log(`ℹ️ [INFO] ${message}`, data || '');
+    }
+  }
+  
+  debug(message, data = null) {
+    if (this.currentLevel >= this.levels.DEBUG) {
+      console.log(`🐛 [DEBUG] ${message}`, data || '');
+    }
+  }
+  
+  auth(message, data = null) {
+    if (this.isDevelopment) {
+      const safePrint = this.sanitizeAuthData(data);
+      console.log(`🔐 [AUTH] ${message}`, safePrint);
+    }
+  }
+  
+  sanitizeAuthData(data) {
+    if (!data || typeof data !== 'object') return data;
+    const safe = { ...data };
+    const sensitiveFields = ['token', 'password', 'email', 'jwt'];
+    sensitiveFields.forEach(field => {
+      if (safe[field]) {
+        safe[field] = '***HIDDEN***';
+      }
+    });
+    return safe;
+  }
+  
+  setProductionMode() {
+    this.currentLevel = this.levels.ERROR;
+    this.isDevelopment = false;
+    console.warn('🚨 Logger configurado para PRODUCCIÓN - Solo errores se mostrarán');
+  }
+}
 
-console.log('🔧 Login.js cargado, API base:', apiBase);
+// Crear instancia global del logger
+const logger = new SecureLogger();
 
-// Función para mostrar/ocultar contraseña (compatibilidad login y modal)
+// ⚠️ PARA PRODUCCIÓN: Descomentar la siguiente línea
+logger.setProductionMode();
+
+const apiBase = 'http://10.11.21.15:5001';
+logger.debug('Login.js cargado, API base', { apiBase });
+
 function togglePassword(inputId, btn) {
   // Si no se pasan argumentos, es el botón del login principal
   if (!inputId || !btn) {
@@ -34,21 +108,16 @@ function togglePassword(inputId, btn) {
   }
 }
 
-// Función global para cerrar sesión - disponible para todas las páginas
 function logout() {
-  // Eliminar datos de sesión tanto de localStorage como de sessionStorage
   localStorage.removeItem('userSession');
   localStorage.removeItem('token');
   sessionStorage.removeItem('userSession');
-  
-  // Redirigir a la página de login
   window.location.href = 'login.html';
 }
 
 // Hacer la función logout disponible globalmente
 window.logout = logout;
 
-// Mostrar el modal si la contraseña ha expirado
 function showPasswordExpiredModal() {
   const modal = document.getElementById('passwordExpiredModal');
   if (modal) {
@@ -56,7 +125,6 @@ function showPasswordExpiredModal() {
   }
 }
 
-// Cerrar el modal
 function closeModal() {
   const modal = document.getElementById('passwordExpiredModal');
   if (modal) {
@@ -64,7 +132,6 @@ function closeModal() {
   }
 }
 
-// Manejar el envío del formulario de cambio de contraseña
 async function handleChangePassword(e) {
   e.preventDefault();
   const newPassword = document.getElementById('newPassword').value;
@@ -97,19 +164,22 @@ async function handleChangePassword(e) {
     alert('Contraseña cambiada exitosamente');
     closeModal();
   } catch (error) {
+    logger.error('Error cambiando contraseña', error);
     if (errorDiv) {
       errorDiv.textContent = error.message;
       errorDiv.style.display = 'block';
     }
   }
 }
-  
-// Manejar el envío del formulario de login - VERSIÓN COMPLETA RESTAURADA
+
+// ===============================
+// MANEJO DE LOGIN
+// ===============================
 document.addEventListener('DOMContentLoaded', function() {
   const loginForm = document.getElementById('loginForm');
   
   if (loginForm) {
-    console.log('✅ Formulario de login encontrado');
+    logger.debug('Formulario de login encontrado');
     
     loginForm.addEventListener('submit', async function(e) {
       e.preventDefault();
@@ -120,8 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const errorDiv = document.getElementById('loginError');
       const loginButton = document.querySelector('.login-button');
       
-      console.log('🔍 Iniciando proceso de login para:', username);
-      console.log('🔍 Recordar sesión:', rememberMe);
+      logger.debug('Iniciando proceso de login', { username, rememberMe });
       
       // Limpiar errores previos
       if (errorDiv) {
@@ -135,29 +204,29 @@ document.addEventListener('DOMContentLoaded', function() {
         loginButton.innerHTML = '<span class="material-icons">hourglass_empty</span> Iniciando sesión...';
       }
       
-        try {
-          console.log('🔍 Enviando petición a:', `${apiBase}/api/auth/login`);
-          
-          const response = await fetch(`${apiBase}/api/auth/login`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify({ 
-              username: username.trim(), 
-              password: password 
-            })
-          });
+      try {
+        logger.debug('Enviando petición de login');
+        
+        const response = await fetch(`${apiBase}/api/auth/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ 
+            username: username.trim(), 
+            password: password 
+          })
+        });
 
-          console.log('🔍 Status de respuesta:', response.status);
+        logger.debug('Status de respuesta recibido', { status: response.status });
         
         let data;
         try {
           data = await response.json();
-          console.log('🔍 Datos recibidos del servidor:', data);
+          logger.debug('Datos recibidos del servidor');
         } catch (parseError) {
-          console.error('❌ Error al parsear JSON:', parseError);
+          logger.error('Error al parsear JSON', parseError);
           throw new Error('Respuesta inválida del servidor');
         }
 
@@ -173,11 +242,11 @@ document.addEventListener('DOMContentLoaded', function() {
           throw new Error('No se recibió token del servidor');
         }
 
-        console.log('✅ Login exitoso!');
-        console.log('✅ Token recibido:', data.token);
-        console.log('✅ Usuario:', data.user);
+        logger.info('Login exitoso');
+        logger.auth('Token recibido', { token: data.token });
+        logger.auth('Usuario autenticado', data.user);
         
-        // GUARDAR TOKEN Y SESIÓN - LÓGICA COMPLETA RESTAURADA
+        // GUARDAR TOKEN Y SESIÓN
         localStorage.setItem('token', data.token);
         
         const sessionData = {
@@ -193,35 +262,37 @@ document.addEventListener('DOMContentLoaded', function() {
         // Decidir dónde guardar basado en "recordar sesión"
         if (rememberMe) {
           localStorage.setItem('userSession', JSON.stringify(sessionData));
-          console.log('✅ Sesión guardada en localStorage (persistente)');
+          logger.debug('Sesión guardada en localStorage (persistente)');
         } else {
           sessionStorage.setItem('userSession', JSON.stringify(sessionData));
-          console.log('✅ Sesión guardada en sessionStorage (temporal)');
+          logger.debug('Sesión guardada en sessionStorage (temporal)');
         }
         
-        console.log('✅ Token guardado en localStorage');
-        console.log('✅ Sesión guardada:', sessionData);
+        logger.debug('Token guardado en localStorage');
+        logger.auth('Sesión guardada', sessionData);
         
         // Verificar que se guardó correctamente
         const tokenGuardado = localStorage.getItem('token');
         const sessionGuardadaLocal = localStorage.getItem('userSession');
         const sessionGuardadaSession = sessionStorage.getItem('userSession');
         
-        console.log('🔍 Verificación - Token guardado:', tokenGuardado ? 'SÍ' : 'NO');
-        console.log('🔍 Verificación - Sesión localStorage:', sessionGuardadaLocal ? 'SÍ' : 'NO');
-        console.log('🔍 Verificación - Sesión sessionStorage:', sessionGuardadaSession ? 'SÍ' : 'NO');
+        logger.debug('Verificación de guardado', {
+          token: tokenGuardado ? 'SÍ' : 'NO',
+          localStorage: sessionGuardadaLocal ? 'SÍ' : 'NO',
+          sessionStorage: sessionGuardadaSession ? 'SÍ' : 'NO'
+        });
         
         if (!tokenGuardado || (!sessionGuardadaLocal && !sessionGuardadaSession)) {
           throw new Error('Error al guardar la sesión localmente');
         }
         
-        console.log('✅ Todo guardado correctamente, redirigiendo...');
+        logger.info('Todo guardado correctamente, redirigiendo...');
         
         // Redirigir a la página de referencias
         window.location.href = 'api.html';
 
       } catch (error) {
-        console.error('❌ Error en login:', error);
+        logger.error('Error en login', error);
         
         if (errorDiv) {
           errorDiv.textContent = error.message || 'Error desconocido';
@@ -242,21 +313,21 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   } else {
-    console.warn('⚠️ Formulario de login no encontrado');
+    logger.warn('Formulario de login no encontrado');
   }
 
   // Verificar si ya hay una sesión activa al cargar la página
-  // Solo ejecutar esta lógica si estamos en la página de login
   if (window.location.pathname.endsWith('login.html') || window.location.pathname === '/') {
     const token = localStorage.getItem('token');
     const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
     
-    console.log('🔍 Verificando sesión existente...');
-    console.log('Token encontrado:', token ? 'SÍ' : 'NO');
-    console.log('Sesión encontrada:', userSession ? 'SÍ' : 'NO');
+    logger.debug('Verificando sesión existente', {
+      token: token ? 'SÍ' : 'NO',
+      session: userSession ? 'SÍ' : 'NO'
+    });
     
     if (token && userSession) {
-      console.log('✅ Sesión existente encontrada, redirigiendo...');
+      logger.info('Sesión existente encontrada, redirigiendo...');
       // Prevenir parpadeo durante la redirección
       document.body.style.display = 'none';
       window.location.replace('api.html');
@@ -267,6 +338,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const changePasswordForm = document.getElementById('changePasswordForm');
   if (changePasswordForm) {
     changePasswordForm.addEventListener('submit', handleChangePassword);
-    console.log('✅ Event listener para cambio de contraseña agregado');
+    logger.debug('Event listener para cambio de contraseña agregado');
   }
 });

@@ -8,13 +8,23 @@
   <link rel="stylesheet" href="/css/api-cards.css">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- SILENCIADOR GLOBAL DE CONSOLA -->
+  <script>
+    // Silenciar toda la consola excepto errores críticos
+    console.log = () => {};
+    console.info = () => {};
+    console.debug = () => {};
+    console.warn = () => {};
+    // Mantener console.error para errores importantes
+  </script>
 </head>
 <body>
   <header class="main-header">
     <div class="header-container">
       <div class="header-left">
         <div class="logo">
-          <img src="assets/logo-white.png" alt="Logo Rodall" style="height: 40px; margin-right: 12px; vertical-align: middle;">
+          <img src="assets/01 IMAGOTIPO RODALL BN PNG.png" alt="Logo Rodall" style="height: 40px; margin-right: 12px; vertical-align: middle;">
           <h1>E-Clientes</h1>
         </div>
       </div>
@@ -45,7 +55,7 @@
       <div class="page-header">
         <h2>Consulta de Referencias</h2>
         <p>Consulta tus referencias disponibles en el sistema</p>
-        <button id="checkAuthBtn" onclick="checkAuthToken()" style="background-color: #4CAF50; color: white; border: none; padding: 8px 15px; border-radius: 4px; margin-top: 10px; cursor: pointer;">Verificar Autenticación</button>
+        <!-- <button id="checkAuthBtn" onclick="checkAuthToken()" style="background-color: #4CAF50; color: white; border: none; padding: 8px 15px; border-radius: 4px; margin-top: 10px; cursor: pointer;">Verificar Autenticación</button> -->
         <div id="authStatus" style="margin-top: 10px; padding: 8px; border-radius: 4px; display: none;"></div>
       </div>
 
@@ -175,6 +185,6 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="api.js"></script>
+  <script src="/js/api.js"></script>
 </body>
 </html>

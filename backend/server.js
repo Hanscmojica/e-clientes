@@ -31,6 +31,8 @@ console.log(`   Ruta base: ${ftpConfig.basePath}`);
 
 // Inicializar app
 const app = express();
+// Para obtener IPs reales detrás de proxies
+app.set('trust proxy', true);
 
 // Middleware
 app.use(express.json());
@@ -42,6 +44,8 @@ app.use(cors({
     credentials: true // Para cookies si es necesario
 }));
 app.use(express.static(path.join(__dirname, '../')));
+
+
 
 // Configurar multer para manejar archivos en memoria
 const storage = multer.memoryStorage();
@@ -526,6 +530,7 @@ app.use((err, req, res, next) => {
 // Iniciar servidor
 app.listen(SERVER_PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor ejecutándose en http://localhost:${SERVER_PORT}`);
+    console.log(`   Red: http://10.11.21.15:${SERVER_PORT} ←  USAR ESTA URL PARA RED`);
     console.log('📋 Rutas API registradas:');
     console.log('   - /api/auth/*');
     console.log('   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN');
@@ -558,4 +563,71 @@ app.listen(SERVER_PORT, '0.0.0.0', () => {
     } catch (error) {
         console.log('⚠️ No se pudo iniciar limpiador de sesiones:', error.message);
     }
+
+    // Sistema de logging simple
+class SimpleLogger {
+    constructor() {
+        this.BACKEND_URL = 'http://10.11.21.14:5001';
+    }
+
+    getAuthToken() {
+        const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
+        return userSession ? userSession.token : null;
+    }
+
+    async log(tipo, referencia = '', detalle = '', exito = true, error = null) {
+        try {
+            const token = this.getAuthToken();
+            if (!token) return;
+
+            await fetch(`${this.BACKEND_URL}/api/logging/consulta`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    sFolioReferencia: referencia,
+                    sDetalleConsulta: detalle,
+                    sTipoConsulta: tipo,
+                    bExito: exito,
+                    sError: error,
+                    sIpUsuario: 'web-client'
+                })
+            });
+        } catch (error) {
+            // Fallar silenciosamente para no afectar UX
+            console.log('Error logging:', error);
+        }
+    }
+
+    // Métodos específicos
+    busquedaReferencias(parametros, resultados) {
+        const detalle = JSON.stringify({ ...parametros, resultados });
+        this.log('REFERENCIAS_BUSQUEDA', '', detalle);
+    }
+
+    consultaHistorial(referencia, registros = 0) {
+        const detalle = JSON.stringify({ registros_historial: registros });
+        this.log('REFERENCIA_HISTORIAL', referencia, detalle);
+    }
+
+    consultaBiblioteca(referencia, documentos = 0) {
+        const detalle = JSON.stringify({ documentos_encontrados: documentos });
+        this.log('REFERENCIA_BIBLIOTECA', referencia, detalle);
+    }
+
+    descargaDocumento(referencia, documento) {
+        const detalle = JSON.stringify({ documento: documento });
+        this.log('DOCUMENTO_DESCARGA', referencia, detalle);
+    }
+
+    visualizacionDocumento(referencia, documento) {
+        const detalle = JSON.stringify({ documento: documento });
+        this.log('DOCUMENTO_VISUALIZACION', referencia, detalle);
+    }
+}
+
+const logger = new SimpleLogger();
+
 });

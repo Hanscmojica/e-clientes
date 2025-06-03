@@ -282,6 +282,7 @@
     });
 
     // ✅ PUT CORREGIDO - Actualizar usuario
+    // ✅ PUT CORREGIDO - Actualizar usuario
 router.put('/usuarios/:id', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const userId = parseInt(req.params.id);
@@ -531,5 +532,86 @@ router.put('/usuarios/:id', authenticateToken, requireAdmin, async (req, res) =>
         });
       }
     });
+
+    // GET /api/admin/logs - Obtener logs del sistema con filtros y paginación
+router.get('/logs', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const { page = 1, limit = 100, startDate, endDate, type } = req.query;
+    
+    console.log('📋 Obteniendo logs del sistema...', { page, limit, startDate, endDate, type });
+    
+    // Construir filtros para Prisma usando la tabla auditlog
+    const where = {};
+    
+    // Filtro por fechas
+    if (startDate && endDate) {
+      where.timestamp = {
+        gte: new Date(startDate + 'T00:00:00.000Z'),
+        lte: new Date(endDate + 'T23:59:59.999Z')
+      };
+    } else if (startDate) {
+      where.timestamp = {
+        gte: new Date(startDate + 'T00:00:00.000Z')
+      };
+    } else if (endDate) {
+      where.timestamp = {
+        lte: new Date(endDate + 'T23:59:59.999Z')
+      };
+    }
+    
+    // Filtro por tipo de evento
+    if (type) {
+      where.event = type;
+    }
+    
+    // Calcular offset para paginación
+    const offset = (parseInt(page) - 1) * parseInt(limit);
+    
+    // Obtener logs con paginación usando la tabla auditlog
+    const [logs, totalLogs] = await Promise.all([
+      prisma.auditlog.findMany({
+        where,
+        orderBy: { timestamp: 'desc' },
+        skip: offset,
+        take: parseInt(limit)
+      }),
+      prisma.auditlog.count({ where })
+    ]);
+    
+    const totalPages = Math.ceil(totalLogs / parseInt(limit));
+    
+    // Formatear logs para el frontend respetando los campos reales
+    const formattedLogs = logs.map(log => ({
+      id: log.id,
+      timestamp: log.timestamp,
+      type: log.event || 'UNKNOWN',
+      username: log.username || 'Sistema',
+      description: log.details || `Evento: ${log.event}`,
+      ipAddress: log.ip || null,
+    }));
+    
+    console.log(`✅ ${formattedLogs.length} logs obtenidos de la tabla auditlog`);
+    
+    res.json({
+      success: true,
+      data: {
+        logs: formattedLogs,
+        currentPage: parseInt(page),
+        totalPages,
+        totalLogs,
+        hasNextPage: parseInt(page) < totalPages,
+        hasPrevPage: parseInt(page) > 1
+      }
+    });
+    
+  } catch (error) {
+    console.error('❌ Error obteniendo logs:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error obteniendo logs del sistema',
+      error: error.message
+    });
+  }
+});
 
     module.exports = router;

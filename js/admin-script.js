@@ -1,103 +1,28 @@
-// SISTEMA DE LOGGING SEGURO
-class SecureLogger {
-  constructor() {
-    this.isDevelopment = this.detectEnvironment();
-    this.levels = { ERROR: 0, WARN: 1, INFO: 2, DEBUG: 3 };
-    this.currentLevel = this.isDevelopment ? this.levels.DEBUG : this.levels.ERROR;
-  }
-  
-  detectEnvironment() {
-    return (
-      window.location.hostname === 'localhost' ||
-      window.location.hostname === '127.0.0.1' ||
-      window.location.hostname.includes('dev') ||
-      window.location.hostname.includes('test') ||
-      window.location.port !== '' ||
-      window.location.protocol === 'file:'
-    );
-  }
-  
-  error(message, data = null) {
-    if (this.currentLevel >= this.levels.ERROR) {
-      console.error(`🚨 [ERROR] ${message}`, data || '');
-    }
-  }
-  
-  warn(message, data = null) {
-    if (this.currentLevel >= this.levels.WARN) {
-      console.warn(`⚠️ [WARN] ${message}`, data || '');
-    }
-  }
-  
-  info(message, data = null) {
-    if (this.currentLevel >= this.levels.INFO) {
-      console.log(`ℹ️ [INFO] ${message}`, data || '');
-    }
-  }
-  
-  debug(message, data = null) {
-    if (this.currentLevel >= this.levels.DEBUG) {
-      console.log(`🐛 [DEBUG] ${message}`, data || '');
-    }
-  }
-  
-  auth(message, data = null) {
-    if (this.isDevelopment) {
-      const safePrint = this.sanitizeAuthData(data);
-      console.log(`🔐 [AUTH] ${message}`, safePrint);
-    }
-  }
-  
-  sanitizeAuthData(data) {
-    if (!data || typeof data !== 'object') return data;
-    const safe = { ...data };
-    const sensitiveFields = ['token', 'password', 'email', 'jwt'];
-    sensitiveFields.forEach(field => {
-      if (safe[field]) {
-        safe[field] = '***HIDDEN***';
-      }
-    });
-    return safe;
-  }
-  
-  setProductionMode() {
-    this.currentLevel = this.levels.ERROR;
-    this.isDevelopment = false;
-    console.warn('🚨 Logger configurado para PRODUCCIÓN - Solo errores se mostrarán');
-  }
-}
-
-// Crear instancia global del logger
-const logger = new SecureLogger();
-
-// ⚠️ PARA PRODUCCIÓN: Descomentar la siguiente línea
-logger.setProductionMode();
-
-// ===============================
-// CONFIGURACIÓN Y VARIABLES
-// ===============================
+// Configuración de la API
 const apiBase = 'http://10.11.21.15:5001';
+
+// Variables globales
 let usuarios = [];
 let perfiles = [];
 let currentSection = 'dashboard';
 let editingUserId = null;
+let permisosData = [];
+let modulosDisponibles = [];  
 
-// ===============================
-// INICIALIZACIÓN
-// ===============================
+// Inicialización
 document.addEventListener('DOMContentLoaded', function() {
-  logger.debug('Cargando panel de administrador...');
+  console.log('🔧 Cargando panel de administrador...');
   
   // Verificación simple - solo comprobar si hay sesión
   const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
   
   if (!userSession) {
-    logger.warn('No hay sesión, redirigiendo...');
+    console.log('❌ No hay sesión, redirigiendo...');
     window.location.href = 'login.html';
     return;
   }
   
-  logger.auth('Sesión encontrada', userSession);
+  console.log('✅ Sesión encontrada:', userSession);
   
   // Actualizar header con datos reales
   const userNameElement = document.querySelector('.user-name');
@@ -125,21 +50,19 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Cargar dashboard
   cargarDashboard();
+
+  cargarLogs();
   
-  logger.info('Panel admin cargado exitosamente');
+  console.log('✅ Panel admin cargado exitosamente');
 });
 
-// ===============================
-// FUNCIONES DE UTILIDAD
-// ===============================
+// Función para obtener token
 function getAuthToken() {
   const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
   return userSession ? userSession.token : null;
 }
 
-// ===============================
-// NAVEGACIÓN
-// ===============================
+// Configurar navegación del sidebar
 function configurarNavegacion() {
   const navItems = document.querySelectorAll('.admin-nav .nav-item');
   
@@ -152,6 +75,7 @@ function configurarNavegacion() {
   });
 }
 
+// Cambiar sección activa
 function cambiarSeccion(sectionName) {
   // Actualizar navegación
   document.querySelectorAll('.admin-nav .nav-item').forEach(item => {
@@ -181,10 +105,10 @@ function cambiarSeccion(sectionName) {
       cargarPerfiles();
       break;
     case 'permisos':
-      mostrarAlerta('Sección en desarrollo', 'info');
+    cargarPermisos(); 
       break;
     case 'logs':
-      mostrarAlerta('Sección en desarrollo', 'info');
+      cargarLogs(); 
       break;
     case 'configuracion':
       mostrarAlerta('Configuración cargada', 'success');
@@ -195,6 +119,8 @@ function cambiarSeccion(sectionName) {
 // ===============================
 // DASHBOARD - CONECTADO CON API
 // ===============================
+
+// Cargar dashboard
 async function cargarDashboard() {
   try {
     const token = getAuthToken();
@@ -213,8 +139,6 @@ async function cargarDashboard() {
       setTimeout(() => document.getElementById('usuarios-activos').textContent = stats.usuariosActivos, 200);
       setTimeout(() => document.getElementById('logins-hoy').textContent = stats.loginsHoy, 300);
       setTimeout(() => document.getElementById('referencias-mes').textContent = stats.referenciasMes, 400);
-      
-      logger.debug('Estadísticas del dashboard cargadas', stats);
     }
     
     // Cargar actividad reciente
@@ -225,15 +149,15 @@ async function cargarDashboard() {
     if (activityResponse.ok) {
       const activityData = await activityResponse.json();
       actualizarActividadReciente(activityData.data);
-      logger.debug('Actividad reciente cargada');
     }
     
   } catch (error) {
-    logger.error('Error cargando dashboard', error);
+    console.error('Error cargando dashboard:', error);
     mostrarDashboardFallback();
   }
 }
 
+// Actualizar actividad reciente
 function actualizarActividadReciente(activity) {
   const activityList = document.getElementById('activity-list');
   
@@ -250,6 +174,7 @@ function actualizarActividadReciente(activity) {
   `).join('');
 }
 
+// Dashboard fallback
 function mostrarDashboardFallback() {
   document.getElementById('total-usuarios').textContent = '0';
   document.getElementById('usuarios-activos').textContent = '0';
@@ -280,6 +205,8 @@ function getActivityIcon(type) {
 // ===============================
 // GESTIÓN DE USUARIOS - CON API REAL
 // ===============================
+
+// Cargar usuarios desde la API
 async function cargarUsuarios() {
   const tableBody = document.getElementById('usuarios-table-body');
   tableBody.innerHTML = '<tr><td colspan="8" class="loading">Cargando usuarios...</td></tr>';
@@ -297,16 +224,17 @@ async function cargarUsuarios() {
     const data = await response.json();
     usuarios = data.data;
     
-    logger.info('Usuarios cargados desde API', { count: usuarios.length });
+    console.log('✅ Usuarios cargados desde API:', usuarios.length);
     mostrarUsuarios(usuarios);
     
   } catch (error) {
-    logger.error('Error cargando usuarios', error);
+    console.error('❌ Error cargando usuarios:', error);
     tableBody.innerHTML = '<tr><td colspan="8" class="error">Error cargando usuarios: ' + error.message + '</td></tr>';
     mostrarAlerta('Error cargando usuarios: ' + error.message, 'error');
   }
 }
 
+// Mostrar usuarios en la tabla
 function mostrarUsuarios(usuariosList) {
   const tableBody = document.getElementById('usuarios-table-body');
   
@@ -354,6 +282,7 @@ function mostrarUsuarios(usuariosList) {
   `).join('');
 }
 
+// Configurar búsqueda y filtros
 function configurarBusquedaYFiltros() {
   const searchInput = document.getElementById('search-usuarios');
   const filterRole = document.getElementById('filter-role');
@@ -372,6 +301,7 @@ function configurarBusquedaYFiltros() {
   }
 }
 
+// Filtrar usuarios
 function filtrarUsuarios() {
   const searchTerm = document.getElementById('search-usuarios')?.value.toLowerCase() || '';
   const roleFilter = document.getElementById('filter-role')?.value || '';
@@ -395,6 +325,8 @@ function filtrarUsuarios() {
 // ===============================
 // ACCIONES DE USUARIOS - CON API REAL
 // ===============================
+
+// ✅ FUNCIÓN CORREGIDA: Editar usuario
 function editarUsuario(userId) {
   const usuario = usuarios.find(u => u.id === userId);
   if (!usuario) {
@@ -403,7 +335,6 @@ function editarUsuario(userId) {
   }
   
   editingUserId = userId;
-  logger.debug('Editando usuario', { id: userId, username: usuario.username });
   
   // Pre-llenar el formulario con los datos del usuario
   const nombreCompleto = usuario.name.split(' ');
@@ -412,7 +343,10 @@ function editarUsuario(userId) {
   document.getElementById('nuevo-apellido-materno').value = nombreCompleto.slice(2).join(' ') || '';
   document.getElementById('nuevo-usuario').value = usuario.username;
   document.getElementById('nuevo-email').value = usuario.email;
+  
+  // ✅ CORREGIDO: Usar el ID del usuario para el campo ID Cliente
   document.getElementById('nuevo-id-cliente').value = usuario.id;
+  
   document.getElementById('nuevo-perfil').value = usuario.role;
   document.getElementById('nuevo-activo').checked = usuario.active;
   
@@ -439,6 +373,7 @@ function editarUsuario(userId) {
   mostrarModalCrearUsuario();
 }
 
+// Toggle estado del usuario - CON API REAL
 async function toggleUsuarioStatus(userId) {
   const usuario = usuarios.find(u => u.id === userId);
   if (!usuario) {
@@ -473,14 +408,14 @@ async function toggleUsuarioStatus(userId) {
     usuario.active = nuevoEstado;
     mostrarUsuarios(usuarios);
     mostrarAlerta(`Usuario ${accion}do exitosamente`, 'success');
-    logger.info(`Usuario ${accion}do`, { id: userId, username: usuario.username });
     
   } catch (error) {
-    logger.error('Error cambiando estado', error);
+    console.error('❌ Error cambiando estado:', error);
     mostrarAlerta('Error: ' + error.message, 'error');
   }
 }
 
+// Eliminar usuario - CON API REAL
 async function eliminarUsuario(userId) {
   const usuario = usuarios.find(u => u.id === userId);
   if (!usuario) {
@@ -488,7 +423,7 @@ async function eliminarUsuario(userId) {
     return;
   }
   
-  if (!confirm(`¿Estás seguro de eliminar al usuario ${usuario.username}?\n\nEsta acción no se puede deshacer.`)) {
+  if (!confirm(`¿Estás seguro de eliminar al usuario ${usuario.username}?\\n\\nEsta acción no se puede deshacer.`)) {
     return;
   }
   
@@ -510,10 +445,9 @@ async function eliminarUsuario(userId) {
     usuarios = usuarios.filter(u => u.id !== userId);
     mostrarUsuarios(usuarios);
     mostrarAlerta('Usuario eliminado exitosamente', 'success');
-    logger.info('Usuario eliminado', { id: userId, username: usuario.username });
     
   } catch (error) {
-    logger.error('Error eliminando usuario', error);
+    console.error('❌ Error eliminando usuario:', error);
     mostrarAlerta('Error: ' + error.message, 'error');
   }
 }
@@ -521,6 +455,8 @@ async function eliminarUsuario(userId) {
 // ===============================
 // MODAL REAL CON FORMULARIO
 // ===============================
+
+// Configurar modales
 function configurarModales() {
   const closeButtons = document.querySelectorAll('.modal .close');
   
@@ -538,6 +474,7 @@ function configurarModales() {
   configurarTabsModal();
 }
 
+// Configurar tabs del modal
 function configurarTabsModal() {
   const tabButtons = document.querySelectorAll('.tab-btn');
   
@@ -559,6 +496,7 @@ function configurarTabsModal() {
   });
 }
 
+// Mostrar modal crear/editar usuario
 function mostrarModalCrearUsuario() {
   const modal = document.getElementById('modal-crear-usuario');
   
@@ -597,6 +535,7 @@ function mostrarModalCrearUsuario() {
   modal.style.display = 'block';
 }
 
+// Cargar perfiles en el select
 async function cargarPerfilesEnSelect() {
   const select = document.getElementById('nuevo-perfil');
   
@@ -614,8 +553,6 @@ async function cargarPerfilesEnSelect() {
         perfiles.map(perfil => 
           `<option value="${perfil.nombre}">${perfil.nombre} - ${perfil.descripcion}</option>`
         ).join('');
-      
-      logger.debug('Perfiles cargados en select', { count: perfiles.length });
     } else {
       // Fallback con perfiles básicos
       select.innerHTML = `
@@ -626,7 +563,7 @@ async function cargarPerfilesEnSelect() {
       `;
     }
   } catch (error) {
-    logger.error('Error cargando perfiles', error);
+    console.error('Error cargando perfiles:', error);
     // Fallback
     select.innerHTML = `
       <option value="">Seleccionar perfil...</option>
@@ -637,6 +574,7 @@ async function cargarPerfilesEnSelect() {
   }
 }
 
+// Configurar formularios
 function configurarFormularios() {
   const formCrearUsuario = document.getElementById('form-crear-usuario');
   
@@ -645,6 +583,7 @@ function configurarFormularios() {
   }
 }
 
+// ✅ FUNCIÓN CORREGIDA: Manejar submit del formulario (crear o editar)
 async function manejarSubmitUsuario(e) {
   e.preventDefault();
   
@@ -690,13 +629,10 @@ async function manejarSubmitUsuario(e) {
     const token = getAuthToken();
     let response;
     
-    logger.debug('Enviando datos al backend', { 
-      operation: editingUserId ? 'UPDATE' : 'CREATE',
-      userId: editingUserId,
-      username: formData.username
-    });
+    console.log('📤 Enviando datos al backend:', formData);
     
     if (editingUserId) {
+      console.log(`🔄 Actualizando usuario ID: ${editingUserId}`);
       response = await fetch(`${apiBase}/api/admin/usuarios/${editingUserId}`, {
         method: 'PUT',
         headers: {
@@ -706,6 +642,7 @@ async function manejarSubmitUsuario(e) {
         body: JSON.stringify(formData)
       });
     } else {
+      console.log('➕ Creando nuevo usuario');
       response = await fetch(`${apiBase}/api/admin/usuarios`, {
         method: 'POST',
         headers: {
@@ -722,10 +659,7 @@ async function manejarSubmitUsuario(e) {
     }
     
     const result = await response.json();
-    logger.info(`Usuario ${editingUserId ? 'actualizado' : 'creado'} exitosamente`, {
-      userId: editingUserId || 'nuevo',
-      username: formData.username
-    });
+    console.log('✅ Respuesta completa del servidor:', result);
     
     mostrarAlerta(result.message || `Usuario ${editingUserId ? 'actualizado' : 'creado'} exitosamente`, 'success');
     
@@ -735,39 +669,44 @@ async function manejarSubmitUsuario(e) {
     // Recargar usuarios
     await cargarUsuarios();
     
-    // Forzar actualización de la tabla
-    mostrarUsuarios(usuarios);
-    
   } catch (error) {
-    logger.error(`Error ${editingUserId ? 'actualizando' : 'creando'} usuario`, error);
+    console.error(`❌ Error ${editingUserId ? 'actualizando' : 'creando'} usuario:`, error);
     mostrarAlerta('Error: ' + error.message, 'error');
   }
 }
 
 function cerrarModal() {
+  console.log('🚪 Cerrando modal...');
+  
+  // Cerrar modal de crear usuario específicamente
+  const modalCrearUsuario = document.getElementById('modal-crear-usuario');
+  if (modalCrearUsuario) {
+    modalCrearUsuario.style.display = 'none';
+    console.log('✅ Modal crear usuario cerrado');
+  }
+  
+  // Cerrar cualquier modal con clase .modal
   document.querySelectorAll('.modal').forEach(modal => {
     modal.style.display = 'none';
   });
   
-  // Limpiar estado de edición
+  // Limpiar estado
   editingUserId = null;
   
   // Resetear formulario
   const form = document.getElementById('form-crear-usuario');
   if (form) {
     form.reset();
-    document.getElementById('nuevo-usuario').disabled = false;
-    const passwordField = document.getElementById('nuevo-password');
-    if (passwordField) {
-      passwordField.required = true;
-      passwordField.placeholder = '';
-    }
+    console.log('✅ Formulario reseteado');
   }
+  
+  console.log('✅ Modal cerrado completamente');
 }
-
 // ===============================
 // GESTIÓN DE PERFILES - CON API
 // ===============================
+
+// Cargar perfiles
 async function cargarPerfiles() {
   const profilesGrid = document.getElementById('profiles-grid');
   profilesGrid.innerHTML = '<div class="profile-card loading"><div class="profile-header"><span class="material-icons">badge</span><h3>Cargando perfiles...</h3></div></div>';
@@ -786,14 +725,14 @@ async function cargarPerfiles() {
     perfiles = data.data;
     
     mostrarPerfiles(perfiles);
-    logger.info('Perfiles cargados', { count: perfiles.length });
     
   } catch (error) {
-    logger.error('Error cargando perfiles', error);
+    console.error('❌ Error cargando perfiles:', error);
     mostrarPerfilesFallback();
   }
 }
 
+// Mostrar perfiles
 function mostrarPerfiles(perfilesList) {
   const profilesGrid = document.getElementById('profiles-grid');
   
@@ -825,6 +764,7 @@ function mostrarPerfiles(perfilesList) {
   `).join('');
 }
 
+// Perfiles fallback
 function mostrarPerfilesFallback() {
   const profilesGrid = document.getElementById('profiles-grid');
   
@@ -840,14 +780,35 @@ function mostrarPerfilesFallback() {
     </div>
   `;
 }
-
+// Editar perfil (placeholder)
 function editarPerfil(perfilId) {
   mostrarAlerta('Funcionalidad de edición de perfiles en desarrollo', 'info');
 }
 
+// Placeholder functions
+function mostrarModalCrearPerfil() {
+  mostrarAlerta('Modal de crear perfil en desarrollo', 'info');
+}
+
+function mostrarModalCrearPermiso() {
+  mostrarAlerta('Modal de crear permiso en desarrollo', 'info');
+}
+
+function filtrarLogs() {
+    const startDate = document.getElementById('log-date-start').value;
+    const endDate = document.getElementById('log-date-end').value;
+    const type = document.getElementById('log-type').value;
+    
+    console.log('🔍 Filtrando logs:', { startDate, endDate, type });
+    
+    // Cargar logs con filtros
+    cargarLogs(1, 100, startDate, endDate, type);
+}
 // ===============================
 // UTILIDADES
 // ===============================
+
+// Formatear fecha
 function formatearFecha(fecha) {
   if (!fecha) return 'Nunca';
   
@@ -865,6 +826,110 @@ function formatearFecha(fecha) {
   }
 }
 
+// Función para cargar logs desde el API
+async function cargarLogs(page = 1, limit = 100, startDate = null, endDate = null, type = null) {
+    try {
+        // Construir URL con parámetros
+        let url = `/api/admin/logs?page=${page}&limit=${limit}`;
+        
+        if (startDate) url += `&startDate=${startDate}`;
+        if (endDate) url += `&endDate=${endDate}`;
+        if (type && type !== '' && type !== 'todos') url += `&type=${type}`;
+
+        console.log('🔍 Cargando logs desde:', url);
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            mostrarLogs(result.data.logs);
+            actualizarPaginacion(result.data);
+        } else {
+            mostrarAlerta('Error cargando logs: ' + result.message, 'error');
+        }
+
+    } catch (error) {
+        console.error('❌ Error cargando logs:', error);
+        mostrarAlerta('Error de conexión al cargar logs', 'error');
+    }
+}
+
+// Función para mostrar logs en la tabla
+function mostrarLogs(logs) {
+    const container = document.getElementById('logs-table');
+    
+    if (!logs || logs.length === 0) {
+        container.innerHTML = `
+            <div class="no-data">
+                <p>No se encontraron logs</p>
+            </div>
+        `;
+        return;
+    }
+
+    let html = `
+        <div class="table-responsive">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Fecha/Hora</th>
+                        <th>Usuario</th>
+                        <th>Tipo</th>
+                        <th>Descripción</th>
+                        <th>IP</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+    logs.forEach(log => {
+        const fecha = formatearFecha(log.timestamp);
+        html += `
+            <tr>
+                <td>${fecha}</td>
+                <td>${log.username || 'Sistema'}</td>
+                <td>
+                    <span class="badge badge-${getBadgeClass(log.type)}">${log.type}</span>
+                </td>
+                <td>${log.description}</td>
+                <td>${log.ipAddress || '-'}</td>
+            </tr>
+        `;
+    });
+
+    html += `
+                </tbody>
+            </table>
+        </div>
+    `;
+
+    container.innerHTML = html;
+}
+
+// Función para obtener clase CSS del badge según el tipo de log
+function getBadgeClass(type) {
+    switch(type) {
+        case 'LOGIN': return 'success';
+        case 'LOGOUT': return 'info';
+        case 'LOGIN_FAILED': return 'danger';
+        case 'CHANGE_PASSWORD': return 'warning';
+        default: return 'secondary';
+    }
+}
+
+// Función para actualizar controles de paginación
+function actualizarPaginacion(data) {
+    console.log(`📊 Logs: ${data.logs.length} de ${data.totalLogs} total`);
+}
+
+// Mostrar alerta
 function mostrarAlerta(mensaje, tipo = 'info') {
   const alerta = document.createElement('div');
   alerta.className = `alert alert-${tipo}`;
@@ -904,6 +969,7 @@ function mostrarAlerta(mensaje, tipo = 'info') {
   }, 5000);
 }
 
+// Obtener icono de alerta
 function getAlertIcon(tipo) {
   const icons = {
     'success': 'check_circle',
@@ -914,23 +980,24 @@ function getAlertIcon(tipo) {
   return icons[tipo] || 'info';
 }
 
+// Obtener color de alerta
 function getAlertColor(tipo) {
   const colors = {
     'success': '#059669',
     'error': '#dc2626',
     'warning': '#d97706',
-    'info': '#0891b2'  
+    'info': '#2563eb'  // Azul en lugar de cyan
   };
-  return colors[tipo] || '#0891b2';
+  return colors[tipo] || '#2563eb';
 }
 
+// Logout
 function logout() {
   if (!confirm('¿Estás seguro de cerrar sesión?')) {
     return;
   }
   
   mostrarAlerta('Cerrando sesión...', 'info');
-  logger.info('Usuario cerrando sesión');
   
   setTimeout(() => {
     localStorage.removeItem('userSession');
@@ -938,40 +1005,175 @@ function logout() {
     localStorage.removeItem('token');
     window.location.href = 'login.html';
   }, 1000);
+}// Mostrar modal para crear perfil
+function mostrarModalCrearPerfil() {
+  const modal = document.createElement('div');
+  modal.innerHTML = `
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Crear Nuevo Perfil</h3>
+        <button class="close-modal" onclick="cerrarModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-crear-perfil">
+          <div class="form-group">
+            <label>Nombre del Perfil:</label>
+            <input type="text" id="perfil-nombre" required placeholder="Ej: Editor de Contenido">
+          </div>
+          <div class="form-group">
+            <label>Descripción:</label>
+            <textarea id="perfil-descripcion" rows="3" placeholder="Descripción del perfil y sus responsabilidades"></textarea>
+          </div>
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="perfil-activo" checked>
+              Perfil activo
+            </label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
+        <button class="btn-primary" onclick="crearPerfil()">Crear Perfil</button>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
 }
 
-// ===============================
-// ESTILOS DE ANIMACIÓN
-// ===============================
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes slideIn {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-  }
-  
-  .loading::after {
-    content: '';
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #ccc;
-    border-radius: 50%;
-    border-top-color: #007bff;
-    animation: spin 1s ease-in-out infinite;
-    margin-left: 10px;
-  }
-  
-  @keyframes spin {
-    to { transform: rotate(360deg); }
-  }
-  
-  .error {
-    color: #dc2626;
-    text-align: center;
-    font-style: italic;
-  }
-`;
-document.head.appendChild(style);
+// Crear nuevo perfil
+async function crearPerfil() {
+  const nombre = document.getElementById('perfil-nombre').value.trim();
+  const descripcion = document.getElementById('perfil-descripcion').value.trim();
+  const activo = document.getElementById('perfil-activo').checked;
 
-logger.info('Admin.js con sistema de logging seguro cargado completamente');
+  if (!nombre) {
+    mostrarAlerta('El nombre del perfil es obligatorio', 'error');
+    return;
+  }
+
+  try {
+    const token = getAuthToken();
+    const response = await fetch(`${apiBase}/api/admin/perfiles`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        nombre,
+        descripcion,
+        activo
+      })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      mostrarAlerta('Perfil creado exitosamente', 'success');
+      cerrarModal();
+      cargarPerfiles(); // Recargar la lista
+    } else {
+      mostrarAlerta('Error: ' + result.message, 'error');
+    }
+
+  } catch (error) {
+    console.error('❌ Error creando perfil:', error);
+    mostrarAlerta('Error de conexión al crear perfil', 'error');
+  }
+}
+
+// Editar perfil
+async function editarPerfil(perfilId) {
+  try {
+    // Buscar el perfil en la lista actual
+    const perfil = perfiles.find(p => p.id === perfilId);
+    if (!perfil) {
+      mostrarAlerta('Perfil no encontrado', 'error');
+      return;
+    }
+
+    const modal = document.createElement('div');
+    modal.innerHTML = `
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Editar Perfil</h3>
+          <button class="close-modal" onclick="cerrarModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form id="form-editar-perfil">
+            <div class="form-group">
+              <label>Nombre del Perfil:</label>
+              <input type="text" id="edit-perfil-nombre" value="${perfil.nombre}" required>
+            </div>
+            <div class="form-group">
+              <label>Descripción:</label>
+              <textarea id="edit-perfil-descripcion" rows="3">${perfil.descripcion}</textarea>
+            </div>
+            <div class="form-group">
+              <label>
+                <input type="checkbox" id="edit-perfil-activo" ${perfil.activo ? 'checked' : ''}>
+                Perfil activo
+              </label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
+          <button class="btn-primary" onclick="actualizarPerfil(${perfilId})">Guardar Cambios</button>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(modal);
+
+  } catch (error) {
+    console.error('❌ Error abriendo modal de edición:', error);
+    mostrarAlerta('Error al abrir editor de perfil', 'error');
+  }
+}
+
+// Actualizar perfil
+async function actualizarPerfil(perfilId) {
+  const nombre = document.getElementById('edit-perfil-nombre').value.trim();
+  const descripcion = document.getElementById('edit-perfil-descripcion').value.trim();
+  const activo = document.getElementById('edit-perfil-activo').checked;
+
+  if (!nombre) {
+    mostrarAlerta('El nombre del perfil es obligatorio', 'error');
+    return;
+  }
+
+  try {
+    const token = getAuthToken();
+    const response = await fetch(`${apiBase}/api/admin/perfiles/${perfilId}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        nombre,
+        descripcion,
+        activo
+      })
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      mostrarAlerta('Perfil actualizado exitosamente', 'success');
+      cerrarModal();
+      cargarPerfiles(); // Recargar la lista
+    } else {
+      mostrarAlerta('Error: ' + result.message, 'error');
+    }
+
+  } catch (error) {
+    console.error('❌ Error actualizando perfil:', error);
+    mostrarAlerta('Error de conexión al actualizar perfil', 'error');
+  }
+}
+
+console.log('✅ Admin.js con backend real cargado completamente');

@@ -1,9 +1,9 @@
 /* Variables de colores según el manual de identidad de Rodall Oseguera */
 :root {
   /* Azules (identidad marítima) */
-  --primary-dark: #04263f;  /* PANTONE 19-4024 TPG */
-  --primary-medium: #082f4c; /* PANTONE 19-4111 TPG */
-  --primary-blue: #0e5372;  /* PANTONE 19-4540 TPG */
+  --primary-dark: #082f4c;  /* PANTONE 19-4024 TPG */
+  --primary-medium: #04263f; /* PANTONE 19-4111 TPG */
+  --primary-blue: #04263f;  /* PANTONE 19-4540 TPG */
   --primary-light: #0b73a0; /* PANTONE 18-4528 TPG */
   --blue-lightest: #9cdfe8; /* Azul muy claro del manual */
   
@@ -51,7 +51,7 @@ body {
   background-color: white;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  box-shadow: 0 20px 40px rgba(92, 83, 83, 0.2);
 }
 
 .login-card {
@@ -85,7 +85,7 @@ body {
   width: 80px;
   height: 80px;
   /* Color dorado del ingeniero como fondo del logo */
-  background-color: var(--gold);
+  background-color: white;
   border-radius: 20px;
   margin-bottom: 20px;
 }
@@ -426,4 +426,13 @@ input[type="password"]::-webkit-input-password-toggle-button {
   background-color: var(--primary-medium);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(4, 38, 63, 0.3);
+}
+
+/* Ajustar tamaño del logo */
+.logo img {
+  max-width: 160px;  /* Cambia este valor para ajustar el ancho */
+  max-height: 80px;  /* Cambia este valor para ajustar la altura */
+  width: auto;
+  height: auto;
+  object-fit: contain;
 }

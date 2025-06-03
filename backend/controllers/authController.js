@@ -250,7 +250,7 @@ exports.login = async (req, res, next) => {
         const perfil = user.perfilesUsuario[0]?.perfil?.sNombre || 'USER';
         
         // MAPEO ESPECIAL PARA USUARIOS CON IDs PERSONALIZADOS
-         let clienteId = user.nIdCliente || user.nId01Usuario;  // ✅ Correcto
+        let clienteId = user.nIdCliente || user.nId01Usuario;  // ✅ Correcto
         
         // Si es HANS desde la BD, usar el ID 5951 para las referencias
         if (user.sUsuario.toUpperCase() === 'HANS') {

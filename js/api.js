@@ -1,4 +1,111 @@
-// Verificar autenticación al cargar la página
+// ===============================
+// SISTEMA DE LOGGING SEGURO (COMPARTIDO)
+// ===============================
+class SecureLogger {
+    constructor() {
+      this.isDevelopment = this.detectEnvironment();
+      this.levels = { ERROR: 0, WARN: 1, INFO: 2, DEBUG: 3 };
+      this.currentLevel = this.isDevelopment ? this.levels.DEBUG : this.levels.ERROR;
+      this.BACKEND_URL = 'http://10.11.21.15:5001';
+    }
+    
+    detectEnvironment() {
+      return (
+        window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1' ||
+        window.location.hostname.includes('dev') ||
+        window.location.hostname.includes('test') ||
+        window.location.port !== '' ||
+        window.location.protocol === 'file:'
+      );
+    }
+    
+    error(message, data = null) {
+      if (this.currentLevel >= this.levels.ERROR) {
+        console.error(`🚨 [ERROR] ${message}`, data || '');
+      }
+    }
+    
+    warn(message, data = null) {
+      if (this.currentLevel >= this.levels.WARN) {
+        console.warn(`⚠️ [WARN] ${message}`, data || '');
+      }
+    }
+    
+    info(message, data = null) {
+      if (this.currentLevel >= this.levels.INFO) {
+        console.log(`ℹ️ [INFO] ${message}`, data || '');
+      }
+    }
+    
+    debug(message, data = null) {
+      if (this.currentLevel >= this.levels.DEBUG) {
+        console.log(`🐛 [DEBUG] ${message}`, data || '');
+      }
+    }
+    
+    auth(message, data = null) {
+      if (this.isDevelopment) {
+        const safePrint = this.sanitizeAuthData(data);
+        console.log(`🔐 [AUTH] ${message}`, safePrint);
+      }
+    }
+    
+    sanitizeAuthData(data) {
+      if (!data || typeof data !== 'object') return data;
+      const safe = { ...data };
+      const sensitiveFields = ['token', 'password', 'email', 'jwt', 'id'];
+      sensitiveFields.forEach(field => {
+        if (safe[field]) {
+          safe[field] = '***HIDDEN***';
+        }
+      });
+      return safe;
+    }
+    
+    setProductionMode() {
+      this.currentLevel = this.levels.ERROR;
+      this.isDevelopment = false;
+      console.warn('🚨 Logger configurado para PRODUCCIÓN - Solo errores se mostrarán');
+    }
+
+    // 🔥 NUEVO MÉTODO PARA LOGGING DE CONSULTAS
+    getAuthToken() {
+        const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
+        return userSession ? userSession.token : null;
+    }
+
+    async log(tipo, referencia = '', detalle = '') {
+        try {
+            const token = this.getAuthToken();
+            if (!token) return;
+            
+            await fetch(`${this.BACKEND_URL}/api/logging/consulta`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({
+                    sFolioReferencia: referencia,
+                    sDetalleConsulta: detalle,
+                    sTipoConsulta: tipo,
+                    bExito: true,
+                    sIpUsuario: 'web-client'
+                })
+            });
+        } catch (error) { 
+            // Fallar silenciosamente para no afectar UX
+        }
+    }
+}
+  
+// Crear instancia global del logger
+const logger = new SecureLogger();
+
+// ⚠️ PARA PRODUCCIÓN: Descomentar la siguiente línea
+logger.setProductionMode();
+
+// ===============================
+// VERIFICACIÓN DE AUTENTICACIÓN
+// ===============================
 document.addEventListener('DOMContentLoaded', function() {
     // Verificar si existe sesión
     const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
@@ -21,10 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Si llegamos aquí, la sesión es válida
-    console.log('%c✅ Usuario autenticado', 'color: green; font-weight: bold; font-size: 14px');
-    console.log('ID Cliente:', userSession.id);
-    console.log('Nombre:', userSession.name);
-    console.log('Rol:', userSession.role);
+    logger.auth('Usuario autenticado', userSession);
     
     // Actualizar el nombre de usuario y ID en la interfaz
     const userNameElement = document.querySelector('.user-name');
@@ -67,7 +171,7 @@ function checkAuthToken() {
     }
     
     authStatus.style.display = 'block';
-    console.log('Datos de sesión completos:', userSession);
+    logger.auth('Datos de sesión verificados', userSession);
 }
 
 // Función global para cerrar sesión
@@ -81,7 +185,9 @@ function logout() {
     window.location.href = 'login.html';
 }
 
-// Arreglo global para almacenar las referencias
+// ===============================
+// VARIABLES GLOBALES
+// ===============================
 let referencias = [];
 let referenciasCompletas = [];
 let referenciasFiltradas = [];
@@ -90,7 +196,9 @@ function getItemsPorPagina() {
 }
 let paginaActual = 1;
 
-// Obtener el modal
+// ===============================
+// MANEJO DE MODALES
+// ===============================
 const modal = document.getElementById('historialModal');
 const span = document.getElementsByClassName('close')[0];
 
@@ -122,7 +230,7 @@ document.addEventListener('click', function(e) {
         if (tabPanel) {
             tabPanel.classList.add('active');
         } else {
-            console.warn(`No se encontró el panel de pestaña: #${tabName}-tab`);
+            logger.warn(`No se encontró el panel de pestaña: #${tabName}-tab`);
         }
         
         if (tabName === "biblioteca") {
@@ -134,7 +242,9 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// Función para filtrar referencias por búsqueda
+// ===============================
+// FILTROS Y BÚSQUEDAS
+// ===============================
 function filtrarReferencias() {
     const searchTerm = document.getElementById('searchReferencia').value.toLowerCase();
 
@@ -150,7 +260,6 @@ function filtrarReferencias() {
     mostrarReferencias(getCurrentClienteInfo(), referenciasFiltradas);
 }
 
-// Función para actualizar el contador de búsqueda
 function actualizarContadorBusqueda() {
     const searchCount = document.getElementById('searchCount');
     if (searchCount) {
@@ -164,7 +273,6 @@ function actualizarContadorBusqueda() {
     }
 }
 
-// Función para obtener la información actual del cliente
 function getCurrentClienteInfo() {
     const userSession = JSON.parse(localStorage.getItem('userSession') || 'null');
     return referencias.length > 0 ? {
@@ -175,7 +283,9 @@ function getCurrentClienteInfo() {
     } : { id: userSession ? userSession.id : 'N/A' };
 }
 
-// Función para limpiar el formulario
+// ===============================
+// FUNCIONES DE FORMULARIO
+// ===============================
 function limpiarFormulario() {
     document.getElementById('tipoFecha').value = '1';
     document.getElementById('fechaInicial').value = '';
@@ -195,7 +305,9 @@ function limpiarFormulario() {
     paginaActual = 1;
 }
 
-// Función principal para consultar referencias - MODIFICADA PARA USAR ID AUTOMÁTICO
+// ===============================
+// CONSULTA DE REFERENCIAS
+// ===============================
 function consultarReferencias() {
     const fechaInicial = document.getElementById('fechaInicial').value;
     const fechaFinal = document.getElementById('fechaFinal').value;
@@ -218,7 +330,7 @@ function consultarReferencias() {
         return;
     }
 
-    console.log(`🔍 Consultando referencias para cliente ID: ${clienteNo}`);
+    logger.debug(`Consultando referencias para cliente ID: ${clienteNo}`);
 
     document.getElementById('loading').style.display = 'flex';
     const alertEl = document.getElementById('alert');
@@ -241,7 +353,7 @@ function consultarReferencias() {
         return;
     }
 
-    axios.post('http://localhost:5001/api/v1/apiExterna', datos, {
+    axios.post('http://10.11.21.15:5001/api/v1/apiExterna', datos, {
         headers: { 
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${userSession.token}`
@@ -252,7 +364,7 @@ function consultarReferencias() {
         procesarRespuesta(res.data);
     })
     .catch(err => {
-        console.error('Error en la solicitud:', err);
+        logger.error('Error en la solicitud', err);
         document.getElementById('loading').style.display = 'none';
         
         if (err.response && err.response.status === 401) {
@@ -266,7 +378,9 @@ function consultarReferencias() {
     });
 }
 
-// Función para mostrar alertas
+// ===============================
+// PROCESAMIENTO DE DATOS
+// ===============================
 function mostrarAlerta(mensaje, tipo = 'error') {
     const alertEl = document.getElementById('alert');
     if (!alertEl) return;
@@ -278,7 +392,6 @@ function mostrarAlerta(mensaje, tipo = 'error') {
     }, 5000);
 }
 
-// Función para procesar la respuesta de la API
 function procesarRespuesta(data) {
     if (!data || Object.keys(data).length === 0) {
         mostrarAlerta('No se encontraron referencias para este cliente.', 'error');
@@ -309,18 +422,30 @@ function procesarRespuesta(data) {
             const searchContainer = document.getElementById('search-filter-container');
             if (searchContainer) searchContainer.style.display = 'block';
             mostrarReferencias(getCurrentClienteInfo(), referencias);
+            
+            logger.info('Referencias procesadas exitosamente', { count: referencias.length });
+            
+            // 🔥 LOG DE BÚSQUEDA DE REFERENCIAS
+            const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
+            const datos = {
+                ClienteNo: parseInt(userSession.id),
+                TipoFecha: parseInt(document.getElementById('tipoFecha').value),
+                FechaInicial: document.getElementById('fechaInicial').value,
+                FechaFinal: document.getElementById('fechaFinal').value
+            };
+            logger.log('REFERENCIAS_BUSQUEDA', '', `Parámetros: TipoFecha=${datos.TipoFecha}, Fechas=${datos.FechaInicial} a ${datos.FechaFinal}, Resultados=${referencias.length}`);
+            
         } else if (data.status && data.status !== "OK") {
             mostrarAlerta(data.message || 'Error en la consulta.', 'error');
         } else {
             mostrarAlerta('La respuesta no tiene el formato esperado.', 'error');
         }
     } catch (error) {
-        console.error('Error al procesar la respuesta:', error);
+        logger.error('Error al procesar la respuesta', error);
         mostrarAlerta('Error al procesar los datos: ' + error.message, 'error');
     }
 }
 
-// Función para formatear fechas
 function formatearFecha(fechaStr) {
     if (!fechaStr) return '';
     try {
@@ -335,13 +460,15 @@ function formatearFecha(fechaStr) {
     }
 }
 
-// ✅ FUNCIÓN CORREGIDA - Generarar biblioteca de documentos DENTRO DEL MODAL
+// ===============================
+// BIBLIOTECA DE DOCUMENTOS
+// ===============================
 function generarBibliotecaModal(referenciaOriginal) {
     const listaDocumentosUI = modal.querySelector('#listaDocumentos');
     const noDocumentosMensaje = modal.querySelector('#noDocumentosModalMensaje');
 
     if (!listaDocumentosUI || !noDocumentosMensaje) {
-        console.error("Elementos de la biblioteca no encontrados en el modal.");
+        logger.error("Elementos de la biblioteca no encontrados en el modal.");
         return;
     }
     
@@ -350,7 +477,7 @@ function generarBibliotecaModal(referenciaOriginal) {
     
     const numeroReferencia = referenciaOriginal.Referencia || '';
     
-    console.log(`Generando biblioteca para referencia: ${numeroReferencia}`);
+    logger.debug(`Generando biblioteca para referencia: ${numeroReferencia}`);
     
     if (!numeroReferencia) {
         noDocumentosMensaje.style.display = 'block';
@@ -359,23 +486,21 @@ function generarBibliotecaModal(referenciaOriginal) {
         return;
     }
 
-    const BACKEND_URL = 'http://localhost:5001';
-    // ✅ URL CORREGIDA - Cambio de /list/ a /api/referencias/.../documentos
+    const BACKEND_URL = 'http://10.11.21.15:5001';
     const endpointUrl = `${BACKEND_URL}/api/referencias/${numeroReferencia}/documentos`;
     
-    console.log(`Consultando endpoint: ${endpointUrl}`);
+    logger.debug(`Consultando endpoint: ${endpointUrl}`);
     
     fetch(endpointUrl)
         .then(response => {
-            console.log(`Respuesta del servidor: status=${response.status}`);
+            logger.debug(`Respuesta del servidor: status=${response.status}`);
             if (!response.ok) {
                 throw new Error(`Error del servidor: ${response.status} ${response.statusText}`);
             }
             return response.json();
         })
         .then(respuestaAPI => {
-            // ✅ MANEJO DE RESPUESTA CORREGIDO - Ahora maneja la nueva estructura JSON
-            console.log(`Respuesta completa del API:`, respuestaAPI);
+            logger.debug(`Respuesta completa del API:`, respuestaAPI);
             
             listaDocumentosUI.innerHTML = '';
 
@@ -400,7 +525,7 @@ function generarBibliotecaModal(referenciaOriginal) {
             noDocumentosMensaje.style.display = 'none';
             listaDocumentosUI.style.display = '';
 
-            // ✅ PROCESAR LOS DOCUMENTOS - Ahora accede a data.documents
+            // Procesar los documentos
             data.documents.forEach((doc, index) => {
                 const li = document.createElement('li');
                 
@@ -440,24 +565,30 @@ function generarBibliotecaModal(referenciaOriginal) {
                 filtroDocsInput.value = '';
             }
 
-            console.log(`✅ Se cargaron ${data.documents.length} documentos exitosamente`);
+            logger.info(`Se cargaron ${data.documents.length} documentos exitosamente`);
+            
+            // 🔥 LOG DE CONSULTA DE BIBLIOTECA
+            logger.log('REFERENCIA_BIBLIOTECA', numeroReferencia, `Documentos encontrados: ${data.documents.length}`);
+            
         })
         .catch(error => {
-            console.error("Error al cargar documentos:", error);
+            logger.error("Error al cargar documentos", error);
             listaDocumentosUI.innerHTML = '';
             noDocumentosMensaje.style.display = 'block';
             noDocumentosMensaje.textContent = 'Error al cargar los documentos: ' + error.message;
         });
 }
 
-// ✅ FUNCIONES DE DESCARGA Y VISTA ACTUALIZADAS - Usando las nuevas URLs
 // Función para ver documento (desde el modal)
 function verDocumentoModal(referenciaId, docNombre) {
-    const BACKEND_URL = 'http://localhost:5001';
-    // 🔧 Actualizar URL según tu backend - ajustar si es necesario
+    const BACKEND_URL = 'http://10.11.15.21:5001';
     const viewUrl = `${BACKEND_URL}/view/${referenciaId}/${docNombre}`;
     
-    console.log('Abriendo vista previa:', viewUrl);
+    logger.debug('Abriendo vista previa', { url: viewUrl });
+    
+    // 🔥 LOG DE VISUALIZACIÓN DE DOCUMENTO
+    logger.log('DOCUMENTO_VISUALIZACION', referenciaId, decodeURIComponent(docNombre));
+    
     mostrarAlerta(`Abriendo vista previa de ${decodeURIComponent(docNombre)}...`, 'success');
     
     window.open(viewUrl, '_blank');
@@ -465,11 +596,14 @@ function verDocumentoModal(referenciaId, docNombre) {
 
 // Función para descargar documento (desde el modal)
 function descargarDocumentoModal(referenciaId, docNombre) {
-    const BACKEND_URL = 'http://localhost:5001';
-    // 🔧 Actualizar URL según tu backend - ajustar si es necesario
+    const BACKEND_URL = 'http://10.11.21.15:5001';
     const downloadUrl = `${BACKEND_URL}/download/${referenciaId}/${docNombre}`;
     
-    console.log('Descargando documento:', downloadUrl);
+    logger.debug('Descargando documento', { url: downloadUrl });
+    
+    // 🔥 LOG DE DESCARGA DE DOCUMENTO
+    logger.log('DOCUMENTO_DESCARGA', referenciaId, decodeURIComponent(docNombre));
+    
     mostrarAlerta(`Iniciando descarga de ${decodeURIComponent(docNombre)}...`, 'success');
     
     const link = document.createElement('a');
@@ -520,7 +654,9 @@ function filtrarDocumentosModal() {
     }
 }
 
-// Función principal para mostrar el modal de una referencia con todas sus pestañas
+// ===============================
+// MODAL DE REFERENCIAS
+// ===============================
 function mostrarModalReferencia(indexEnListaMostrada) {
     const referenciaOriginal = referenciasCompletas[indexEnListaMostrada];
 
@@ -577,6 +713,9 @@ function mostrarModalReferencia(indexEnListaMostrada) {
         }
     }
 
+    // 🔥 LOG DE CONSULTA DE HISTORIAL
+    logger.log('REFERENCIA_HISTORIAL', referenciaOriginal.Referencia, `Registros historial: ${referenciaOriginal.Hist ? referenciaOriginal.Hist.length : 0}`);
+
     // Establecer "Detalle" como pestaña activa por defecto
     modal.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
     modal.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
@@ -603,7 +742,6 @@ function mostrarModalReferencia(indexEnListaMostrada) {
     if (modal) modal.style.display = "block";
 }
 
-// Función para obtener la descripción de un estado
 function getEstadoDescripcion(estadoCve) {
     const estados = {
         'P': 'Pendiente', 'C': 'En Proceso', 'D': 'Despacho', 'T': 'Terminado',
@@ -611,7 +749,9 @@ function getEstadoDescripcion(estadoCve) {
     return estados[String(estadoCve).toUpperCase()] || estadoCve || 'Desconocido';
 }
 
-// Función para mostrar las referencias en formato de tarjetas - MODIFICADA
+// ===============================
+// MOSTRAR REFERENCIAS
+// ===============================
 function mostrarReferencias(clienteInfo, referenciasAMostrarParam) {
     const container = document.getElementById('referencias-container');
     let referenciasAMostrar = referenciasAMostrarParam;
@@ -679,7 +819,6 @@ function mostrarReferencias(clienteInfo, referenciasAMostrarParam) {
     }
 }
 
-// Función para crear una tarjeta de referencia
 function crearTarjetaReferencia(referencia, indexOriginal, indexEnVistaActual) {
     const card = document.createElement('div');
     card.className = 'reference-card';
@@ -704,7 +843,7 @@ function crearTarjetaReferencia(referencia, indexOriginal, indexEnVistaActual) {
             ${referencia.TipoReconocimiento ? `<div class="ref-detail-item"><strong>Reconocimiento:</strong><span>${referencia.TipoReconocimiento}</span></div>` : ''}
         </div>
         <div class="ref-actions">
-            <button class="btn-action btn-pdf" onclick="event.stopPropagation(); console.log('PDF para ref: ${referencia.Referencia}')">
+            <button class="btn-action btn-pdf" onclick="event.stopPropagation(); logger.debug('PDF para ref: ${referencia.Referencia}')">
                 <span class="material-icons">picture_as_pdf</span> PDF
             </button>
             <button class="btn-action btn-preview" onclick="event.stopPropagation(); mostrarModalReferencia(${indexOriginal})">
@@ -714,7 +853,6 @@ function crearTarjetaReferencia(referencia, indexOriginal, indexEnVistaActual) {
     return card;
 }
 
-// Función para obtener la clase de estado
 function obtenerClaseEstado(estadoCve) {
     const clases = {
         'P': 'status-pending', 'C': 'status-processing', 'D': 'status-dispatch', 'T': 'status-completed'
@@ -722,7 +860,9 @@ function obtenerClaseEstado(estadoCve) {
     return clases[String(estadoCve).toUpperCase()] || 'status-pending';
 }
 
-// Validar fechas al perder el foco
+// ===============================
+// VALIDACIONES
+// ===============================
 const fechaInicialInput = document.getElementById('fechaInicial');
 const fechaFinalInput = document.getElementById('fechaFinal');
 
@@ -741,7 +881,9 @@ function validarFormatoFechaInput(e) {
     }
 }
 
-// Inicializar listeners al cargar el script
+// ===============================
+// INICIALIZACIÓN DE EVENTOS
+// ===============================
 document.addEventListener('DOMContentLoaded', () => {
     const btnLimpiar = document.getElementById('btnLimpiar');
     if (btnLimpiar) {
@@ -757,4 +899,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (searchInput) {
         searchInput.addEventListener('keyup', filtrarReferencias);
     }
-});
+}); 
