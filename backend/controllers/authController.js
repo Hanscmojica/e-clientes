@@ -1,8 +1,8 @@
-// controllers/authController.js - CON LOGGING USANDO TU authService EXISTENTE
+// controllers/authController.js - CORREGIDO CON SEPARACIÓN DE CONCEPTOS
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const prisma = require('../utils/prisma');
-const authService = require('../services/authService'); // ← TU authService EXISTENTE
+const authService = require('../services/authService');
 
 exports.login = async (req, res, next) => {
     try {
@@ -14,24 +14,28 @@ exports.login = async (req, res, next) => {
         
         // USUARIO DE PRUEBA HANS - SIEMPRE DISPONIBLE
         if (username.toUpperCase() === 'HANS' && password === '12345') {
-            console.log('✅ Login de prueba para HANS (ID: 5951)');
+            console.log('✅ Login de prueba para HANS');
+            
+            // ✅ SEPARACIÓN CORRECTA DE CONCEPTOS
+            const usuarioId = 5951;  // ID único del usuario HANS
+            const clienteId = 5951;  // ID de la empresa de HANS
             
             const token = jwt.sign(
                 { 
-                    id: 5951, 
+                    id: usuarioId,           // ✅ ID único del usuario
+                    idCliente: clienteId,    // ✅ ID de la empresa/cliente
                     username: 'HANS', 
                     role: 'ADMIN',
-                    originalId: 5951,
-                    idCliente: 5951  // ✅ AGREGAR idCliente
+                    originalId: usuarioId    // ✅ Para logs (ID único del usuario)
                 },
                 process.env.JWT_SECRET || 'clave_secreta_para_jwt',
                 { expiresIn: process.env.JWT_EXPIRE || '24h' }
             );
             
-            // 🔥 REGISTRAR LOG DE LOGIN EXITOSO USANDO TU authService
+            // 🔥 REGISTRAR LOG DE LOGIN EXITOSO
             try {
                 await authService.createAuthLog({
-                    nId01Usuario: 5951,
+                    nId01Usuario: usuarioId,  // ✅ Usar ID único del usuario
                     sTipoAccion: 'LOGIN',
                     dFechaHora: new Date(),
                     sIpUsuario: (ip || 'unknown').substring(0, 50),
@@ -47,9 +51,9 @@ exports.login = async (req, res, next) => {
                 console.error('⚠️ Error al guardar log:', logError);
             }
             
-            // 🔥 CREAR SESIÓN ACTIVA USANDO TU authService
+            // 🔥 CREAR SESIÓN ACTIVA
             try {
-                await authService.createActiveSession(5951, token, req);
+                await authService.createActiveSession(usuarioId, token, req);
                 console.log('✅ Sesión activa creada para HANS');
             } catch (sessionError) {
                 console.error('⚠️ Error al crear sesión:', sessionError);
@@ -60,12 +64,12 @@ exports.login = async (req, res, next) => {
                 message: 'Login exitoso',
                 token: token,
                 user: {
-                    id: 5951,
+                    id: usuarioId,           // ✅ ID único del usuario
+                    idCliente: clienteId,    // ✅ ID de la empresa/cliente
                     username: 'HANS',
                     name: 'Hans Hansen Mojica',
                     role: 'ADMIN',
-                    email: 'hans@hotmail.com',
-                    idCliente: 5951  // ✅ AGREGAR idCliente en respuesta
+                    email: 'hans@hotmail.com'
                 }
             });
         }
@@ -111,13 +115,17 @@ exports.login = async (req, res, next) => {
             // Fallback para HANS en caso de error de BD
             if (username.toUpperCase() === 'HANS' && password === '12345') {
                 console.log('⚠️ Error de BD, usando fallback para HANS');
+                
+                const usuarioId = 5951;
+                const clienteId = 5951;
+                
                 const token = jwt.sign(
                     { 
-                        id: 5951, 
+                        id: usuarioId,
+                        idCliente: clienteId,
                         username: 'HANS', 
                         role: 'ADMIN',
-                        originalId: 5951,
-                        idCliente: 5951  // ✅ AGREGAR idCliente
+                        originalId: usuarioId
                     },
                     process.env.JWT_SECRET || 'clave_secreta_para_jwt',
                     { expiresIn: process.env.JWT_EXPIRE || '24h' }
@@ -126,7 +134,7 @@ exports.login = async (req, res, next) => {
                 // 🔥 REGISTRAR LOG DE FALLBACK
                 try {
                     await authService.createAuthLog({
-                        nId01Usuario: 5951,
+                        nId01Usuario: usuarioId,
                         sTipoAccion: 'LOGIN',
                         dFechaHora: new Date(),
                         sIpUsuario: (ip || 'unknown').substring(0, 50),
@@ -137,7 +145,7 @@ exports.login = async (req, res, next) => {
                         sDetalleError: 'Fallback por error BD',
                         sTokenSesion: token.substring(0, 255)
                     });
-                    await authService.createActiveSession(5951, token, req);
+                    await authService.createActiveSession(usuarioId, token, req);
                 } catch (logError) {
                     console.error('⚠️ Error al guardar log de fallback:', logError);
                 }
@@ -147,12 +155,12 @@ exports.login = async (req, res, next) => {
                     message: 'Login exitoso (fallback)',
                     token: token,
                     user: {
-                        id: 5951,
+                        id: usuarioId,
+                        idCliente: clienteId,
                         username: 'HANS',
                         name: 'Hans Hansen Mojica',
                         role: 'ADMIN',
-                        email: 'hans@hotmail.com',
-                        idCliente: 5951  // ✅ AGREGAR idCliente en respuesta
+                        email: 'hans@hotmail.com'
                     }
                 });
             }
@@ -249,23 +257,20 @@ exports.login = async (req, res, next) => {
         // Obtener el perfil del usuario
         const perfil = user.perfilesUsuario[0]?.perfil?.sNombre || 'USER';
         
-        // MAPEO ESPECIAL PARA USUARIOS CON IDs PERSONALIZADOS
-        let clienteId = user.nIdCliente || user.nId01Usuario;  // ✅ Correcto
+        // ✅ SEPARACIÓN CORRECTA DE CONCEPTOS
+        const usuarioId = user.nId01Usuario;              // ID único del usuario (1, 2, 3, 4, 5...)
+        const clienteId = user.nIdCliente || usuarioId;   // ID del cliente/empresa (5951, 3159... o fallback)
         
-        // Si es HANS desde la BD, usar el ID 5951 para las referencias
-        if (user.sUsuario.toUpperCase() === 'HANS') {
-            clienteId = 5951;
-            console.log('✅ Mapeando HANS de BD (ID original: ' + user.nId01Usuario + ') a ID cliente: 5951');
-        }
+        console.log(`✅ Usuario: ${user.sUsuario} - ID Usuario: ${usuarioId} - ID Cliente: ${clienteId}`);
         
         // Generar token JWT
         const token = jwt.sign(
             { 
-                id: clienteId,
+                id: usuarioId,           // ✅ ID único del usuario (para identificar la persona)
+                idCliente: clienteId,    // ✅ ID del cliente/empresa (para consultar referencias)
                 username: user.sUsuario,
                 role: perfil,
-                originalId: user.nId01Usuario,
-                idCliente: clienteId  // ✅ AGREGAR idCliente
+                originalId: usuarioId    // ✅ Para logs (ID único del usuario)
             },
             process.env.JWT_SECRET || 'clave_secreta_para_jwt',
             { expiresIn: process.env.JWT_EXPIRE || '8h' }
@@ -274,7 +279,7 @@ exports.login = async (req, res, next) => {
         // 🔥 REGISTRAR LOG DE LOGIN EXITOSO
         try {
             await authService.createAuthLog({
-                nId01Usuario: user.nId01Usuario,
+                nId01Usuario: usuarioId,  // ✅ Usar ID único del usuario
                 sTipoAccion: 'LOGIN',
                 dFechaHora: new Date(),
                 sIpUsuario: (ip || 'unknown').substring(0, 50),
@@ -292,13 +297,14 @@ exports.login = async (req, res, next) => {
         
         // 🔥 CREAR SESIÓN ACTIVA
         try {
-            await authService.createActiveSession(user.nId01Usuario, token, req);
+            await authService.createActiveSession(usuarioId, token, req);
             console.log('✅ Sesión activa creada para:', user.sUsuario);
         } catch (sessionError) {
             console.error('⚠️ Error al crear sesión activa:', sessionError);
         }
         
         console.log('✅ Login exitoso para:', user.sUsuario);
+        console.log('✅ ID Usuario:', usuarioId);
         console.log('✅ ID Cliente para referencias:', clienteId);
         console.log('✅ Logs de autenticación registrados');
         
@@ -308,13 +314,13 @@ exports.login = async (req, res, next) => {
             message: 'Login exitoso',
             token,
             user: {
-                id: clienteId,
+                id: usuarioId,           // ✅ ID único del usuario (1, 2, 3, 4, 5...)
+                idCliente: clienteId,    // ✅ ID del cliente/empresa (5951, 3159...)
                 username: user.sUsuario,
                 name: `${user.sNombre} ${user.sApellidoPaterno} ${user.sApellidoMaterno}`,
                 role: perfil,
                 email: user.sEmail,
-                image: user.sUsuarioImg,
-                idCliente: clienteId  // ✅ AGREGAR idCliente en respuesta
+                image: user.sUsuarioImg
             }
         });
     } catch (error) {
@@ -341,13 +347,17 @@ exports.login = async (req, res, next) => {
         // Fallback final para HANS
         if (req.body.username?.toUpperCase() === 'HANS' && req.body.password === '12345') {
             console.log('⚠️ Error general, usando fallback final para HANS');
+            
+            const usuarioId = 5951;
+            const clienteId = 5951;
+            
             const token = jwt.sign(
                 { 
-                    id: 5951, 
+                    id: usuarioId,
+                    idCliente: clienteId,
                     username: 'HANS', 
                     role: 'ADMIN',
-                    originalId: 5951,
-                    idCliente: 5951  // ✅ AGREGAR idCliente
+                    originalId: usuarioId
                 },
                 process.env.JWT_SECRET || 'clave_secreta_para_jwt',
                 { expiresIn: process.env.JWT_EXPIRE || '24h' }
@@ -356,7 +366,7 @@ exports.login = async (req, res, next) => {
             // 🔥 REGISTRAR LOG DE FALLBACK FINAL
             try {
                 await authService.createAuthLog({
-                    nId01Usuario: 5951,
+                    nId01Usuario: usuarioId,
                     sTipoAccion: 'LOGIN',
                     dFechaHora: new Date(),
                     sIpUsuario: (req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown').substring(0, 50),
@@ -367,7 +377,7 @@ exports.login = async (req, res, next) => {
                     sDetalleError: 'Fallback por error general',
                     sTokenSesion: token.substring(0, 255)
                 });
-                await authService.createActiveSession(5951, token, req);
+                await authService.createActiveSession(usuarioId, token, req);
             } catch (logError) {
                 console.error('⚠️ Error al guardar log de fallback final:', logError);
             }
@@ -377,11 +387,11 @@ exports.login = async (req, res, next) => {
                 message: 'Login exitoso (modo emergencia)',
                 token: token,
                 user: {
-                    id: 5951,
+                    id: usuarioId,
+                    idCliente: clienteId,
                     username: 'HANS',
                     name: 'Hans Hansen Mojica',
-                    role: 'ADMIN',
-                    idCliente: 5951  // ✅ AGREGAR idCliente en respuesta
+                    role: 'ADMIN'
                 }
             });
         }
@@ -399,10 +409,10 @@ exports.logout = async (req, res) => {
                       req.header('x-auth-token');
         
         if (req.user && req.user.originalId) {
-            // 🔥 REGISTRAR LOGOUT USANDO TU authService
+            // 🔥 REGISTRAR LOGOUT
             try {
                 await authService.createAuthLog({
-                    nId01Usuario: req.user.originalId,
+                    nId01Usuario: req.user.originalId,  // ✅ Usar ID único del usuario
                     sTipoAccion: 'LOGOUT',
                     dFechaHora: new Date(),
                     sIpUsuario: (req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown').substring(0, 50),
@@ -449,14 +459,14 @@ exports.getProfile = async (req, res, next) => {
             return res.status(200).json({
                 success: true,
                 user: {
-                    id: 5951,
+                    id: 5951,              // ✅ ID único del usuario
+                    idCliente: 5951,       // ✅ ID del cliente/empresa
                     username: 'HANS',
                     name: 'Hans Hansen Mojica',
                     email: 'hans@hotmail.com',
                     role: 'ADMIN',
                     active: true,
-                    createdAt: new Date().toISOString(),
-                    idCliente: 5951  // ✅ AGREGAR idCliente en respuesta
+                    createdAt: new Date().toISOString()
                 }
             });
         }
@@ -485,23 +495,22 @@ exports.getProfile = async (req, res, next) => {
         
         const perfil = user.perfilesUsuario[0]?.perfil?.sNombre || 'USER';
         
-        let clienteId = user.nId01Usuario;
-        if (user.sUsuario.toUpperCase() === 'HANS') {
-            clienteId = 5951;
-        }
+        // ✅ SEPARACIÓN CORRECTA DE CONCEPTOS
+        const usuarioId = user.nId01Usuario;
+        const clienteId = user.nIdCliente || usuarioId;
         
         res.status(200).json({
             success: true,
             user: {
-                id: clienteId,
+                id: usuarioId,           // ✅ ID único del usuario
+                idCliente: clienteId,    // ✅ ID del cliente/empresa
                 username: user.sUsuario,
                 name: `${user.sNombre} ${user.sApellidoPaterno} ${user.sApellidoMaterno}`,
                 email: user.sEmail,
                 role: perfil,
                 image: user.sUsuarioImg,
                 active: user.bActivo,
-                createdAt: user.dFechaCreacion,
-                idCliente: clienteId  // ✅ AGREGAR idCliente en respuesta
+                createdAt: user.dFechaCreacion
             }
         });
     } catch (error) {

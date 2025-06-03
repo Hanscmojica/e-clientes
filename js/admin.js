@@ -395,6 +395,7 @@ function filtrarUsuarios() {
 // ===============================
 // ACCIONES DE USUARIOS - CON API REAL
 // ===============================
+// ✅ FUNCIÓN CORREGIDA: Editar usuario
 function editarUsuario(userId) {
   const usuario = usuarios.find(u => u.id === userId);
   if (!usuario) {
@@ -403,7 +404,6 @@ function editarUsuario(userId) {
   }
   
   editingUserId = userId;
-  logger.debug('Editando usuario', { id: userId, username: usuario.username });
   
   // Pre-llenar el formulario con los datos del usuario
   const nombreCompleto = usuario.name.split(' ');
@@ -412,7 +412,10 @@ function editarUsuario(userId) {
   document.getElementById('nuevo-apellido-materno').value = nombreCompleto.slice(2).join(' ') || '';
   document.getElementById('nuevo-usuario').value = usuario.username;
   document.getElementById('nuevo-email').value = usuario.email;
-  document.getElementById('nuevo-id-cliente').value = usuario.id;
+  
+  // ✅ CORREGIDO: Ahora usar el campo idCliente separado
+  document.getElementById('nuevo-id-cliente').value = usuario.idCliente || '';
+  
   document.getElementById('nuevo-perfil').value = usuario.role;
   document.getElementById('nuevo-activo').checked = usuario.active;
   

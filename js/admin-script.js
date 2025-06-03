@@ -344,8 +344,8 @@ function editarUsuario(userId) {
   document.getElementById('nuevo-usuario').value = usuario.username;
   document.getElementById('nuevo-email').value = usuario.email;
   
-  // ✅ CORREGIDO: Usar el ID del usuario para el campo ID Cliente
-  document.getElementById('nuevo-id-cliente').value = usuario.id;
+  // ✅ CORREGIDO: Usar el idCliente del usuario, NO su ID único
+  document.getElementById('nuevo-id-cliente').value = usuario.idCliente || '';
   
   document.getElementById('nuevo-perfil').value = usuario.role;
   document.getElementById('nuevo-activo').checked = usuario.active;
