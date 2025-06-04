@@ -672,6 +672,20 @@ function mostrarModalReferencia(indexEnListaMostrada) {
     const modalTitulo = modal.querySelector('#refHistorialTitulo');
     if (modalTitulo) modalTitulo.textContent = `Referencia: ${referenciaOriginal.Referencia || 'N/A'}`;
 
+    // Extraer datos de arrays anidados de manera segura
+    const pedimento = referenciaOriginal.Ped && referenciaOriginal.Ped.length > 0 ? referenciaOriginal.Ped[0] : null;
+    const numeroPedimento = pedimento ? pedimento.Pedimento : '-';
+    
+    // Extraer guías (puede haber múltiples)
+    const guias = pedimento && pedimento.Guias && pedimento.Guias.length > 0 
+        ? pedimento.Guias.map(g => g.Guia).join(', ') 
+        : '-';
+
+    // Extraer cuentas (puede haber múltiples)
+    const cuentas = referenciaOriginal.Ctas && referenciaOriginal.Ctas.length > 0 
+        ? referenciaOriginal.Ctas.map(c => c.Cuenta || c.NoCuenta || c).join(', ') 
+        : referenciaOriginal.Cliente || '-';
+
     // Pestaña "Detalle"
     const detalleContenidoDiv = modal.querySelector('#detalleReferenciaContenido');
     if (detalleContenidoDiv) {
@@ -682,11 +696,16 @@ function mostrarModalReferencia(indexEnListaMostrada) {
             <p><strong>Fecha:</strong> ${formatearFecha(referenciaOriginal.Fecha) || '-'}</p>
             <p><strong>ETA:</strong> ${formatearFecha(referenciaOriginal.ETA) || '-'}</p>
             <p><strong>Mercancía:</strong> ${referenciaOriginal.Mercancia || '-'}</p>
-            <p><strong>Contenedor:</strong> ${referenciaOriginal.Contenedor || '-'}</p>
             <p><strong>Buque:</strong> ${referenciaOriginal.Buque || '-'}</p>
             <p><strong>Reconocimiento:</strong> ${referenciaOriginal.TipoReconocimiento || '-'}</p>
+            <p><strong>Aduana:</strong> ${referenciaOriginal.Aduana || '-'}</p>
+            <p><strong>Ejecutivo de cuenta:</strong> ${referenciaOriginal.Ejecutivo || '-'}</p>
+            <p><strong>Guías:</strong> ${guias}</p>
+            <p><strong>Pedimento:</strong> ${numeroPedimento}</p>
+            <p><strong>Cuenta:</strong> ${cuentas}</p>
             `;
     }
+    
 
     // Pestaña "Biblioteca"
     generarBibliotecaModal(referenciaOriginal);
