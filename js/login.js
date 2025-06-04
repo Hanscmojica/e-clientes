@@ -78,6 +78,15 @@ logger.setProductionMode();
 const apiBase = 'http://10.11.21.15:5001';
 logger.debug('Login.js cargado, API base', { apiBase });
 
+// ===============================
+// VARIABLES GLOBALES PARA CAMBIO DE CONTRASEÑA
+// ===============================
+let tempToken = null;
+let currentUser = null;
+
+// ===============================
+// FUNCIONES DE UTILIDAD EXISTENTES
+// ===============================
 function togglePassword(inputId, btn) {
   // Si no se pasan argumentos, es el botón del login principal
   if (!inputId || !btn) {
@@ -108,6 +117,20 @@ function togglePassword(inputId, btn) {
   }
 }
 
+// ✅ NUEVA FUNCIÓN: Toggle para contraseñas del modal
+function togglePasswordModal(inputId, button) {
+  const input = document.getElementById(inputId);
+  const icon = button.querySelector('.material-icons');
+  
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.textContent = 'visibility_off';
+  } else {
+    input.type = 'password';
+    icon.textContent = 'visibility';
+  }
+}
+
 function logout() {
   localStorage.removeItem('userSession');
   localStorage.removeItem('token');
@@ -118,6 +141,219 @@ function logout() {
 // Hacer la función logout disponible globalmente
 window.logout = logout;
 
+// ✅ NUEVAS FUNCIONES PARA PRIMER INGRESO
+
+// Validar fortaleza de contraseña
+function validatePasswordStrength(password) {
+  const requirements = {
+    length: password.length >= 8,
+    number: /\d/.test(password),
+    special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+  };
+  
+  return {
+    isValid: requirements.length && requirements.number && requirements.special,
+    requirements
+  };
+}
+
+// Actualizar indicadores visuales de requisitos
+function updatePasswordRequirements(password, confirmPassword = '') {
+  const validation = validatePasswordStrength(password);
+  const requirements = validation.requirements;
+  
+  // Actualizar indicadores
+  updateRequirement('req-length', requirements.length);
+  updateRequirement('req-number', requirements.number);
+  updateRequirement('req-special', requirements.special);
+  updateRequirement('req-match', password === confirmPassword && password.length > 0 && confirmPassword.length > 0);
+  
+  return validation.isValid && password === confirmPassword && password.length > 0;
+}
+
+// Actualizar un requisito específico
+function updateRequirement(elementId, isValid) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    const icon = element.querySelector('.material-icons');
+    if (isValid) {
+      element.classList.add('valid');
+      element.classList.remove('invalid');
+      icon.textContent = 'check';
+    } else {
+      element.classList.add('invalid');
+      element.classList.remove('valid');
+      icon.textContent = 'close';
+    }
+  }
+}
+
+// Mostrar modal de cambio de contraseña
+function showChangePasswordModal(token, user) {
+  tempToken = token;
+  currentUser = user;
+  
+  const modal = document.getElementById('changePasswordModal');
+  if (modal) {
+    modal.style.display = 'block';
+    
+    // Limpiar campos
+    document.getElementById('newPassword').value = '';
+    document.getElementById('confirmPassword').value = '';
+    
+    // Ocultar mensajes
+    hideModalMessages();
+    
+    // Resetear requisitos
+    updatePasswordRequirements('', '');
+    
+    // Focus en el primer campo
+    setTimeout(() => {
+      document.getElementById('newPassword').focus();
+    }, 300);
+  }
+}
+
+// Ocultar modal
+function hideChangePasswordModal() {
+  const modal = document.getElementById('changePasswordModal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+  
+  tempToken = null;
+  currentUser = null;
+}
+
+// Mostrar/ocultar mensajes del modal
+function showModalError(message) {
+  const errorDiv = document.getElementById('modalError');
+  const successDiv = document.getElementById('modalSuccess');
+  
+  if (errorDiv) {
+    errorDiv.textContent = message;
+    errorDiv.style.display = 'block';
+  }
+  
+  if (successDiv) {
+    successDiv.style.display = 'none';
+  }
+}
+
+function showModalSuccess(message) {
+  const errorDiv = document.getElementById('modalError');
+  const successDiv = document.getElementById('modalSuccess');
+  
+  if (successDiv) {
+    successDiv.textContent = message;
+    successDiv.style.display = 'block';
+  }
+  
+  if (errorDiv) {
+    errorDiv.style.display = 'none';
+  }
+}
+
+function hideModalMessages() {
+  const errorDiv = document.getElementById('modalError');
+  const successDiv = document.getElementById('modalSuccess');
+  
+  if (errorDiv) errorDiv.style.display = 'none';
+  if (successDiv) successDiv.style.display = 'none';
+}
+
+// Manejar cambio de contraseña
+async function handleChangePassword(e) {
+  e.preventDefault();
+  
+  const newPassword = document.getElementById('newPassword').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+  const submitBtn = document.getElementById('changePasswordBtn');
+  
+  hideModalMessages();
+  
+  // Validaciones básicas
+  if (!newPassword || !confirmPassword) {
+    showModalError('Todos los campos son requeridos');
+    return;
+  }
+  
+  if (newPassword !== confirmPassword) {
+    showModalError('Las contraseñas no coinciden');
+    return;
+  }
+  
+  const validation = validatePasswordStrength(newPassword);
+  if (!validation.isValid) {
+    showModalError('La contraseña no cumple con los requisitos de seguridad');
+    return;
+  }
+  
+  // Deshabilitar botón y mostrar carga
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<div class="spinner"></div> Cambiando contraseña...';
+  }
+  
+  try {
+    logger.debug('Enviando solicitud de cambio de contraseña');
+    
+    const response = await fetch(`${apiBase}/api/auth/change-first-password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${tempToken}`
+      },
+      body: JSON.stringify({
+        newPassword,
+        confirmPassword
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || 'Error al cambiar contraseña');
+    }
+    
+    if (!data.success) {
+      throw new Error(data.message || 'Error al cambiar contraseña');
+    }
+    
+    logger.info('Contraseña cambiada exitosamente');
+    showModalSuccess('Contraseña cambiada exitosamente. Será redirigido al login...');
+    
+    // Esperar 2 segundos y redirigir al login
+    setTimeout(() => {
+      hideChangePasswordModal();
+      // Limpiar campos del login
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      
+      // Mostrar mensaje de éxito en el login
+      const loginError = document.getElementById('loginError');
+      if (loginError) {
+        loginError.style.display = 'block';
+        loginError.style.backgroundColor = '#f0fdf4';
+        loginError.style.color = '#16a34a';
+        loginError.style.borderColor = '#bbf7d0';
+        loginError.textContent = 'Contraseña cambiada exitosamente. Inicie sesión con su nueva contraseña.';
+      }
+    }, 2000);
+    
+  } catch (error) {
+    logger.error('Error al cambiar contraseña', error);
+    showModalError(error.message || 'Error al cambiar contraseña');
+  } finally {
+    // Restaurar botón
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<span class="material-icons">check</span> Cambiar Contraseña';
+    }
+  }
+}
+
+// FUNCIONES EXISTENTES (sin cambios)
 function showPasswordExpiredModal() {
   const modal = document.getElementById('passwordExpiredModal');
   if (modal) {
@@ -132,7 +368,7 @@ function closeModal() {
   }
 }
 
-async function handleChangePassword(e) {
+async function handleChangePasswordOld(e) {
   e.preventDefault();
   const newPassword = document.getElementById('newPassword').value;
   const confirmPassword = document.getElementById('confirmPassword').value;
@@ -173,7 +409,7 @@ async function handleChangePassword(e) {
 }
 
 // ===============================
-// MANEJO DE LOGIN
+// MANEJO DE LOGIN ACTUALIZADO
 // ===============================
 document.addEventListener('DOMContentLoaded', function() {
   const loginForm = document.getElementById('loginForm');
@@ -196,6 +432,10 @@ document.addEventListener('DOMContentLoaded', function() {
       if (errorDiv) {
         errorDiv.style.display = 'none';
         errorDiv.textContent = '';
+        // Resetear estilos
+        errorDiv.style.backgroundColor = '';
+        errorDiv.style.color = '';
+        errorDiv.style.borderColor = '';
       }
       
       // Deshabilitar el botón durante el proceso
@@ -238,6 +478,14 @@ document.addEventListener('DOMContentLoaded', function() {
           throw new Error(data.message || 'Login falló');
         }
 
+        // ✅ NUEVO: Verificar si requiere cambio de contraseña
+        if (data.requirePasswordChange) {
+          logger.info('Primer ingreso detectado - Requiere cambio de contraseña');
+          showChangePasswordModal(data.tempToken, data.user);
+          return;
+        }
+
+        // ✅ LOGIN NORMAL - Usuario ya cambió contraseña
         if (!data.token || !data.user) {
           throw new Error('No se recibió token del servidor');
         }
@@ -255,6 +503,7 @@ document.addEventListener('DOMContentLoaded', function() {
           name: data.user.name,
           role: data.user.role,
           email: data.user.email,
+          idCliente: data.user.idCliente,  // ✅ NUEVO: Incluir idCliente
           token: data.token,
           loginTime: new Date().toISOString()
         };
@@ -316,6 +565,33 @@ document.addEventListener('DOMContentLoaded', function() {
     logger.warn('Formulario de login no encontrado');
   }
 
+  // ✅ NUEVO: Eventos para el formulario de cambio de contraseña
+  const changePasswordForm = document.getElementById('changePasswordForm');
+  if (changePasswordForm) {
+    changePasswordForm.addEventListener('submit', handleChangePassword);
+    logger.debug('Event listener para cambio de contraseña agregado');
+  }
+
+  // ✅ NUEVO: Eventos para validación en tiempo real
+  const newPasswordInput = document.getElementById('newPassword');
+  const confirmPasswordInput = document.getElementById('confirmPassword');
+  const changePasswordBtn = document.getElementById('changePasswordBtn');
+
+  if (newPasswordInput && confirmPasswordInput && changePasswordBtn) {
+    function validateAndUpdate() {
+      const newPassword = newPasswordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+      const isValid = updatePasswordRequirements(newPassword, confirmPassword);
+      
+      changePasswordBtn.disabled = !isValid;
+    }
+
+    newPasswordInput.addEventListener('input', validateAndUpdate);
+    confirmPasswordInput.addEventListener('input', validateAndUpdate);
+    
+    logger.debug('Event listeners para validación de contraseña agregados');
+  }
+
   // Verificar si ya hay una sesión activa al cargar la página
   if (window.location.pathname.endsWith('login.html') || window.location.pathname === '/') {
     const token = localStorage.getItem('token');
@@ -334,10 +610,21 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Añadir evento al formulario de cambio de contraseña si existe
-  const changePasswordForm = document.getElementById('changePasswordForm');
-  if (changePasswordForm) {
-    changePasswordForm.addEventListener('submit', handleChangePassword);
-    logger.debug('Event listener para cambio de contraseña agregado');
+  // Añadir evento al formulario de cambio de contraseña si existe (función antigua)
+  const changePasswordFormOld = document.getElementById('changePasswordFormOld');
+  if (changePasswordFormOld) {
+    changePasswordFormOld.addEventListener('submit', handleChangePasswordOld);
+    logger.debug('Event listener para cambio de contraseña (viejo) agregado');
+  }
+
+  // ✅ NUEVO: Cerrar modal al hacer click fuera de él (opcional)
+  const modal = document.getElementById('changePasswordModal');
+  if (modal) {
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        // No permitir cerrar el modal clickeando fuera
+        // hideChangePasswordModal(); 
+      }
+    });
   }
 });

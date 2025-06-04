@@ -282,7 +282,8 @@ function getActivityIcon(type) {
 // ===============================
 async function cargarUsuarios() {
   const tableBody = document.getElementById('usuarios-table-body');
-  tableBody.innerHTML = '<tr><td colspan="8" class="loading">Cargando usuarios...</td></tr>';
+  tableBody.innerHTML = '<tr><td colspan="9" class="loading">Cargando usuarios...</td></tr>';
+ // ← AGREGAR ESTA LÍNEA
   
   try {
     const token = getAuthToken();
@@ -296,26 +297,37 @@ async function cargarUsuarios() {
     
     const data = await response.json();
     usuarios = data.data;
+
+    console.log('✅ TODOS LOS USUARIOS:', usuarios);
+    console.log('🔍 PRIMER USUARIO COMPLETO:', usuarios[0]);
+    console.log('🎯 ID CLIENTE DEL PRIMERO:', usuarios[0]?.idCliente)
     
     logger.info('Usuarios cargados desde API', { count: usuarios.length });
     mostrarUsuarios(usuarios);
     
   } catch (error) {
     logger.error('Error cargando usuarios', error);
-    tableBody.innerHTML = '<tr><td colspan="8" class="error">Error cargando usuarios: ' + error.message + '</td></tr>';
+    tableBody.innerHTML = '<tr><td colspan="9" class="error">Error cargando usuarios: ' + error.message + '</td></tr>';
     mostrarAlerta('Error cargando usuarios: ' + error.message, 'error');
   }
 }
 
 function mostrarUsuarios(usuariosList) {
+
+  console.log('🚀 mostrarUsuarios() EJECUTÁNDOSE con:', usuariosList.length, 'usuarios');
+  console.log('📋 Primer usuario para mostrar:', usuariosList[0]);
+
   const tableBody = document.getElementById('usuarios-table-body');
+
+  console.log('🎯 tableBody encontrado:', tableBody);
   
   if (usuariosList.length === 0) {
-    tableBody.innerHTML = '<tr><td colspan="8" class="no-data">No se encontraron usuarios</td></tr>';
+    tableBody.innerHTML = '<tr><td colspan="9" class="no-data">No se encontraron usuarios</td></tr>';
     return;
   }
   
   tableBody.innerHTML = usuariosList.map(usuario => `
+    
     <tr>
       <td>${usuario.id}</td>
       <td>
@@ -350,10 +362,24 @@ function mostrarUsuarios(usuariosList) {
           </button>
         </div>
       </td>
+      <td>
+        <div class="user-cell">
+          <div class="user-avatar">
+            <span class="material-icons">person</span>
+          </div>
+          <strong>${usuario.idCliente}</strong>
+        </div>
+      </td>
     </tr>
   `).join('');
-}
 
+  console.log('📝 HTML generado para primer usuario:', htmlGenerado.substring(0, 200) + '...');
+  
+  tableBody.innerHTML = htmlGenerado;
+  
+  console.log('✅ HTML insertado en la tabla');
+
+}
 function configurarBusquedaYFiltros() {
   const searchInput = document.getElementById('search-usuarios');
   const filterRole = document.getElementById('filter-role');

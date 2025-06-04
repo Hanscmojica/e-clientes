@@ -1177,3 +1177,20 @@ async function actualizarPerfil(perfilId) {
 }
 
 console.log('✅ Admin.js con backend real cargado completamente');
+
+// ✅ FUNCIÓN PARA TOGGLE PASSWORD EN ADMIN
+function toggleAdminPassword(inputId, button) {
+  console.log('¡Click funcionó!', inputId);
+  const passwordInput = document.getElementById(inputId);
+  const toggleIcon = button.querySelector('.material-icons');
+  
+  if (passwordInput && toggleIcon) {
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      toggleIcon.textContent = 'visibility_off';
+    } else {
+      passwordInput.type = 'password';
+      toggleIcon.textContent = 'visibility';
+    }
+  }
+}

@@ -184,6 +184,8 @@
                   <th>Estado</th>
                   <th>Último Login</th>
                   <th>Acciones</th>
+                  <th>ID CLIENTE</th>
+                  
                 </tr>
               </thead>
               <tbody id="usuarios-table-body">
@@ -385,7 +387,10 @@
                 <span class="material-icons">lock</span>
                 Contraseña *
               </label>
+              <div class="password-wrapper"></div>
               <input type="password" id="nuevo-password" required>
+              <button type="button" class="toggle-password" onclick="toggleAdminPassword('nuevo-password', this)">  
+              <span class="material-icons">visibility</span>
             </div>
           </div>
         </div>

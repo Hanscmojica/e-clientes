@@ -181,4 +181,7 @@ router.post('/close-all-sessions', verifyToken, async (req, res) => {
     }
 });
 
+// ✅ NUEVA RUTA: Cambiar contraseña en primer ingreso
+router.post('/change-first-password', authController.changeFirstPassword);
+
 module.exports = router;

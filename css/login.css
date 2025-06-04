@@ -368,7 +368,18 @@ input[type="password"]::-webkit-input-password-toggle-button {
   display: none !important;
 }
 
-/* Estilos para el modal de cambio de contraseña */
+/* Ajustar tamaño del logo */
+.logo img {
+  max-width: 160px;  /* Cambia este valor para ajustar el ancho */
+  max-height: 80px;  /* Cambia este valor para ajustar la altura */
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ✅ NUEVOS ESTILOS PARA EL MODAL DE CAMBIO DE CONTRASEÑA */
+
+/* Modal backdrop */
 .modal {
   display: none;
   position: fixed;
@@ -377,62 +388,287 @@ input[type="password"]::-webkit-input-password-toggle-button {
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background: rgba(4, 38, 63, 0.85); /* Más oscuro y opaco */
+  background: rgba(4, 38, 63, 0.85);
+  backdrop-filter: blur(8px);
+  animation: fadeInModal 0.3s ease-out;
 }
 
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Modal content */
 .modal-content {
-  background-color: var(--light-bg);
-  margin: 15% auto;
-  padding: 20px;
-  border: 1px solid var(--border-color);
-  width: 80%;
-  max-width: 500px;
-  border-radius: 10px;
-  box-shadow: 0 8px 32px 8px rgba(4,38,63,0.45), 0 1.5px 8px rgba(0,0,0,0.15);
-  position: relative;
-  z-index: 1100;
+  background: var(--light-bg);
+  margin: 3% auto;
+  padding: 0;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 520px;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+  animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  overflow: hidden;
 }
 
-.close-button {
-  color: var(--dark-text);
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-.close-button:hover,
-.close-button:focus {
-  color: var(--primary-dark);
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.modal-button {
-  width: 100%;
-  padding: 10px;
+/* Modal header */
+.modal-header {
+  padding: 32px 32px 16px;
+  text-align: center;
   background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
   color: white;
+  position: relative;
+}
+
+.modal-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.modal-header p {
+  font-size: 15px;
+  margin: 0;
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+/* Modal body */
+.modal-body {
+  padding: 32px;
+  background: white;
+}
+
+/* Password form styles */
+.password-form .form-group {
+  margin-bottom: 20px;
+}
+
+.password-input-container {
+  position: relative;
+}
+
+.password-input-container input {
+  width: 100%;
+  padding: 12px 45px 12px 15px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background-color: #fafafa;
+}
+
+.password-input-container input:focus {
+  outline: none;
+  border-color: var(--primary-light);
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(11, 115, 160, 0.1);
+}
+
+.toggle-password-modal {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
   border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: 600;
   cursor: pointer;
+  color: var(--light-text);
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.2s ease;
+}
+
+.toggle-password-modal:hover {
+  color: var(--dark-text);
+}
+
+.toggle-password-modal .material-icons {
+  font-size: 20px;
+}
+
+/* Password requirements */
+.password-requirements {
+  margin-top: 16px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: 10px;
+  border-left: 4px solid var(--primary-light);
+}
+
+.password-requirements h4 {
+  margin: 0 0 12px 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--dark-text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.requirement {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  margin-bottom: 6px;
+  padding: 4px 0;
+  transition: all 0.3s ease;
+  color: var(--light-text);
+}
+
+.requirement .material-icons {
+  font-size: 16px;
+  margin-right: 8px;
   transition: all 0.3s ease;
 }
 
-.modal-button:hover {
-  background-color: var(--primary-medium);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(4, 38, 63, 0.3);
+.requirement.valid {
+  color: var(--success-color);
+  font-weight: 500;
 }
 
-/* Ajustar tamaño del logo */
-.logo img {
-  max-width: 160px;  /* Cambia este valor para ajustar el ancho */
-  max-height: 80px;  /* Cambia este valor para ajustar la altura */
-  width: auto;
-  height: auto;
-  object-fit: contain;
+.requirement.valid .material-icons {
+  color: var(--success-color);
+}
+
+.requirement.invalid {
+  color: var(--error-color);
+}
+
+.requirement.invalid .material-icons {
+  color: var(--error-color);
+}
+
+/* Modal messages */
+.modal-error-message,
+.modal-success-message {
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  display: none;
+  animation: slideInMessage 0.3s ease-out;
+}
+
+.modal-error-message {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  border: 1px solid #fecaca;
+  color: var(--error-color);
+}
+
+.modal-success-message {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 1px solid #bbf7d0;
+  color: var(--success-color);
+}
+
+@keyframes slideInMessage {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal buttons */
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.modal-button {
+  flex: 1;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
+  color: white;
+  box-shadow: 0 4px 14px rgba(4, 38, 63, 0.3);
+}
+
+.modal-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(4, 38, 63, 0.4);
+}
+
+.modal-button:disabled {
+  background: var(--light-text);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.7;
+}
+
+/* Loading spinner */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive para modal */
+@media (max-width: 640px) {
+  .modal-content {
+    margin: 10px;
+    width: calc(100% - 20px);
+    max-width: none;
+  }
+  
+  .modal-header {
+    padding: 24px 20px 12px;
+  }
+  
+  .modal-header h2 {
+    font-size: 20px;
+  }
+  
+  .modal-body {
+    padding: 24px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-buttons {
+    flex-direction: column;
+  }
+  
+  .modal-button {
+    width: 100%;
+  }
 }

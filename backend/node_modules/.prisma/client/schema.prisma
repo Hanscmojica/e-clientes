@@ -21,6 +21,9 @@ model BP_01_USUARIO {
   sUsuarioImg             String?
   dFechaUltimoCambioPass  DateTime                  @default(now())
   nIdCliente              Int?
+  bPrimerIngreso          Boolean?                  @default(true)
+  passwordChangedAt       DateTime?                 @map("password_changed_at") @db.DateTime(0)
+  loginAttempts           Int?                      @default(0) @map("login_attempts")
   perfilesUsuario         BP_04_PERFIL_USUARIO[]    @relation("UsuarioPerfiles")
   bp_06_registro_consulta bp_06_registro_consulta[]
   logsAutenticacion       BP_07_LOG_AUTENTICACION[] @relation("UsuarioLogsAuth")

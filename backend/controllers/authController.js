@@ -1,8 +1,34 @@
-// controllers/authController.js - CORREGIDO CON SEPARACIÓN DE CONCEPTOS
+// controllers/authController.js - ACTUALIZADO CON PRIMER INGRESO
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const prisma = require('../utils/prisma');
 const authService = require('../services/authService');
+
+// ✅ NUEVA FUNCIÓN: Validar fortaleza de contraseña
+function validatePasswordStrength(password) {
+  const minLength = 8;
+  const hasNumber = /\d/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  
+  const errors = [];
+  
+  if (password.length < minLength) {
+    errors.push(`La contraseña debe tener al menos ${minLength} caracteres`);
+  }
+  
+  if (!hasNumber) {
+    errors.push('La contraseña debe contener al menos un número');
+  }
+  
+  if (!hasSpecialChar) {
+    errors.push('La contraseña debe contener al menos un carácter especial (!@#$%^&*(),.?":{}|<>)');
+  }
+  
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+}
 
 exports.login = async (req, res, next) => {
     try {
@@ -26,7 +52,8 @@ exports.login = async (req, res, next) => {
                     idCliente: clienteId,    // ✅ ID de la empresa/cliente
                     username: 'HANS', 
                     role: 'ADMIN',
-                    originalId: usuarioId    // ✅ Para logs (ID único del usuario)
+                    originalId: usuarioId,   // ✅ Para logs (ID único del usuario)
+                    primerIngreso: false     // ✅ NUEVO: HANS no requiere cambio
                 },
                 process.env.JWT_SECRET || 'clave_secreta_para_jwt',
                 { expiresIn: process.env.JWT_EXPIRE || '24h' }
@@ -69,7 +96,8 @@ exports.login = async (req, res, next) => {
                     username: 'HANS',
                     name: 'Hans Hansen Mojica',
                     role: 'ADMIN',
-                    email: 'hans@hotmail.com'
+                    email: 'hans@hotmail.com',
+                    primerIngreso: false     // ✅ NUEVO: No requiere cambio
                 }
             });
         }
@@ -125,7 +153,8 @@ exports.login = async (req, res, next) => {
                         idCliente: clienteId,
                         username: 'HANS', 
                         role: 'ADMIN',
-                        originalId: usuarioId
+                        originalId: usuarioId,
+                        primerIngreso: false     // ✅ NUEVO
                     },
                     process.env.JWT_SECRET || 'clave_secreta_para_jwt',
                     { expiresIn: process.env.JWT_EXPIRE || '24h' }
@@ -160,7 +189,8 @@ exports.login = async (req, res, next) => {
                         username: 'HANS',
                         name: 'Hans Hansen Mojica',
                         role: 'ADMIN',
-                        email: 'hans@hotmail.com'
+                        email: 'hans@hotmail.com',
+                        primerIngreso: false     // ✅ NUEVO
                     }
                 });
             }
@@ -171,7 +201,8 @@ exports.login = async (req, res, next) => {
             });
         }
         
-        console.log('Usuario encontrado:', user ? `ID: ${user.nId01Usuario}, Activo: ${user.bActivo}` : 'No encontrado');
+        // ✅ MODIFICADO: Incluir información de primer ingreso
+        console.log('Usuario encontrado:', user ? `ID: ${user.nId01Usuario}, Activo: ${user.bActivo}, PrimerIngreso: ${user.bPrimerIngreso}` : 'No encontrado');
         
         // Verificar si existe el usuario
         if (!user) {
@@ -260,17 +291,67 @@ exports.login = async (req, res, next) => {
         // ✅ SEPARACIÓN CORRECTA DE CONCEPTOS
         const usuarioId = user.nId01Usuario;              // ID único del usuario (1, 2, 3, 4, 5...)
         const clienteId = user.nIdCliente || usuarioId;   // ID del cliente/empresa (5951, 3159... o fallback)
+        const primerIngreso = user.bPrimerIngreso || false; // ✅ NUEVO: Verificar primer ingreso
         
-        console.log(`✅ Usuario: ${user.sUsuario} - ID Usuario: ${usuarioId} - ID Cliente: ${clienteId}`);
+        // ✅ MODIFICADO: Incluir información de primer ingreso
+        console.log(`✅ Usuario: ${user.sUsuario} - ID Usuario: ${usuarioId} - ID Cliente: ${clienteId} - Primer Ingreso: ${primerIngreso}`);
         
-        // Generar token JWT
+        // ✅ NUEVO: Verificar si es primer ingreso
+        if (primerIngreso) {
+            console.log('🔑 Primer ingreso detectado, requiere cambio de contraseña');
+            
+            // Generar token temporal para cambio de contraseña
+            const tempToken = jwt.sign(
+                { 
+                    id: usuarioId,
+                    username: user.sUsuario,
+                    tempPasswordChange: true,
+                    exp: Math.floor(Date.now() / 1000) + (15 * 60) // 15 minutos
+                },
+                process.env.JWT_SECRET || 'clave_secreta_para_jwt'
+            );
+            
+            // 🔥 REGISTRAR LOG DE PRIMER INGRESO
+            try {
+                await authService.createAuthLog({
+                    nId01Usuario: usuarioId,
+                    sTipoAccion: 'FIRST_LOGIN',
+                    dFechaHora: new Date(),
+                    sIpUsuario: (ip || 'unknown').substring(0, 50),
+                    sUserAgent: (req.headers['user-agent'] || '').substring(0, 500),
+                    sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
+                    sUbicacion: null,
+                    bExitoso: true,
+                    sDetalleError: 'Requiere cambio de contraseña',
+                    sTokenSesion: tempToken.substring(0, 255)
+                });
+            } catch (logError) {
+                console.error('⚠️ Error al guardar log de primer ingreso:', logError);
+            }
+            
+            return res.status(200).json({
+                success: true,
+                message: 'Primer ingreso - Debe cambiar su contraseña',
+                requirePasswordChange: true,
+                tempToken: tempToken,
+                user: {
+                    id: usuarioId,
+                    username: user.sUsuario,
+                    name: `${user.sNombre} ${user.sApellidoPaterno} ${user.sApellidoMaterno}`,
+                    primerIngreso: true
+                }
+            });
+        }
+        
+        // Generar token JWT normal para usuarios que ya cambiaron contraseña
         const token = jwt.sign(
             { 
                 id: usuarioId,           // ✅ ID único del usuario (para identificar la persona)
                 idCliente: clienteId,    // ✅ ID del cliente/empresa (para consultar referencias)
                 username: user.sUsuario,
                 role: perfil,
-                originalId: usuarioId    // ✅ Para logs (ID único del usuario)
+                originalId: usuarioId,   // ✅ Para logs (ID único del usuario)
+                primerIngreso: false     // ✅ NUEVO: Ya no es primer ingreso
             },
             process.env.JWT_SECRET || 'clave_secreta_para_jwt',
             { expiresIn: process.env.JWT_EXPIRE || '8h' }
@@ -320,7 +401,8 @@ exports.login = async (req, res, next) => {
                 name: `${user.sNombre} ${user.sApellidoPaterno} ${user.sApellidoMaterno}`,
                 role: perfil,
                 email: user.sEmail,
-                image: user.sUsuarioImg
+                image: user.sUsuarioImg,
+                primerIngreso: false     // ✅ NUEVO: Ya completó el primer ingreso
             }
         });
     } catch (error) {
@@ -357,7 +439,8 @@ exports.login = async (req, res, next) => {
                     idCliente: clienteId,
                     username: 'HANS', 
                     role: 'ADMIN',
-                    originalId: usuarioId
+                    originalId: usuarioId,
+                    primerIngreso: false     // ✅ NUEVO
                 },
                 process.env.JWT_SECRET || 'clave_secreta_para_jwt',
                 { expiresIn: process.env.JWT_EXPIRE || '24h' }
@@ -391,12 +474,143 @@ exports.login = async (req, res, next) => {
                     idCliente: clienteId,
                     username: 'HANS',
                     name: 'Hans Hansen Mojica',
-                    role: 'ADMIN'
+                    role: 'ADMIN',
+                    primerIngreso: false     // ✅ NUEVO
                 }
             });
         }
         
         return res.status(500).json({
+            success: false,
+            message: 'Error interno del servidor'
+        });
+    }
+};
+
+// ✅ NUEVA FUNCIÓN: Cambiar contraseña en primer ingreso
+exports.changeFirstPassword = async (req, res) => {
+    try {
+        console.log('🔑 Solicitud de cambio de contraseña primer ingreso');
+        
+        const { newPassword, confirmPassword } = req.body;
+        const authHeader = req.headers.authorization;
+        
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({
+                success: false,
+                message: 'Token de autorización requerido'
+            });
+        }
+        
+        const tempToken = authHeader.substring(7);
+        
+        // Verificar token temporal
+        let decoded;
+        try {
+            decoded = jwt.verify(tempToken, process.env.JWT_SECRET || 'clave_secreta_para_jwt');
+        } catch (error) {
+            console.error('❌ Token temporal inválido:', error);
+            return res.status(401).json({
+                success: false,
+                message: 'Token temporal inválido o expirado'
+            });
+        }
+        
+        // Verificar que es un token para cambio de contraseña
+        if (!decoded.tempPasswordChange) {
+            return res.status(401).json({
+                success: false,
+                message: 'Token no válido para cambio de contraseña'
+            });
+        }
+        
+        // Validaciones básicas
+        if (!newPassword || !confirmPassword) {
+            return res.status(400).json({
+                success: false,
+                message: 'Nueva contraseña y confirmación son requeridas'
+            });
+        }
+        
+        if (newPassword !== confirmPassword) {
+            return res.status(400).json({
+                success: false,
+                message: 'Las contraseñas no coinciden'
+            });
+        }
+        
+        // ✅ VALIDAR FORTALEZA DE CONTRASEÑA
+        const passwordValidation = validatePasswordStrength(newPassword);
+        if (!passwordValidation.isValid) {
+            return res.status(400).json({
+                success: false,
+                message: 'Contraseña no cumple con los requisitos de seguridad',
+                errors: passwordValidation.errors
+            });
+        }
+        
+        // Buscar usuario
+        const user = await prisma.BP_01_USUARIO.findUnique({
+            where: { nId01Usuario: decoded.id }
+        });
+        
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Usuario no encontrado'
+            });
+        }
+        
+        // Verificar que el usuario aún está en primer ingreso
+        if (!user.bPrimerIngreso) {
+            return res.status(400).json({
+                success: false,
+                message: 'Este usuario ya no requiere cambio de contraseña'
+            });
+        }
+        
+        // Encriptar nueva contraseña
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
+        
+        // Actualizar usuario
+        await prisma.BP_01_USUARIO.update({
+            where: { nId01Usuario: user.nId01Usuario },
+            data: {
+                sPassword: hashedPassword,
+                bPrimerIngreso: false,                    // ✅ Ya no es primer ingreso
+                dFechaUltimoCambioPass: new Date(),
+                dFechaActualizacion: new Date()
+            }
+        });
+        
+        // 🔥 REGISTRAR LOG DE CAMBIO DE CONTRASEÑA
+        try {
+            await authService.createAuthLog({
+                nId01Usuario: user.nId01Usuario,
+                sTipoAccion: 'PASSWORD_CHANGED',
+                dFechaHora: new Date(),
+                sIpUsuario: (req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown').substring(0, 50),
+                sUserAgent: (req.headers['user-agent'] || '').substring(0, 500),
+                sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
+                sUbicacion: null,
+                bExitoso: true,
+                sDetalleError: 'Primer cambio de contraseña completado',
+                sTokenSesion: null
+            });
+        } catch (logError) {
+            console.error('⚠️ Error al guardar log de cambio de contraseña:', logError);
+        }
+        
+        console.log(`✅ Contraseña cambiada exitosamente para usuario: ${user.sUsuario}`);
+        
+        res.status(200).json({
+            success: true,
+            message: 'Contraseña cambiada exitosamente. Ya puede iniciar sesión con su nueva contraseña.'
+        });
+        
+    } catch (error) {
+        console.error('❌ Error al cambiar contraseña:', error);
+        res.status(500).json({
             success: false,
             message: 'Error interno del servidor'
         });
@@ -466,6 +680,7 @@ exports.getProfile = async (req, res, next) => {
                     email: 'hans@hotmail.com',
                     role: 'ADMIN',
                     active: true,
+                    primerIngreso: false,  // ✅ NUEVO: HANS no requiere cambio
                     createdAt: new Date().toISOString()
                 }
             });
@@ -510,6 +725,7 @@ exports.getProfile = async (req, res, next) => {
                 role: perfil,
                 image: user.sUsuarioImg,
                 active: user.bActivo,
+                primerIngreso: user.bPrimerIngreso || false,  // ✅ NUEVO: Incluir estado de primer ingreso
                 createdAt: user.dFechaCreacion
             }
         });
