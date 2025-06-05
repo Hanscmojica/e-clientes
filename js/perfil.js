@@ -84,11 +84,11 @@ function configurarPagina() {
     });
   });
 
-  // Configurar formularios
+  // Configurar formularios (solo para preferencias y seguridad)
   configurarFormularios();
   
-  // Cargar datos del usuario en los formularios
-  cargarDatosUsuario();
+  // Cargar datos del usuario en la vista estática
+  cargarDatosUsuario()
   
   // Configurar cerrar modales
   document.querySelectorAll('.close').forEach(closeBtn => {
@@ -118,7 +118,7 @@ function actualizarHeader() {
   
   const userRole = document.querySelector('.user-role');
   if (userRole) {
-    userRole.textContent = userData.role || 'Usuario';
+    userRole.textContent = formatearRol(userData.role) || 'Usuario';
   }
 }
 
@@ -160,30 +160,76 @@ function configurarFormularios() {
   }
 }
 
-// Cargar datos del usuario en los formularios
+// Cargar datos del usuario en la vista estática
 function cargarDatosUsuario() {
-  // Información personal
-  if (document.getElementById('nombre')) {
-    document.getElementById('nombre').value = userData.nombre || '';
-    document.getElementById('apellidos').value = userData.apellidos || '';
-    document.getElementById('email').value = userData.email || '';
-    document.getElementById('telefono').value = userData.telefono || '';
-    document.getElementById('direccion').value = userData.direccion || '';
+  // ===== INFORMACIÓN PERSONAL ESTÁTICA =====
+  
+  // Datos personales
+  if (document.getElementById('display-nombre-completo')) {
+    document.getElementById('display-nombre-completo').textContent = `${userData.nombre} ${userData.apellidos}`.trim();
   }
   
-  // Información de empresa
-  if (document.getElementById('empresa-nombre')) {
-    document.getElementById('empresa-nombre').value = userData.empresa?.nombre || '';
-    document.getElementById('rfc').value = userData.empresa?.rfc || '';
-    document.getElementById('cargo').value = userData.empresa?.cargo || '';
-    document.getElementById('direccion-empresa').value = userData.empresa?.direccion || '';
+  if (document.getElementById('display-username')) {
+    document.getElementById('display-username').textContent = userData.username || 'N/A';
   }
   
-  // Cargar preferencias guardadas
+  if (document.getElementById('display-role')) {
+    document.getElementById('display-role').textContent = formatearRol(userData.role) || 'Usuario';
+  }
+  
+  // Información de contacto
+  if (document.getElementById('display-email')) {
+    document.getElementById('display-email').textContent = userData.email || 'No disponible';
+  }
+  
+  if (document.getElementById('display-telefono')) {
+    document.getElementById('display-telefono').textContent = userData.telefono || 'No disponible';
+  }
+  
+  if (document.getElementById('display-direccion')) {
+    document.getElementById('display-direccion').textContent = userData.direccion || 'No disponible';
+  }
+  
+  // Información empresarial
+  if (document.getElementById('display-empresa')) {
+    document.getElementById('display-empresa').textContent = 'Agencia Aduanal Rodall Oseguera';
+  }
+  
+  if (document.getElementById('display-id-cliente')) {
+    // Obtener el ID cliente de la sesión
+    const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+    let idCliente = 'N/A';
+    
+    if (userSession) {
+      try {
+        const sessionData = JSON.parse(userSession);
+        idCliente = sessionData.idCliente || sessionData.id || 'N/A';
+      } catch (error) {
+        console.error('Error al obtener ID cliente:', error);
+      }
+    }
+    
+    document.getElementById('display-id-cliente').textContent = idCliente;
+  }
+  
+  // ===== CARGAR PREFERENCIAS =====
   const itemsPorPagina = localStorage.getItem('itemsPorPagina');
   if (itemsPorPagina && document.getElementById('items-por-pagina')) {
     document.getElementById('items-por-pagina').value = itemsPorPagina;
   }
+}
+
+// Función para formatear nombres de roles
+function formatearRol(role) {
+  const roleMap = {
+    'ADMIN': 'Administrador',
+    'ADMINISTRADOR': 'Administrador',
+    'CLIENTE': 'Cliente',
+    'USER': 'Usuario',
+    'EJECUTIVO_CUENTA': 'Ejecutivo de Cuenta'
+  };
+  
+  return roleMap[role] || role;
 }
 
 // Función para guardar preferencias
@@ -327,11 +373,7 @@ function mostrarAlerta(mensaje, tipo = 'info') {
   }, 4000);
 }
 
-// Funciones adicionales para funcionalidad completa
-function cambiarAvatar() {
-  mostrarAlerta('Funcionalidad de cambio de avatar próximamente disponible', 'info');
-}
-
+// Función para ver sesiones (placeholder)
 function verSesiones() {
-  mostrarAlerta('Funcionalidad de sesiones activas próximamente disponible', 'info');
+  mostrarAlerta('');
 }

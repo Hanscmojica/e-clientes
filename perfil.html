@@ -33,9 +33,6 @@
           <span class="material-icons">account_circle</span>
           <span class="user-name">Usuario</span>
         </div>
-        <button id="theme-toggle" class="theme-toggle-btn" title="Cambiar tema">
-          <span class="material-icons" id="theme-icon">light_mode</span>
-        </button>
         <button class="logout-btn" title="Cerrar sesión" onclick="logout()">
           <span class="material-icons">logout</span>
         </button>
@@ -59,10 +56,6 @@
               <span class="material-icons">person</span>
               Información Personal
             </a>
-            <a href="#" class="nav-item" data-section="company">
-              <span class="material-icons">business</span>
-              Empresa
-            </a>
             <a href="#" class="nav-item" data-section="security">
               <span class="material-icons">security</span>
               Seguridad
@@ -70,10 +63,6 @@
             <a href="#" class="nav-item" data-section="preferences">
               <span class="material-icons">settings</span>
               Preferencias
-            </a>
-            <a href="#" class="nav-item" data-section="notifications">
-              <span class="material-icons">notifications</span>
-              Notificaciones
             </a>
           </nav>
         </aside>
@@ -122,7 +111,7 @@
                     <span class="material-icons">email</span>
                     Correo Electrónico
                   </label>
-                  <input type="email" id="email" value="juan.perez@empresa.com" required>
+                  <input type="email" id="email" value="hanscmojica@rodall.com" required>
                 </div>
                 <div class="form-group">
                   <label for="telefono">
@@ -139,55 +128,6 @@
                   Dirección
                 </label>
                 <input type="text" id="direccion" value="Av. Principal #123, Veracruz, Ver.">
-              </div>
-
-              <div class="form-actions">
-                <button type="submit" class="btn-primary">
-                  <span class="material-icons">save</span>
-                  Guardar Cambios
-                </button>
-              </div>
-            </form>
-          </section>
-
-          <!-- Sección de Empresa -->
-          <section id="company-section" class="profile-section">
-            <h3>Información de la Empresa</h3>
-            
-            <form id="company-form" class="profile-form">
-              <div class="form-group">
-                <label for="empresa-nombre">
-                  <span class="material-icons">business</span>
-                  Nombre de la Empresa
-                </label>
-                <input type="text" id="empresa-nombre" value="Importadora ABC S.A. de C.V." required>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <label for="rfc">
-                    <span class="material-icons">badge</span>
-                    RFC
-                  </label>
-                  <input type="text" id="rfc" value="IAB123456HM7" required>
-                </div>
-                <div class="form-group">
-                  <label for="cargo">
-                    <span class="material-icons">work</span>
-                    Cargo
-                  </label>
-                  <input type="text" id="cargo" value="Gerente de Operaciones">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label for="direccion-empresa">
-                  <span class="material-icons">location_city</span>
-                  Dirección de la Empresa
-                </label>
-                <textarea id="direccion-empresa" rows="3">Blvd. Avila Camacho #1234
-Col. Centro, C.P. 91700
-Veracruz, Ver., México</textarea>
               </div>
 
               <div class="form-actions">
@@ -217,37 +157,7 @@ Veracruz, Ver., México</textarea>
                   </button>
                 </div>
               </div>
-
-              <div class="security-item">
-                <div class="security-icon">
-                  <span class="material-icons">verified_user</span>
-                </div>
-                <div class="security-content">
-                  <h4>Autenticación de Dos Factores</h4>
-                  <p>Protege tu cuenta con una capa adicional de seguridad</p>
-                  <div class="toggle-container">
-                    <label class="toggle">
-                      <input type="checkbox" id="toggle-2fa">
-                      <span class="slider"></span>
-                    </label>
-                    <span id="2fa-status">Desactivado</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="security-item">
-                <div class="security-icon">
-                  <span class="material-icons">devices</span>
-                </div>
-                <div class="security-content">
-                  <h4>Sesiones Activas</h4>
-                  <p>Dispositivos donde has iniciado sesión</p>
-                  <button class="btn-secondary" onclick="verSesiones()">
-                    Ver Dispositivos
-                  </button>
-                </div>
-              </div>
-            </div>
+              
           </section>
 
           <!-- Sección de Preferencias -->
@@ -256,38 +166,7 @@ Veracruz, Ver., México</textarea>
             
             <form id="preferences-form" class="profile-form">
               <div class="preference-item">
-                <div class="preference-info">
-                  <h4>Idioma</h4>
-                  <p>Selecciona el idioma de la interfaz</p>
-                </div>
-                <select id="idioma" class="preference-select">
-                  <option value="es">Español</option>
-                  <option value="en">English</option>
-                </select>
-              </div>
-
-              <div class="preference-item">
-                <div class="preference-info">
-                  <h4>Formato de Fecha</h4>
-                  <p>Elige cómo se muestran las fechas</p>
-                </div>
-                <select id="formato-fecha" class="preference-select">
-                  <option value="dd/mm/yyyy">DD/MM/AAAA</option>
-                  <option value="yyyy-mm-dd">AAAA-MM-DD</option>
-                </select>
-              </div>
-
-              <div class="preference-item">
-                <div class="preference-info">
-                  <h4>Tema</h4>
-                  <p>Selecciona el tema de la aplicación</p>
-                </div>
-                <select id="tema" class="preference-select">
-                  <option value="light">Claro</option>
-                  <option value="dark">Oscuro</option>
-                  <option value="auto">Automático</option>
-                </select>
-              </div>
+ 
 
               <div class="preference-item">
                 <div class="preference-info">
@@ -310,66 +189,6 @@ Veracruz, Ver., México</textarea>
               </div>
             </form>
           </section>
-
-          <!-- Sección de Notificaciones -->
-          <section id="notifications-section" class="profile-section">
-            <h3>Notificaciones</h3>
-            
-            <form id="notifications-form" class="profile-form">
-              <div class="notification-group">
-                <h4>Notificaciones por Email</h4>
-                
-                <div class="notification-item">
-                  <label class="checkbox-label">
-                    <input type="checkbox" id="email-nuevas-referencias" checked>
-                    <span class="checkbox-text">Nuevas referencias disponibles</span>
-                  </label>
-                </div>
-
-                <div class="notification-item">
-                  <label class="checkbox-label">
-                    <input type="checkbox" id="email-actualizaciones" checked>
-                    <span class="checkbox-text">Actualizaciones de estado</span>
-                  </label>
-                </div>
-
-                <div class="notification-item">
-                  <label class="checkbox-label">
-                    <input type="checkbox" id="email-reportes">
-                    <span class="checkbox-text">Reportes semanales</span>
-                  </label>
-                </div>
-              </div>
-
-              <div class="notification-group">
-                <h4>Notificaciones del Sistema</h4>
-                
-                <div class="notification-item">
-                  <label class="checkbox-label">
-                    <input type="checkbox" id="sistema-alertas" checked>
-                    <span class="checkbox-text">Alertas importantes</span>
-                  </label>
-                </div>
-
-                <div class="notification-item">
-                  <label class="checkbox-label">
-                    <input type="checkbox" id="sistema-mantenimiento" checked>
-                    <span class="checkbox-text">Avisos de mantenimiento</span>
-                  </label>
-                </div>
-              </div>
-
-              <div class="form-actions">
-                <button type="submit" class="btn-primary">
-                  <span class="material-icons">save</span>
-                  Guardar Configuración
-                </button>
-              </div>
-            </form>
-          </section>
-        </div>
-      </div>
-    </div>
   </main>
 
   <!-- Footer -->
