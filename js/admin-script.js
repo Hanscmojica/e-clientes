@@ -207,9 +207,10 @@ function getActivityIcon(type) {
 // ===============================
 
 // Cargar usuarios desde la API
+// Cargar usuarios desde la API
 async function cargarUsuarios() {
   const tableBody = document.getElementById('usuarios-table-body');
-  tableBody.innerHTML = '<tr><td colspan="8" class="loading">Cargando usuarios...</td></tr>';
+  tableBody.innerHTML = '<tr><td colspan="7" class="loading">Cargando usuarios...</td></tr>';
   
   try {
     const token = getAuthToken();
@@ -229,7 +230,7 @@ async function cargarUsuarios() {
     
   } catch (error) {
     console.error('❌ Error cargando usuarios:', error);
-    tableBody.innerHTML = '<tr><td colspan="8" class="error">Error cargando usuarios: ' + error.message + '</td></tr>';
+    tableBody.innerHTML = '<tr><td colspan="7" class="error">Error cargando usuarios: ' + error.message + '</td></tr>';
     mostrarAlerta('Error cargando usuarios: ' + error.message, 'error');
   }
 }
@@ -239,7 +240,7 @@ function mostrarUsuarios(usuariosList) {
   const tableBody = document.getElementById('usuarios-table-body');
   
   if (usuariosList.length === 0) {
-    tableBody.innerHTML = '<tr><td colspan="8" class="no-data">No se encontraron usuarios</td></tr>';
+    tableBody.innerHTML = '<tr><td colspan="7" class="no-data">No se encontraron usuarios</td></tr>';
     return;
   }
   
@@ -264,7 +265,6 @@ function mostrarUsuarios(usuariosList) {
           ${usuario.active ? 'Activo' : 'Inactivo'}
         </span>
       </td>
-      <td>${formatearFecha(usuario.lastLogin)}</td>
       <td>
         <div class="action-buttons">
           <button class="btn-icon" onclick="editarUsuario(${usuario.id})" title="Editar">
@@ -827,168 +827,280 @@ function formatearFecha(fecha) {
 }
 
 // Función para cargar logs desde el API
+// ✅ FUNCIÓN CORREGIDA: Cargar logs desde el API
 async function cargarLogs(page = 1, limit = 100, startDate = null, endDate = null, type = null) {
-    try {
-        // Construir URL con parámetros
-        let url = `/api/admin/logs?page=${page}&limit=${limit}`;
-        
-        if (startDate) url += `&startDate=${startDate}`;
-        if (endDate) url += `&endDate=${endDate}`;
-        if (type && type !== '' && type !== 'todos') url += `&type=${type}`;
+  try {
+      const token = getAuthToken();
+      
+      // ✅ CORREGIDO: Usar apiBase para la URL completa
+      let url = `${apiBase}/api/admin/logs?page=${page}&limit=${limit}`;
+      
+      if (startDate) url += `&startDate=${startDate}`;
+      if (endDate) url += `&endDate=${endDate}`;
+      if (type && type !== '' && type !== 'todos') url += `&type=${type}`;
 
-        console.log('🔍 Cargando logs desde:', url);
+      console.log('🔍 Cargando logs desde:', url);
 
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'application/json'
-            }
-        });
+      const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+          }
+      });
 
-        const result = await response.json();
+      const result = await response.json();
 
-        if (result.success) {
-            mostrarLogs(result.data.logs);
-            actualizarPaginacion(result.data);
-        } else {
-            mostrarAlerta('Error cargando logs: ' + result.message, 'error');
-        }
+      if (result.success) {
+          mostrarLogs(result.data.logs);
+          actualizarPaginacion(result.data);
+          console.log(`✅ ${result.data.logs.length} logs cargados exitosamente`);
+      } else {
+          mostrarAlerta('Error cargando logs: ' + result.message, 'error');
+      }
 
-    } catch (error) {
-        console.error('❌ Error cargando logs:', error);
-        mostrarAlerta('Error de conexión al cargar logs', 'error');
-    }
+  } catch (error) {
+      console.error('❌ Error cargando logs:', error);
+      mostrarAlerta('Error de conexión al cargar logs', 'error');
+  }
 }
 
-// Función para mostrar logs en la tabla
+// ✅ FUNCIÓN MEJORADA: Mostrar logs con más información
 function mostrarLogs(logs) {
-    const container = document.getElementById('logs-table');
-    
-    if (!logs || logs.length === 0) {
-        container.innerHTML = `
-            <div class="no-data">
-                <p>No se encontraron logs</p>
-            </div>
-        `;
-        return;
-    }
+  const container = document.getElementById('logs-table');
+  
+  if (!logs || logs.length === 0) {
+      container.innerHTML = `
+          <div class="no-data">
+              <span class="material-icons">info</span>
+              <p>No se encontraron logs para los filtros seleccionados</p>
+          </div>
+      `;
+      return;
+  }
 
-    let html = `
-        <div class="table-responsive">
-            <table class="admin-table">
-                <thead>
-                    <tr>
-                        <th>Fecha/Hora</th>
-                        <th>Usuario</th>
-                        <th>Tipo</th>
-                        <th>Descripción</th>
-                        <th>IP</th>
-                    </tr>
-                </thead>
-                <tbody>
-    `;
+  let html = `
+      <div class="table-responsive">
+          <table class="admin-table">
+              <thead>
+                  <tr>
+                      <th>Fecha/Hora</th>
+                      <th>Usuario</th>
+                      <th>Tipo</th>
+                      <th>Estado</th>
+                      <th>Descripción</th>
+                      <th>IP</th>
+                      <th>Dispositivo</th>
+                  </tr>
+              </thead>
+              <tbody>
+  `;
 
-    logs.forEach(log => {
-        const fecha = formatearFecha(log.timestamp);
-        html += `
-            <tr>
-                <td>${fecha}</td>
-                <td>${log.username || 'Sistema'}</td>
-                <td>
-                    <span class="badge badge-${getBadgeClass(log.type)}">${log.type}</span>
-                </td>
-                <td>${log.description}</td>
-                <td>${log.ipAddress || '-'}</td>
-            </tr>
-        `;
-    });
+  logs.forEach(log => {
+      const fecha = formatearFecha(log.timestamp);
+      const successIcon = log.success !== false ? 'check_circle' : 'error';
+      const successClass = log.success !== false ? 'success' : 'danger';
+      
+      html += `
+          <tr>
+              <td>${fecha}</td>
+              <td>
+                  <div class="user-info">
+                      <span class="material-icons">person</span>
+                      ${log.username || 'Sistema'}
+                  </div>
+              </td>
+              <td>
+                  <span class="badge badge-${getBadgeClass(log.type)}">${log.type}</span>
+              </td>
+              <td>
+                  <span class="status-badge ${successClass}">
+                      <span class="material-icons">${successIcon}</span>
+                      ${log.success !== false ? 'Exitoso' : 'Fallido'}
+                  </span>
+              </td>
+              <td>${log.description}</td>
+              <td>${log.ipAddress || '-'}</td>
+              <td>
+                  <span class="device-info">
+                      <span class="material-icons">${getDeviceIcon(log.device)}</span>
+                      ${log.device || 'Unknown'}
+                  </span>
+              </td>
+          </tr>
+      `;
+  });
 
-    html += `
-                </tbody>
-            </table>
-        </div>
-    `;
+  html += `
+              </tbody>
+          </table>
+      </div>
+  `;
 
-    container.innerHTML = html;
+  container.innerHTML = html;
 }
 
-// Función para obtener clase CSS del badge según el tipo de log
+// ✅ FUNCIÓN MEJORADA: Obtener clase CSS del badge según el tipo de log
 function getBadgeClass(type) {
-    switch(type) {
-        case 'LOGIN': return 'success';
-        case 'LOGOUT': return 'info';
-        case 'LOGIN_FAILED': return 'danger';
-        case 'CHANGE_PASSWORD': return 'warning';
-        default: return 'secondary';
-    }
+  switch(type) {
+      case 'LOGIN': return 'success';
+      case 'LOGOUT': return 'info';
+      case 'LOGIN_FAILED': return 'danger';
+      case 'FIRST_LOGIN': return 'warning';
+      case 'PASSWORD_CHANGED': return 'primary';
+      case 'USER_CREATED': return 'success';
+      case 'USER_UPDATED': return 'warning';
+      case 'USER_DELETED': return 'danger';
+      case 'USER_STATUS_CHANGED': return 'info';
+      case 'REFERENCIAS_BUSQUEDA': return 'secondary';
+      default: return 'secondary';
+  }
 }
 
-// Función para actualizar controles de paginación
+// ✅ NUEVA FUNCIÓN: Obtener icono de dispositivo
+function getDeviceIcon(device) {
+  if (!device) return 'device_unknown';
+  const deviceLower = device.toLowerCase();
+  if (deviceLower.includes('mobile')) return 'smartphone';
+  if (deviceLower.includes('tablet')) return 'tablet';
+  if (deviceLower.includes('desktop')) return 'computer';
+  return 'device_unknown';
+}
+
+// ✅ FUNCIÓN MEJORADA: Actualizar controles de paginación
 function actualizarPaginacion(data) {
-    console.log(`📊 Logs: ${data.logs.length} de ${data.totalLogs} total`);
+  const paginationContainer = document.querySelector('#logs-section .pagination') || createPaginationContainer();
+  
+  console.log(`📊 Logs: ${data.logs.length} de ${data.totalLogs} total (Página ${data.currentPage} de ${data.totalPages})`);
+  
+  if (data.totalPages <= 1) {
+      paginationContainer.innerHTML = `
+          <div class="pagination-info">
+              <span>${data.totalLogs} logs encontrados</span>
+          </div>
+      `;
+      return;
+  }
+  
+  let paginationHTML = '<div class="pagination-controls">';
+  
+  // Botón anterior
+  if (data.hasPrevPage) {
+      paginationHTML += `<button class="btn-pagination" onclick="cargarLogs(${data.currentPage - 1})">
+          <span class="material-icons">chevron_left</span> Anterior
+      </button>`;
+  }
+  
+  // Información de página
+  paginationHTML += `<span class="pagination-info">
+      Página ${data.currentPage} de ${data.totalPages} (${data.totalLogs} logs total)
+  </span>`;
+  
+  // Botón siguiente
+  if (data.hasNextPage) {
+      paginationHTML += `<button class="btn-pagination" onclick="cargarLogs(${data.currentPage + 1})">
+          Siguiente <span class="material-icons">chevron_right</span>
+      </button>`;
+  }
+  
+  paginationHTML += '</div>';
+  paginationContainer.innerHTML = paginationHTML;
 }
 
-// Mostrar alerta
+// ✅ NUEVA FUNCIÓN: Crear contenedor de paginación si no existe
+function createPaginationContainer() {
+  const logsSection = document.getElementById('logs-section');
+  let container = logsSection.querySelector('.pagination');
+  if (!container) {
+      container = document.createElement('div');
+      container.className = 'pagination';
+      logsSection.appendChild(container);
+  }
+  return container;
+}
+
+// ✅ FUNCIÓN MEJORADA: Filtrar logs con validación
+function filtrarLogs() {
+  const startDate = document.getElementById('log-date-start').value;
+  const endDate = document.getElementById('log-date-end').value;
+  const type = document.getElementById('log-type').value;
+  
+  // Validar fechas
+  if (startDate && endDate && startDate > endDate) {
+      mostrarAlerta('La fecha inicial no puede ser mayor que la fecha final', 'error');
+      return;
+  }
+  
+  console.log('🔍 Filtrando logs:', { startDate, endDate, type });
+  
+  // Mostrar indicador de carga
+  const container = document.getElementById('logs-table');
+  container.innerHTML = '<div class="loading">Filtrando logs...</div>';
+  
+  // Cargar logs con filtros
+  cargarLogs(1, 100, startDate, endDate, type);
+}
+
+// Mostrar alerta (mantén tu función actual)
 function mostrarAlerta(mensaje, tipo = 'info') {
-  const alerta = document.createElement('div');
-  alerta.className = `alert alert-${tipo}`;
-  alerta.innerHTML = `
-    <span class="material-icons">${getAlertIcon(tipo)}</span>
-    <span>${mensaje}</span>
-    <button onclick="this.parentElement.remove()" class="alert-close">
-      <span class="material-icons">close</span>
-    </button>
-  `;
-  
-  alerta.style.cssText = `
-    position: fixed;
-    top: 100px;
-    right: 20px;
-    padding: 1rem 1.5rem;
-    border-radius: 12px;
-    color: white;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    z-index: 1100;
-    min-width: 300px;
-    max-width: 500px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    background: ${getAlertColor(tipo)};
-    animation: slideIn 0.3s ease;
-  `;
-  
-  document.body.appendChild(alerta);
-  
-  setTimeout(() => {
-    if (alerta.parentElement) {
-      alerta.remove();
-    }
-  }, 5000);
+const alerta = document.createElement('div');
+alerta.className = `alert alert-${tipo}`;
+alerta.innerHTML = `
+  <span class="material-icons">${getAlertIcon(tipo)}</span>
+  <span>${mensaje}</span>
+  <button onclick="this.parentElement.remove()" class="alert-close">
+    <span class="material-icons">close</span>
+  </button>
+`;
+
+alerta.style.cssText = `
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  color: white;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 1100;
+  min-width: 300px;
+  max-width: 500px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  background: ${getAlertColor(tipo)};
+  animation: slideIn 0.3s ease;
+`;
+
+document.body.appendChild(alerta);
+
+setTimeout(() => {
+  if (alerta.parentElement) {
+    alerta.remove();
+  }
+}, 5000);
 }
 
-// Obtener icono de alerta
+// Obtener icono de alerta (mantén tu función actual)
 function getAlertIcon(tipo) {
-  const icons = {
-    'success': 'check_circle',
-    'error': 'error',
-    'warning': 'warning',
-    'info': 'info'
-  };
-  return icons[tipo] || 'info';
+const icons = {
+  'success': 'check_circle',
+  'error': 'error',
+  'warning': 'warning',
+  'info': 'info'
+};
+return icons[tipo] || 'info';
 }
 
-// Obtener color de alerta
+// Obtener color de alerta (mantén tu función actual)
 function getAlertColor(tipo) {
-  const colors = {
-    'success': '#059669',
-    'error': '#dc2626',
-    'warning': '#d97706',
-    'info': '#2563eb'  // Azul en lugar de cyan
-  };
-  return colors[tipo] || '#2563eb';
+const colors = {
+  'success': '#059669',
+  'error': '#dc2626',
+  'warning': '#d97706',
+  'info': '#2563eb'
+};
+return colors[tipo] || '#2563eb';
 }
 
 // Logout

@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const prisma = require('../utils/prisma');
 const { verifyToken: authenticateToken } = require('../middlewares/auth');
 const router = express.Router();
+const authService = require('../services/authService');
 
 // Middleware para verificar que sea administrador
 const requireAdmin = (req, res, next) => {
@@ -133,7 +134,6 @@ router.get('/usuarios', authenticateToken, requireAdmin, async (req, res) => {
         email: usuario.sEmail,
         role: perfil,
         active: usuario.bActivo,
-        lastLogin: null,
         createdAt: usuario.dFechaCreacion?.toISOString(),
         image: usuario.sUsuarioImg
       };
@@ -507,63 +507,77 @@ router.get('/perfiles', authenticateToken, requireAdmin, async (req, res) => {
 });
 
 // GET /api/admin/logs - Obtener logs del sistema con filtros y paginación
+// GET /api/admin/logs - CORREGIDO para usar BP_07_LOG_AUTENTICACION
 router.get('/logs', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const { page = 1, limit = 100, startDate, endDate, type } = req.query;
     
     console.log('📋 Obteniendo logs del sistema...', { page, limit, startDate, endDate, type });
     
-    // Construir filtros para Prisma usando la tabla auditlog
+    // ✅ CORREGIDO: Construir filtros para la tabla correcta BP_07_LOG_AUTENTICACION
     const where = {};
     
     // Filtro por fechas
     if (startDate && endDate) {
-      where.timestamp = {
+      where.dFechaHora = {
         gte: new Date(startDate + 'T00:00:00.000Z'),
         lte: new Date(endDate + 'T23:59:59.999Z')
       };
     } else if (startDate) {
-      where.timestamp = {
+      where.dFechaHora = {
         gte: new Date(startDate + 'T00:00:00.000Z')
       };
     } else if (endDate) {
-      where.timestamp = {
+      where.dFechaHora = {
         lte: new Date(endDate + 'T23:59:59.999Z')
       };
     }
     
     // Filtro por tipo de evento
     if (type) {
-      where.event = type;
+      where.sTipoAccion = type;
     }
     
     // Calcular offset para paginación
     const offset = (parseInt(page) - 1) * parseInt(limit);
     
-    // Obtener logs con paginación usando la tabla auditlog
+    // ✅ CORREGIDO: Obtener logs desde BP_07_LOG_AUTENTICACION con relación al usuario
     const [logs, totalLogs] = await Promise.all([
-      prisma.auditlog.findMany({
+      prisma.BP_07_LOG_AUTENTICACION.findMany({
         where,
-        orderBy: { timestamp: 'desc' },
+        include: {
+          usuario: {
+            select: {
+              sUsuario: true,
+              sNombre: true,
+              sApellidoPaterno: true,
+              sApellidoMaterno: true
+            }
+          }
+        },
+        orderBy: { dFechaHora: 'desc' },
         skip: offset,
         take: parseInt(limit)
       }),
-      prisma.auditlog.count({ where })
+      prisma.BP_07_LOG_AUTENTICACION.count({ where })
     ]);
     
     const totalPages = Math.ceil(totalLogs / parseInt(limit));
     
-    // Formatear logs para el frontend respetando los campos reales
+    // ✅ CORREGIDO: Formatear logs desde la tabla correcta
     const formattedLogs = logs.map(log => ({
-      id: log.id,
-      timestamp: log.timestamp,
-      type: log.event || 'UNKNOWN',
-      username: log.username || 'Sistema',
-      description: log.details || `Evento: ${log.event}`,
-      ipAddress: log.ip || null,
+      id: log.nId07LogAuth,
+      timestamp: log.dFechaHora,
+      type: log.sTipoAccion || 'UNKNOWN',
+      username: log.usuario ? log.usuario.sUsuario : `Usuario ID: ${log.nId01Usuario}`,
+      description: log.sDetalleError || `${log.sTipoAccion} - ${log.bExitoso ? 'Exitoso' : 'Fallido'}`,
+      ipAddress: log.sIpUsuario || null,
+      success: log.bExitoso,
+      device: log.sDispositivo || null,
+      userAgent: log.sUserAgent || null
     }));
     
-    console.log(`✅ ${formattedLogs.length} logs obtenidos de la tabla auditlog`);
+    console.log(`✅ ${formattedLogs.length} logs obtenidos de BP_07_LOG_AUTENTICACION`);
     
     res.json({
       success: true,

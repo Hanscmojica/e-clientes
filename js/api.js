@@ -276,11 +276,11 @@ function actualizarContadorBusqueda() {
 function getCurrentClienteInfo() {
     const userSession = JSON.parse(localStorage.getItem('userSession') || 'null');
     return referencias.length > 0 ? {
-        id: userSession ? userSession.id : 'N/A',
+        idCliente: userSession ? userSession.id : '',
         nombre: referencias[0].Cliente || '',
         importador: referencias[0].Importador || '',
         aduana: referencias[0].Aduana || ''
-    } : { id: userSession ? userSession.id : 'N/A' };
+    } : { idCliente: userSession ? userSession.id : '' };
 }
 
 // ===============================
@@ -785,11 +785,12 @@ function mostrarReferencias(clienteInfo, referenciasAMostrarParam) {
     clienteDiv.innerHTML = `
         <h2>Información del Cliente</h2>
         <div class="cliente-details">
-            <div class="cliente-detail-item"><strong>Cliente ID:</strong><span>${clienteInfo.id}</span></div>
+            <div class="cliente-detail-item"><strong>Cliente ID:</strong><span>${clienteInfo.idCliente}</span></div>
             ${clienteInfo.nombre ? `<div class="cliente-detail-item"><strong>Nombre:</strong><span>${clienteInfo.nombre}</span></div>` : ''}
             ${clienteInfo.importador ? `<div class="cliente-detail-item"><strong>Importador:</strong><span>${clienteInfo.importador}</span></div>` : ''}
             ${clienteInfo.aduana ? `<div class="cliente-detail-item"><strong>Aduana:</strong><span>${clienteInfo.aduana}</span></div>` : ''}
             <div class="cliente-detail-item"><strong>Periodo:</strong><span>${formatearFecha(document.getElementById('fechaInicial').value)} - ${formatearFecha(document.getElementById('fechaFinal').value)}</span></div>
+            
         </div>`;
     container.appendChild(clienteDiv);
 

@@ -348,7 +348,6 @@ function mostrarUsuarios(usuariosList) {
           ${usuario.active ? 'Activo' : 'Inactivo'}
         </span>
       </td>
-      <td>${formatearFecha(usuario.lastLogin)}</td>
       <td>
         <div class="action-buttons">
           <button class="btn-icon" onclick="editarUsuario(${usuario.id})" title="Editar">

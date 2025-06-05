@@ -182,15 +182,12 @@
                   <th>Email</th>
                   <th>Rol</th>
                   <th>Estado</th>
-                  <th>Último Login</th>
                   <th>Acciones</th>
-                  <th>ID CLIENTE</th>
-                  
                 </tr>
               </thead>
               <tbody id="usuarios-table-body">
                 <tr>
-                  <td colspan="8" class="loading">Cargando usuarios...</td>
+                  <td colspan="7" class="loading">Cargando usuarios...</td>
                 </tr>
               </tbody>
             </table>
@@ -205,10 +202,6 @@
         <section id="perfiles-section" class="admin-section">
           <div class="section-header">
             <h2>Gestión de Perfiles</h2>
-            <button class="btn-primary" onclick="mostrarModalCrearPerfil()">
-              <span class="material-icons">add</span>
-              Crear Perfil
-            </button>
           </div>
           
           <div class="profiles-grid" id="profiles-grid">
@@ -250,7 +243,7 @@
                 <option value="LOGIN">Login</option>
                 <option value="LOGOUT">Logout</option>
                 <option value="LOGIN_FAILED">Login Fallido</option>
-                <option value="CHANGE_PASSWORD">Cambio Contraseña</option>
+                <option value="CHANGE_0ORD">Cambio Contraseña</option>
               </select>
               <button class="btn-secondary" onclick="filtrarLogs()">Filtrar</button>
             </div>
@@ -387,10 +380,12 @@
                 <span class="material-icons">lock</span>
                 Contraseña *
               </label>
-              <div class="password-wrapper"></div>
-              <input type="password" id="nuevo-password" required>
-              <button type="button" class="toggle-password" onclick="toggleAdminPassword('nuevo-password', this)">  
-              <span class="material-icons">visibility</span>
+              <div class="input-password-wrapper">
+                <input type="password" id="password" class="input-password">
+                <span class="material-icons toggle-password" onclick="toggleAdminPassword('nuevo-password', this)">visibility_off
+                </span>
+              </div>
+              <p>La contraseña debe contener por lo menos 8 caracteres como minimo, 1 número y 1 caracter especial</p>
             </div>
           </div>
         </div>
