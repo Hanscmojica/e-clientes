@@ -733,4 +733,4 @@ exports.getProfile = async (req, res, next) => {
         console.error('Error al obtener perfil:', error);
         next(error);
     }
-};
+};  

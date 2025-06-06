@@ -530,7 +530,7 @@ app.use((err, req, res, next) => {
 // Iniciar servidor
 app.listen(SERVER_PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor ejecutándose en http://localhost:${SERVER_PORT}`);
-    console.log(`   Red: http://10.11.21.15:${SERVER_PORT} ←  USAR ESTA URL PARA RED`);
+    console.log(`   Red: http://10.11.20.14:${SERVER_PORT} ←  USAR ESTA URL PARA RED`);
     console.log('📋 Rutas API registradas:');
     console.log('   - /api/auth/*');
     console.log('   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN');

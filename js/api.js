@@ -6,7 +6,7 @@ class SecureLogger {
       this.isDevelopment = this.detectEnvironment();
       this.levels = { ERROR: 0, WARN: 1, INFO: 2, DEBUG: 3 };
       this.currentLevel = this.isDevelopment ? this.levels.DEBUG : this.levels.ERROR;
-      this.BACKEND_URL = 'http://10.11.21.15:5001';
+      this.BACKEND_URL = 'http://10.11.20.14:5001';
     }
     
     detectEnvironment() {
@@ -276,7 +276,7 @@ function actualizarContadorBusqueda() {
 function getCurrentClienteInfo() {
     const userSession = JSON.parse(localStorage.getItem('userSession') || 'null');
     return referencias.length > 0 ? {
-        idCliente: userSession ? userSession.id : '',
+        idCliente: userSession ? userSession.idCliente : '',
         nombre: referencias[0].Cliente || '',
         importador: referencias[0].Importador || '',
         aduana: referencias[0].Aduana || ''
@@ -315,7 +315,7 @@ function consultarReferencias() {
     // Obtener el ID del usuario logueado automáticamente
     const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
     
-    if (!userSession || !userSession.id) {
+    if (!userSession || !userSession.idCliente) {
         mostrarAlerta('No hay sesión activa. Por favor, inicie sesión nuevamente.', 'error');
         setTimeout(() => {
             logout();
@@ -323,7 +323,7 @@ function consultarReferencias() {
         return;
     }
 
-    const clienteNo = userSession.id; // USAR EL ID DEL USUARIO AUTOMÁTICAMENTE
+    const clienteNo = userSession.idCliente; // USAR EL ID DEL USUARIO AUTOMÁTICAMENTE
 
     if (!fechaInicial || !fechaFinal) {
         mostrarAlerta('Por favor, complete las fechas.', 'error');
@@ -353,7 +353,7 @@ function consultarReferencias() {
         return;
     }
 
-    axios.post('http://10.11.21.15:5001/api/v1/apiExterna', datos, {
+    axios.post('http://10.11.20.14:5001/api/v1/apiExterna', datos, {
         headers: { 
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${userSession.token}`
@@ -486,7 +486,7 @@ function generarBibliotecaModal(referenciaOriginal) {
         return;
     }
 
-    const BACKEND_URL = 'http://10.11.21.15:5001';
+    const BACKEND_URL = 'http://10.11.20.14:5001';
     const endpointUrl = `${BACKEND_URL}/api/referencias/${numeroReferencia}/documentos`;
     
     logger.debug(`Consultando endpoint: ${endpointUrl}`);
@@ -596,7 +596,7 @@ function verDocumentoModal(referenciaId, docNombre) {
 
 // Función para descargar documento (desde el modal)
 function descargarDocumentoModal(referenciaId, docNombre) {
-    const BACKEND_URL = 'http://10.11.21.15:5001';
+    const BACKEND_URL = 'http://10.11.20.14:5001';
     const downloadUrl = `${BACKEND_URL}/download/${referenciaId}/${docNombre}`;
     
     logger.debug('Descargando documento', { url: downloadUrl });

@@ -75,7 +75,7 @@ const logger = new SecureLogger();
 // ⚠️ PARA PRODUCCIÓN: Descomentar la siguiente línea
 logger.setProductionMode();
 
-const apiBase = 'http://10.11.21.15:5001';
+const apiBase = 'http://10.11.20.14:5001';
 logger.debug('Login.js cargado, API base', { apiBase });
 
 // ===============================
