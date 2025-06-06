@@ -207,7 +207,6 @@ function getActivityIcon(type) {
 // ===============================
 
 // Cargar usuarios desde la API
-// Cargar usuarios desde la API
 async function cargarUsuarios() {
   const tableBody = document.getElementById('usuarios-table-body');
   tableBody.innerHTML = '<tr><td colspan="7" class="loading">Cargando usuarios...</td></tr>';
@@ -326,7 +325,7 @@ function filtrarUsuarios() {
 // ACCIONES DE USUARIOS - CON API REAL
 // ===============================
 
-// ✅ FUNCIÓN CORREGIDA: Editar usuario
+// ✅ FUNCIÓN CORREGIDA: Editar usuario - Sin obligar re-selección de rol
 function editarUsuario(userId) {
   const usuario = usuarios.find(u => u.id === userId);
   if (!usuario) {
@@ -343,12 +342,22 @@ function editarUsuario(userId) {
   document.getElementById('nuevo-apellido-materno').value = nombreCompleto.slice(2).join(' ') || '';
   document.getElementById('nuevo-usuario').value = usuario.username;
   document.getElementById('nuevo-email').value = usuario.email;
-  
-  // ✅ CORREGIDO: Usar el idCliente del usuario, NO su ID único
   document.getElementById('nuevo-id-cliente').value = usuario.idCliente || '';
-  
-  document.getElementById('nuevo-perfil').value = usuario.role;
   document.getElementById('nuevo-activo').checked = usuario.active;
+  
+  // ✅ NUEVO: Pre-seleccionar el rol actual y hacer opcional
+  const perfilSelect = document.getElementById('nuevo-perfil');
+  perfilSelect.value = usuario.role;
+  perfilSelect.required = false; // ✅ Quitar obligatoriedad en edición
+  
+  // ✅ NUEVO: Agregar opción "Mantener rol actual" como primera opción
+  setTimeout(() => {
+    const currentOption = perfilSelect.querySelector(`option[value="${usuario.role}"]`);
+    if (currentOption) {
+      currentOption.selected = true;
+      currentOption.textContent = `${usuario.role} (Actual) - ${currentOption.textContent.split(' - ')[1] || ''}`;
+    }
+  }, 100);
   
   // Cambiar el título y botón del modal
   const modalTitle = document.querySelector('#modal-crear-usuario h2');
@@ -496,24 +505,29 @@ function configurarTabsModal() {
   });
 }
 
-// Mostrar modal crear/editar usuario
+// ✅ FUNCIÓN CORREGIDA: Mostrar modal - Diferenciar creación vs edición
 function mostrarModalCrearUsuario() {
   const modal = document.getElementById('modal-crear-usuario');
   
   // Cargar perfiles disponibles
   cargarPerfilesEnSelect();
   
-  // Si no es edición, limpiar formulario
+  // ✅ NUEVO: Si no es edición, configurar para creación
   if (!editingUserId) {
     document.getElementById('form-crear-usuario').reset();
     document.getElementById('nuevo-usuario').disabled = false;
+    
+    // ✅ En modo creación, el perfil ES obligatorio
+    const perfilSelect = document.getElementById('nuevo-perfil');
+    perfilSelect.required = true;
+    
     const passwordField = document.getElementById('nuevo-password');
     if (passwordField) {
       passwordField.required = true;
       passwordField.placeholder = '';
     }
     
-    // Restaurar título y botón
+    // Restaurar título y botón para creación
     const modalTitle = document.querySelector('#modal-crear-usuario h2');
     const submitBtn = document.querySelector('#form-crear-usuario button[type="submit"]');
     
@@ -583,7 +597,7 @@ function configurarFormularios() {
   }
 }
 
-// ✅ FUNCIÓN CORREGIDA: Manejar submit del formulario (crear o editar)
+// ✅ FUNCIÓN CORREGIDA: Validación diferenciada para creación vs edición
 async function manejarSubmitUsuario(e) {
   e.preventDefault();
   
@@ -604,20 +618,31 @@ async function manejarSubmitUsuario(e) {
     formData.password = passwordField.value;
   }
   
-  // Validaciones básicas
+  // ✅ VALIDACIONES DIFERENCIADAS
   if (!formData.nombre || !formData.apellidoPaterno || !formData.username || !formData.email) {
     mostrarAlerta('Todos los campos obligatorios deben ser completados', 'error');
     return;
   }
   
+  // ✅ NUEVO: Password solo obligatorio en creación
   if (!editingUserId && !formData.password) {
     mostrarAlerta('La contraseña es requerida para usuarios nuevos', 'error');
     return;
   }
   
-  if (!formData.perfil) {
-    mostrarAlerta('Debe seleccionar un perfil', 'error');
+  // ✅ NUEVO: Perfil solo obligatorio en creación
+  if (!editingUserId && !formData.perfil) {
+    mostrarAlerta('Debe seleccionar un perfil para usuarios nuevos', 'error');
     return;
+  }
+  
+  // ✅ NUEVO: En edición, si no se selecciona perfil, mantener el actual
+  if (editingUserId && !formData.perfil) {
+    const usuarioActual = usuarios.find(u => u.id === editingUserId);
+    if (usuarioActual) {
+      formData.perfil = usuarioActual.role;
+      console.log(`📝 Manteniendo rol actual: ${formData.perfil}`);
+    }
   }
   
   if (!formData.idCliente) {
@@ -675,6 +700,7 @@ async function manejarSubmitUsuario(e) {
   }
 }
 
+// ✅ FUNCIÓN CORREGIDA: Cerrar modal - Limpiar estado
 function cerrarModal() {
   console.log('🚪 Cerrando modal...');
   
@@ -690,18 +716,34 @@ function cerrarModal() {
     modal.style.display = 'none';
   });
   
-  // Limpiar estado
+  // ✅ NUEVO: Limpiar estado de edición
   editingUserId = null;
   
-  // Resetear formulario
+  // ✅ NUEVO: Resetear formulario y restaurar configuración para creación
   const form = document.getElementById('form-crear-usuario');
   if (form) {
     form.reset();
-    console.log('✅ Formulario reseteado');
+    
+    // Restaurar configuración para próxima creación
+    document.getElementById('nuevo-usuario').disabled = false;
+    
+    const perfilSelect = document.getElementById('nuevo-perfil');
+    if (perfilSelect) {
+      perfilSelect.required = true; // Volver a hacer obligatorio para creación
+    }
+    
+    const passwordField = document.getElementById('nuevo-password');
+    if (passwordField) {
+      passwordField.required = true;
+      passwordField.placeholder = '';
+    }
+    
+    console.log('✅ Formulario reseteado y configurado para creación');
   }
   
   console.log('✅ Modal cerrado completamente');
 }
+
 // ===============================
 // GESTIÓN DE PERFILES - CON API
 // ===============================
@@ -780,16 +822,8 @@ function mostrarPerfilesFallback() {
     </div>
   `;
 }
-// Editar perfil (placeholder)
-function editarPerfil(perfilId) {
-  mostrarAlerta('Funcionalidad de edición de perfiles en desarrollo', 'info');
-}
 
 // Placeholder functions
-function mostrarModalCrearPerfil() {
-  mostrarAlerta('Modal de crear perfil en desarrollo', 'info');
-}
-
 function mostrarModalCrearPermiso() {
   mostrarAlerta('Modal de crear permiso en desarrollo', 'info');
 }
@@ -804,6 +838,7 @@ function filtrarLogs() {
     // Cargar logs con filtros
     cargarLogs(1, 100, startDate, endDate, type);
 }
+
 // ===============================
 // UTILIDADES
 // ===============================
@@ -1019,28 +1054,6 @@ function createPaginationContainer() {
   return container;
 }
 
-// ✅ FUNCIÓN MEJORADA: Filtrar logs con validación
-function filtrarLogs() {
-  const startDate = document.getElementById('log-date-start').value;
-  const endDate = document.getElementById('log-date-end').value;
-  const type = document.getElementById('log-type').value;
-  
-  // Validar fechas
-  if (startDate && endDate && startDate > endDate) {
-      mostrarAlerta('La fecha inicial no puede ser mayor que la fecha final', 'error');
-      return;
-  }
-  
-  console.log('🔍 Filtrando logs:', { startDate, endDate, type });
-  
-  // Mostrar indicador de carga
-  const container = document.getElementById('logs-table');
-  container.innerHTML = '<div class="loading">Filtrando logs...</div>';
-  
-  // Cargar logs con filtros
-  cargarLogs(1, 100, startDate, endDate, type);
-}
-
 // Mostrar alerta (mantén tu función actual)
 function mostrarAlerta(mensaje, tipo = 'info') {
 const alerta = document.createElement('div');
@@ -1117,7 +1130,9 @@ function logout() {
     localStorage.removeItem('token');
     window.location.href = 'login.html';
   }, 1000);
-}// Mostrar modal para crear perfil
+}
+
+// Mostrar modal para crear perfil
 function mostrarModalCrearPerfil() {
   const modal = document.createElement('div');
   modal.innerHTML = `
