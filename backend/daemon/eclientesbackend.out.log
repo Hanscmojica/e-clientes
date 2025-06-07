@@ -1,0 +1,1408 @@
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🌐 Servidor HTTP ejecutándose en http://undefined:5001
+🔒 Servidor HTTPS ejecutándose en https://undefined:5002
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🌐 Servidor HTTP ejecutándose en http://undefined:5001
+🔒 Servidor HTTPS ejecutándose en https://undefined:5002
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🌐 Servidor HTTP ejecutándose en http://undefined:5001
+🔒 Servidor HTTPS ejecutándose en https://undefined:5002
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🌐 Servidor HTTP ejecutándose en http://undefined:5001
+🔒 Servidor HTTPS ejecutándose en https://undefined:5002
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🌐 Servidor HTTP ejecutándose en http://undefined:5001
+🔒 Servidor HTTPS ejecutándose en https://undefined:5002
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🌐 Servidor HTTP ejecutándose en http://undefined:5001
+🔒 Servidor HTTPS ejecutándose en https://undefined:5002
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5001
+   Red: http://10.11.20.14:5001 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🌐 Servidor HTTP ejecutándose en http://undefined:5001
+🔒 Servidor HTTPS ejecutándose en https://undefined:5002
+✅ Conexión a base de datos exitosa
+
+🧪 Probando conexión FTP al inicio...
+🧪 Probando conexión FTP...
+🔄 Intento 1/1 de conexión FTP a 10.11.20.11:21
+✅ Conexión FTP establecida exitosamente!
+🔍 Probando acceso a: /DocumentacionPublica
+✅ DocumentacionPublica encontrada con 73846 elementos
+✅ Test de conexión exitoso!
+✅ FTP: Conexión inicial exitosa!
+Login request received: {}
+🔍 Username recibido: undefined
+prisma:error 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:31:23.158Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🌐 Servidor HTTP ejecutándose en http://undefined:5002
+🔒 Servidor HTTPS ejecutándose en https://undefined:5001
+✅ Conexión a base de datos exitosa
+
+🧪 Probando conexión FTP al inicio...
+🧪 Probando conexión FTP...
+🔄 Intento 1/1 de conexión FTP a 10.11.20.11:21
+✅ Conexión FTP establecida exitosamente!
+🔍 Probando acceso a: /DocumentacionPublica
+✅ DocumentacionPublica encontrada con 73846 elementos
+✅ Test de conexión exitoso!
+✅ FTP: Conexión inicial exitosa!
+Login request received: {}
+🔍 Username recibido: undefined
+prisma:error 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:32:01.774Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔒 Servidor HTTPS ejecutándose en https://e-clientes.rodall.com:5001
+🌐 Servidor HTTP ejecutándose en http://e-clientes.rodall.com:5002
+✅ Conexión a base de datos exitosa
+
+🧪 Probando conexión FTP al inicio...
+🧪 Probando conexión FTP...
+🔄 Intento 1/1 de conexión FTP a 10.11.20.11:21
+✅ Conexión FTP establecida exitosamente!
+🔍 Probando acceso a: /DocumentacionPublica
+✅ DocumentacionPublica encontrada con 73846 elementos
+✅ Test de conexión exitoso!
+✅ FTP: Conexión inicial exitosa!
+Login request received: {}
+🔍 Username recibido: undefined
+prisma:error 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:35:45.753Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🌐 Servidor HTTP ejecutándose en http://e-clientes.rodall.com:5002
+🔒 Servidor HTTPS ejecutándose en https://e-clientes.rodall.com:5001
+✅ Conexión a base de datos exitosa
+
+🧪 Probando conexión FTP al inicio...
+🧪 Probando conexión FTP...
+🔄 Intento 1/1 de conexión FTP a 10.11.20.11:21
+✅ Conexión FTP establecida exitosamente!
+🔍 Probando acceso a: /DocumentacionPublica
+✅ DocumentacionPublica encontrada con 73846 elementos
+✅ Test de conexión exitoso!
+✅ FTP: Conexión inicial exitosa!
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🔒 Servidor HTTPS ejecutándose en https://e-clientes.rodall.com:5001
+🌐 Servidor HTTP ejecutándose en http://e-clientes.rodall.com:5002
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🌐 Servidor HTTP ejecutándose en http://e-clientes.rodall.com:5002
+🔒 Servidor HTTPS ejecutándose en https://e-clientes.rodall.com:5001
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🌐 Servidor HTTP ejecutándose en http://e-clientes.rodall.com:5002
+🔒 Servidor HTTPS ejecutándose en https://e-clientes.rodall.com:5001
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🌐 Servidor HTTP ejecutándose en http://e-clientes.rodall.com:5002
+🔒 Servidor HTTPS ejecutándose en https://e-clientes.rodall.com:5001
+✅ Conexión a base de datos exitosa
+
+🧪 Probando conexión FTP al inicio...
+🧪 Probando conexión FTP...
+🔄 Intento 1/1 de conexión FTP a 10.11.20.11:21
+✅ Conexión FTP establecida exitosamente!
+🔍 Probando acceso a: /DocumentacionPublica
+✅ DocumentacionPublica encontrada con 73846 elementos
+✅ Test de conexión exitoso!
+✅ FTP: Conexión inicial exitosa!
+Login request received: {}
+🔍 Username recibido: undefined
+prisma:error 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:40:42.542Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+Login request received: {}
+🔍 Username recibido: undefined
+prisma:error 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:40:44.401Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+Login request received: {}
+🔍 Username recibido: undefined
+prisma:error 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:40:45.315Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+Login request received: {}
+🔍 Username recibido: undefined
+prisma:error 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:40:45.961Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+Login request received: {}
+🔍 Username recibido: undefined
+prisma:error 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:40:46.856Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+Login request received: {}
+🔍 Username recibido: undefined
+prisma:error 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:40:47.299Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+Login request received: {}
+🔍 Username recibido: undefined
+prisma:error 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:40:47.715Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🔒 Servidor HTTPS ejecutándose en https://e-clientes.rodall.com:5001
+🌐 Servidor HTTP ejecutándose en http://e-clientes.rodall.com:5002
+✅ Conexión a base de datos exitosa
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://localhost:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://localhost:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://localhost:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5001
+   Red: http://10.11.20.14:5001 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5001
+   Red: http://10.11.20.14:5001 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🌐 Servidor HTTP ejecutándose en http://e-clientes.rodall.com:undefined
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5001
+   Red: http://10.11.20.14:5001 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🚀 Servidor ejecutándose en http://localhost:5002
+   Red: http://10.11.20.14:5002 ←  USAR ESTA URL PARA RED
+📋 Rutas API registradas:
+   - /api/auth/*
+   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN
+   - /api/profile/*
+   - /api/account-access/*
+   - /api/v1/apiExterna/*
+   - /api/ftp/test  ← TEST DE CONEXIÓN FTP
+   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS
+⚠️ No se pudo iniciar limpiador de sesiones: Cannot find module 'node-cron'
+Require stack:
+- c:\Aplicaciones\e-clientes\backend\scripts\cleanSessions.js
+- c:\Aplicaciones\e-clientes\backend\server.js
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*
+🔧 Configuración FTP validada:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Password: ***********
+   Seguro: false
+   Ruta base: /
+   Timeout: 60000ms
+✅ Configuración correcta para servidor 10.11.20.11 con FTP simple
+🔧 Configuración FTP:
+   Host: 10.11.20.11
+   Puerto: 21
+   Usuario: user.eclientes
+   Seguro: false
+   Ruta base: /
+🔍 Cargando rutas de admin...
+✅ Archivo admin.js encontrado y cargado
+✅ Registrando rutas /api/admin/*

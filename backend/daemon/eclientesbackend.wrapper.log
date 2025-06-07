@@ -1,0 +1,118 @@
+2025-06-06 18:27:12 - Starting C:\Program Files\nodejs\node.exe  --harmony c:\Aplicaciones\e-clientes\backend\node_modules\node-windows\lib\wrapper.js --file c:\Aplicaciones\e-clientes\backend\server.js --scriptoptions= --log "EClientesBackend wrapper" --grow 0.5 --wait 2 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-06-06 18:27:12 - Started 5296
+2025-06-06 18:27:32 - Starting C:\Program Files\nodejs\node.exe  --harmony c:\Aplicaciones\e-clientes\backend\node_modules\node-windows\lib\wrapper.js --file c:\Aplicaciones\e-clientes\backend\server.js --scriptoptions= --log "EClientesBackend wrapper" --grow 0.5 --wait 2 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-06-06 18:27:32 - Started 13488
+2025-06-06 18:29:42 - Starting C:\Program Files\nodejs\node.exe  --harmony c:\Aplicaciones\e-clientes\backend\node_modules\node-windows\lib\wrapper.js --file c:\Aplicaciones\e-clientes\backend\server.js --scriptoptions= --log "EClientesBackend wrapper" --grow 0.5 --wait 2 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-06-06 18:29:42 - Started 14228
+2025-06-06 18:31:44 - Stopping eclientesbackend.exe
+2025-06-06 18:31:44 - ProcessKill 14228
+2025-06-06 18:31:44 - Found child process: 11528 Name: conhost.exe
+2025-06-06 18:31:44 - Found child process: 11504 Name: node.exe
+2025-06-06 18:31:44 - Stopping process 11528
+2025-06-06 18:31:44 - Send SIGINT 11528
+2025-06-06 18:31:44 - SIGINT to 11528 failed - Killing as fallback
+2025-06-06 18:31:44 - Stopping process 11504
+2025-06-06 18:31:44 - Send SIGINT 11504
+2025-06-06 18:31:44 - SIGINT to 11504 failed - Killing as fallback
+2025-06-06 18:31:44 - Stopping process 14228
+2025-06-06 18:31:44 - Send SIGINT 14228
+2025-06-06 18:31:44 - SIGINT to 14228 failed - Killing as fallback
+2025-06-06 18:31:44 - Finished eclientesbackend.exe
+2025-06-06 18:31:45 - Starting C:\Program Files\nodejs\node.exe  --harmony c:\Aplicaciones\e-clientes\backend\node_modules\node-windows\lib\wrapper.js --file c:\Aplicaciones\e-clientes\backend\server.js --scriptoptions= --log "EClientesBackend wrapper" --grow 0.5 --wait 2 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-06-06 18:31:46 - Started 13792
+2025-06-06 18:33:30 - Stopping eclientesbackend.exe
+2025-06-06 18:33:30 - ProcessKill 13792
+2025-06-06 18:33:30 - Found child process: 7288 Name: conhost.exe
+2025-06-06 18:33:30 - Found child process: 9652 Name: node.exe
+2025-06-06 18:33:30 - Stopping process 7288
+2025-06-06 18:33:30 - Send SIGINT 7288
+2025-06-06 18:33:30 - SIGINT to 7288 failed - Killing as fallback
+2025-06-06 18:33:30 - Stopping process 9652
+2025-06-06 18:33:30 - Send SIGINT 9652
+2025-06-06 18:33:30 - SIGINT to 9652 failed - Killing as fallback
+2025-06-06 18:33:30 - Stopping process 13792
+2025-06-06 18:33:30 - Send SIGINT 13792
+2025-06-06 18:33:30 - SIGINT to 13792 failed - Killing as fallback
+2025-06-06 18:33:30 - Finished eclientesbackend.exe
+2025-06-06 18:33:31 - Starting C:\Program Files\nodejs\node.exe  --harmony c:\Aplicaciones\e-clientes\backend\node_modules\node-windows\lib\wrapper.js --file c:\Aplicaciones\e-clientes\backend\server.js --scriptoptions= --log "EClientesBackend wrapper" --grow 0.5 --wait 2 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-06-06 18:33:31 - Started 11828
+2025-06-06 18:35:06 - Starting C:\Program Files\nodejs\node.exe  --harmony c:\Aplicaciones\e-clientes\backend\node_modules\node-windows\lib\wrapper.js --file c:\Aplicaciones\e-clientes\backend\server.js --scriptoptions= --log "EClientesBackend wrapper" --grow 0.5 --wait 2 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-06-06 18:35:06 - Started 13908
+2025-06-06 18:36:32 - Stopping eclientesbackend.exe
+2025-06-06 18:36:32 - ProcessKill 13908
+2025-06-06 18:36:32 - Found child process: 12664 Name: conhost.exe
+2025-06-06 18:36:32 - Found child process: 13804 Name: node.exe
+2025-06-06 18:36:32 - Stopping process 12664
+2025-06-06 18:36:32 - Send SIGINT 12664
+2025-06-06 18:36:32 - SIGINT to 12664 failed - Killing as fallback
+2025-06-06 18:36:32 - Stopping process 13804
+2025-06-06 18:36:32 - Send SIGINT 13804
+2025-06-06 18:36:32 - SIGINT to 13804 failed - Killing as fallback
+2025-06-06 18:36:32 - Stopping process 13908
+2025-06-06 18:36:32 - Send SIGINT 13908
+2025-06-06 18:36:32 - SIGINT to 13908 failed - Killing as fallback
+2025-06-06 18:36:32 - Finished eclientesbackend.exe
+2025-06-06 18:36:33 - Starting C:\Program Files\nodejs\node.exe  --harmony c:\Aplicaciones\e-clientes\backend\node_modules\node-windows\lib\wrapper.js --file c:\Aplicaciones\e-clientes\backend\server.js --scriptoptions= --log "EClientesBackend wrapper" --grow 0.5 --wait 2 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-06-06 18:36:33 - Started 3772
+2025-06-06 18:38:49 - Stopping eclientesbackend.exe
+2025-06-06 18:38:49 - ProcessKill 3772
+2025-06-06 18:38:49 - Found child process: 5292 Name: conhost.exe
+2025-06-06 18:38:49 - Found child process: 4688 Name: node.exe
+2025-06-06 18:38:49 - Stopping process 5292
+2025-06-06 18:38:49 - Send SIGINT 5292
+2025-06-06 18:38:49 - SIGINT to 5292 failed - Killing as fallback
+2025-06-06 18:38:49 - Stopping process 4688
+2025-06-06 18:38:49 - Send SIGINT 4688
+2025-06-06 18:38:49 - SIGINT to 4688 failed - Killing as fallback
+2025-06-06 18:38:49 - Stopping process 3772
+2025-06-06 18:38:49 - Send SIGINT 3772
+2025-06-06 18:38:49 - SIGINT to 3772 failed - Killing as fallback
+2025-06-06 18:38:49 - Finished eclientesbackend.exe
+2025-06-06 18:38:50 - Starting C:\Program Files\nodejs\node.exe  --harmony c:\Aplicaciones\e-clientes\backend\node_modules\node-windows\lib\wrapper.js --file c:\Aplicaciones\e-clientes\backend\server.js --scriptoptions= --log "EClientesBackend wrapper" --grow 0.5 --wait 2 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-06-06 18:38:50 - Started 13552
+2025-06-06 18:39:36 - Starting C:\Program Files\nodejs\node.exe  --harmony c:\Aplicaciones\e-clientes\backend\node_modules\node-windows\lib\wrapper.js --file c:\Aplicaciones\e-clientes\backend\server.js --scriptoptions= --log "EClientesBackend wrapper" --grow 0.5 --wait 2 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-06-06 18:39:36 - Started 6012
+2025-06-06 18:42:43 - Stopping eclientesbackend.exe
+2025-06-06 18:42:43 - ProcessKill 6012
+2025-06-06 18:42:43 - Found child process: 336 Name: conhost.exe
+2025-06-06 18:42:43 - Found child process: 2160 Name: node.exe
+2025-06-06 18:42:43 - Stopping process 336
+2025-06-06 18:42:43 - Send SIGINT 336
+2025-06-06 18:42:43 - SIGINT to 336 failed - Killing as fallback
+2025-06-06 18:42:43 - Stopping process 2160
+2025-06-06 18:42:43 - Send SIGINT 2160
+2025-06-06 18:42:43 - SIGINT to 2160 failed - Killing as fallback
+2025-06-06 18:42:43 - Stopping process 6012
+2025-06-06 18:42:43 - Send SIGINT 6012
+2025-06-06 18:42:43 - SIGINT to 6012 failed - Killing as fallback
+2025-06-06 18:42:43 - Finished eclientesbackend.exe
+2025-06-06 18:42:44 - Starting C:\Program Files\nodejs\node.exe  --harmony c:\Aplicaciones\e-clientes\backend\node_modules\node-windows\lib\wrapper.js --file c:\Aplicaciones\e-clientes\backend\server.js --scriptoptions= --log "EClientesBackend wrapper" --grow 0.5 --wait 2 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-06-06 18:42:44 - Started 9256
+2025-06-06 18:43:15 - Stopping eclientesbackend.exe
+2025-06-06 18:43:15 - ProcessKill 9256
+2025-06-06 18:43:15 - Found child process: 4708 Name: conhost.exe
+2025-06-06 18:43:15 - Found child process: 7148 Name: node.exe
+2025-06-06 18:43:15 - Stopping process 4708
+2025-06-06 18:43:15 - Send SIGINT 4708
+2025-06-06 18:43:15 - SIGINT to 4708 failed - Killing as fallback
+2025-06-06 18:43:16 - Stopping process 7148
+2025-06-06 18:43:16 - Send SIGINT 7148
+2025-06-06 18:43:16 - SIGINT to 7148 failed - Killing as fallback
+2025-06-06 18:43:16 - Stopping process 9256
+2025-06-06 18:43:16 - Send SIGINT 9256
+2025-06-06 18:43:16 - SIGINT to 9256 failed - Killing as fallback
+2025-06-06 18:43:16 - Finished eclientesbackend.exe
+2025-06-06 18:49:37 - Starting C:\Program Files\nodejs\node.exe  --harmony c:\Aplicaciones\e-clientes\backend\node_modules\node-windows\lib\wrapper.js --file c:\Aplicaciones\e-clientes\backend\server.js --scriptoptions= --log "EClientesBackend wrapper" --grow 0.5 --wait 2 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-06-06 18:49:37 - Started 12328
+2025-06-06 18:50:27 - Starting C:\Program Files\nodejs\node.exe  --harmony c:\Aplicaciones\e-clientes\backend\node_modules\node-windows\lib\wrapper.js --file c:\Aplicaciones\e-clientes\backend\server.js --scriptoptions= --log "EClientesBackend wrapper" --grow 0.5 --wait 2 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-06-06 18:50:27 - Started 6908
+2025-06-06 18:51:32 - Starting C:\Program Files\nodejs\node.exe  --harmony c:\Aplicaciones\e-clientes\backend\node_modules\node-windows\lib\wrapper.js --file c:\Aplicaciones\e-clientes\backend\server.js --scriptoptions= --log "EClientesBackend wrapper" --grow 0.5 --wait 2 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-06-06 18:51:32 - Started 9308
+2025-06-06 18:52:47 - Starting C:\Program Files\nodejs\node.exe  --harmony c:\Aplicaciones\e-clientes\backend\node_modules\node-windows\lib\wrapper.js --file c:\Aplicaciones\e-clientes\backend\server.js --scriptoptions= --log "EClientesBackend wrapper" --grow 0.5 --wait 2 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-06-06 18:52:48 - Started 10820
+2025-06-06 18:54:23 - Starting C:\Program Files\nodejs\node.exe  --harmony c:\Aplicaciones\e-clientes\backend\node_modules\node-windows\lib\wrapper.js --file c:\Aplicaciones\e-clientes\backend\server.js --scriptoptions= --log "EClientesBackend wrapper" --grow 0.5 --wait 2 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-06-06 18:54:23 - Started 10764
+2025-06-06 18:54:55 - Starting C:\Program Files\nodejs\node.exe  --harmony c:\Aplicaciones\e-clientes\backend\node_modules\node-windows\lib\wrapper.js --file c:\Aplicaciones\e-clientes\backend\server.js --scriptoptions= --log "EClientesBackend wrapper" --grow 0.5 --wait 2 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-06-06 18:54:55 - Started 7320
+2025-06-06 18:55:41 - Starting C:\Program Files\nodejs\node.exe  --harmony c:\Aplicaciones\e-clientes\backend\node_modules\node-windows\lib\wrapper.js --file c:\Aplicaciones\e-clientes\backend\server.js --scriptoptions= --log "EClientesBackend wrapper" --grow 0.5 --wait 2 --maxrestarts 3 --abortonerror n --stopparentfirst undefined
+2025-06-06 18:55:42 - Started 12368

@@ -1,0 +1,1088 @@
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use 0.0.0.0:5001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at node:net:2203:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 5001
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use 0.0.0.0:5001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at node:net:2203:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 5001
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use 0.0.0.0:5001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at node:net:2203:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 5001
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use 0.0.0.0:5001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at node:net:2203:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 5001
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use 0.0.0.0:5001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at node:net:2203:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 5001
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use 0.0.0.0:5001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at node:net:2203:7
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '0.0.0.0',
+  port: 5001
+}
+
+Node.js v22.14.0
+❌ Error en login: TypeError: Cannot read properties of undefined (reading 'toUpperCase')
+    at exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:42:22)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:47:12)
+Error al crear log de autenticación: PrismaClientValidationError: 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:31:23.158Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+    at wn (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:29:1363)
+    at $n.handleRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6958)
+    at $n.handleAndLogRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async exports.createAuthLog (c:\Aplicaciones\e-clientes\backend\services\authService.js:152:12)
+    at async exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:413:13) {
+  clientVersion: '5.22.0'
+}
+❌ Error en login: TypeError: Cannot read properties of undefined (reading 'toUpperCase')
+    at exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:42:22)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:47:12)
+Error al crear log de autenticación: PrismaClientValidationError: 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:32:01.774Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+    at wn (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:29:1363)
+    at $n.handleRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6958)
+    at $n.handleAndLogRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async exports.createAuthLog (c:\Aplicaciones\e-clientes\backend\services\authService.js:152:12)
+    at async exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:413:13) {
+  clientVersion: '5.22.0'
+}
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: getaddrinfo ENOTFOUND https://e-clientes.rodall.com/
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26)
+Emitted 'error' event on Server instance at:
+    at GetAddrInfoReqWrap.callback (node:net:2198:12)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:17) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'https://e-clientes.rodall.com/'
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: getaddrinfo ENOTFOUND https://e-clientes.rodall.com/
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26)
+Emitted 'error' event on Server instance at:
+    at GetAddrInfoReqWrap.callback (node:net:2198:12)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:17) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'https://e-clientes.rodall.com/'
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: getaddrinfo ENOTFOUND https://e-clientes.rodall.com/
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:26)
+Emitted 'error' event on Server instance at:
+    at GetAddrInfoReqWrap.callback (node:net:2198:12)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:120:17) {
+  errno: -3008,
+  code: 'ENOTFOUND',
+  syscall: 'getaddrinfo',
+  hostname: 'https://e-clientes.rodall.com/'
+}
+
+Node.js v22.14.0
+❌ Error en login: TypeError: Cannot read properties of undefined (reading 'toUpperCase')
+    at exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:42:22)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:47:12)
+Error al crear log de autenticación: PrismaClientValidationError: 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:35:45.753Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+    at wn (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:29:1363)
+    at $n.handleRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6958)
+    at $n.handleAndLogRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async exports.createAuthLog (c:\Aplicaciones\e-clientes\backend\services\authService.js:152:12)
+    at async exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:413:13) {
+  clientVersion: '5.22.0'
+}
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5002
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5002
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5002
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5002
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5002
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5002
+}
+
+Node.js v22.14.0
+❌ Error en login: TypeError: Cannot read properties of undefined (reading 'toUpperCase')
+    at exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:42:22)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:47:12)
+Error al crear log de autenticación: PrismaClientValidationError: 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:40:42.542Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+    at wn (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:29:1363)
+    at $n.handleRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6958)
+    at $n.handleAndLogRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async exports.createAuthLog (c:\Aplicaciones\e-clientes\backend\services\authService.js:152:12)
+    at async exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:413:13) {
+  clientVersion: '5.22.0'
+}
+❌ Error en login: TypeError: Cannot read properties of undefined (reading 'toUpperCase')
+    at exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:42:22)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:47:12)
+Error al crear log de autenticación: PrismaClientValidationError: 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:40:44.401Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+    at wn (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:29:1363)
+    at $n.handleRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6958)
+    at $n.handleAndLogRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async exports.createAuthLog (c:\Aplicaciones\e-clientes\backend\services\authService.js:152:12)
+    at async exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:413:13) {
+  clientVersion: '5.22.0'
+}
+❌ Error en login: TypeError: Cannot read properties of undefined (reading 'toUpperCase')
+    at exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:42:22)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:47:12)
+Error al crear log de autenticación: PrismaClientValidationError: 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:40:45.315Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+    at wn (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:29:1363)
+    at $n.handleRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6958)
+    at $n.handleAndLogRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async exports.createAuthLog (c:\Aplicaciones\e-clientes\backend\services\authService.js:152:12)
+    at async exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:413:13) {
+  clientVersion: '5.22.0'
+}
+❌ Error en login: TypeError: Cannot read properties of undefined (reading 'toUpperCase')
+    at exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:42:22)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:47:12)
+Error al crear log de autenticación: PrismaClientValidationError: 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:40:45.961Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+    at wn (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:29:1363)
+    at $n.handleRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6958)
+    at $n.handleAndLogRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async exports.createAuthLog (c:\Aplicaciones\e-clientes\backend\services\authService.js:152:12)
+    at async exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:413:13) {
+  clientVersion: '5.22.0'
+}
+❌ Error en login: TypeError: Cannot read properties of undefined (reading 'toUpperCase')
+    at exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:42:22)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:47:12)
+Error al crear log de autenticación: PrismaClientValidationError: 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:40:46.856Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+    at wn (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:29:1363)
+    at $n.handleRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6958)
+    at $n.handleAndLogRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async exports.createAuthLog (c:\Aplicaciones\e-clientes\backend\services\authService.js:152:12)
+    at async exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:413:13) {
+  clientVersion: '5.22.0'
+}
+❌ Error en login: TypeError: Cannot read properties of undefined (reading 'toUpperCase')
+    at exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:42:22)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:47:12)
+Error al crear log de autenticación: PrismaClientValidationError: 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:40:47.299Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+    at wn (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:29:1363)
+    at $n.handleRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6958)
+    at $n.handleAndLogRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async exports.createAuthLog (c:\Aplicaciones\e-clientes\backend\services\authService.js:152:12)
+    at async exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:413:13) {
+  clientVersion: '5.22.0'
+}
+❌ Error en login: TypeError: Cannot read properties of undefined (reading 'toUpperCase')
+    at exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:42:22)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:149:13)
+    at Route.dispatch (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\route.js:119:3)
+    at Layer.handle [as handle_request] (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\layer.js:95:5)
+    at c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:284:15
+    at Function.process_params (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:346:12)
+    at next (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:280:10)
+    at Function.handle (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:175:3)
+    at router (c:\Aplicaciones\e-clientes\backend\node_modules\express\lib\router\index.js:47:12)
+Error al crear log de autenticación: PrismaClientValidationError: 
+Invalid `prisma.bP_07_LOG_AUTENTICACION.create()` invocation:
+
+{
+  data: {
+    nId01Usuario: null,
+    sTipoAccion: "LOGIN_FAILED",
+    dFechaHora: new Date("2025-06-07T00:40:47.715Z"),
+    sIpUsuario: "::1",
+    sUserAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    sDispositivo: "Desktop",
+    sUbicacion: null,
+    bExitoso: false,
+    sDetalleError: "Error interno: Cannot read properties of undefined (reading 'toUpperCase')",
+    sTokenSesion: null,
++   usuario: {
++     create: BP_01_USUARIOCreateWithoutLogsAutenticacionInput | BP_01_USUARIOUncheckedCreateWithoutLogsAutenticacionInput,
++     connectOrCreate: BP_01_USUARIOCreateOrConnectWithoutLogsAutenticacionInput,
++     connect: BP_01_USUARIOWhereUniqueInput
++   }
+  }
+}
+
+Argument `usuario` is missing.
+    at wn (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:29:1363)
+    at $n.handleRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6958)
+    at $n.handleAndLogRequestError (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6623)
+    at $n.request (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:121:6307)
+    at async l (c:\Aplicaciones\e-clientes\backend\node_modules\@prisma\client\runtime\library.js:130:9633)
+    at async exports.createAuthLog (c:\Aplicaciones\e-clientes\backend\services\authService.js:152:12)
+    at async exports.login (c:\Aplicaciones\e-clientes\backend\controllers\authController.js:413:13) {
+  clientVersion: '5.22.0'
+}
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5002
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5002
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5001
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5001
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5002
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5002
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5002
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5002
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5002
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5002
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5002
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5002
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5001
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5002
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5002
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5001
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5001
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5001
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5002
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5002
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5001
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5002
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5002
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5001
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5002
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5002
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5001
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5001
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5002
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5002
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5002
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5002
+}
+
+Node.js v22.14.0
+node:events:496
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: listen EADDRINUSE: address already in use ::1:5002
+    at Server.setupListenHandle [as _listen2] (node:net:1937:16)
+    at listenInCluster (node:net:1994:12)
+    at GetAddrInfoReqWrap.callback (node:net:2203:7)
+    at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:132:8)
+Emitted 'error' event on Server instance at:
+    at emitErrorNT (node:net:1973:8)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  code: 'EADDRINUSE',
+  errno: -4091,
+  syscall: 'listen',
+  address: '::1',
+  port: 5002
+}
+
+Node.js v22.14.0
