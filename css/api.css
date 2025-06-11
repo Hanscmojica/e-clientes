@@ -395,28 +395,37 @@ button .material-icons {
   
 .cliente-details {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 25px;
 }
   
 .cliente-detail-item {
   background-color: rgba(255, 255, 255, 0.1);
-  padding: 15px;
+  padding: 20px;
   border-radius: 10px;
   backdrop-filter: blur(10px);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  min-height: 80px; 
 }
   
 .cliente-detail-item strong {
   display: block;
   font-weight: 600;
-  margin-bottom: 5px;
+  margin-bottom: 8px; 
   font-size: 14px;
   color: rgba(255, 255, 255, 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
   
 .cliente-detail-item span {
-  font-size: 18px;
+  font-size: 16px; 
   font-weight: 500;
+  line-height: 1.4;
+  word-break: break-word;
+  display: block;
 }
   
 /* Tabla de referencias */

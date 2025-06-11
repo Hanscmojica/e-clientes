@@ -15,9 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
   
   const userSession = userSessionLocal || userSessionSession;
   
-  //console.log('🔍 Token encontrado:', token ? 'SÍ' : 'NO');
-  //console.log('🔍 Sesión encontrada:', userSession ? 'SÍ' : 'NO');
-  
   if (!token || !userSession) {
     console.log('❌ No hay sesión válida, redirigiendo a login...');
     window.location.href = 'login.html';
@@ -27,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
   try {
     // Parsear los datos de sesión
     const sessionData = JSON.parse(userSession);
-    //console.log('✅ Datos de sesión:', sessionData);
+    console.log('✅ Datos de sesión recibidos:', sessionData);
     
     // Verificar expiración (opcional, más flexible)
     const loginTime = new Date(sessionData.loginTime);
@@ -36,28 +33,32 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (hoursSinceLogin > 24) { // 24 horas en lugar de 8
       console.log('⚠️ Sesión expirada, pero permitiendo acceso...');
-      // No redirigir automáticamente, solo avisar
     }
     
-    // Configurar datos del usuario con datos reales de la sesión
+    // 🔥 CORREGIR: Usar datos reales de la sesión, no datos hardcodeados
     userData = {
       id: sessionData.id,
-      nombre: sessionData.name?.split(' ').slice(0, 2).join(' ') || 'Usuario',
-      apellidos: sessionData.name?.split(' ').slice(2).join(' ') || '',
+      // Dividir el nombre completo en nombre y apellidos
+      nombre: sessionData.name ? sessionData.name.split(' ').slice(0, 2).join(' ') : 'Usuario',
+      apellidos: sessionData.name ? sessionData.name.split(' ').slice(2).join(' ') : '',
+      nombreCompleto: sessionData.name || 'Usuario',
       email: sessionData.email || 'no-email@domain.com',
-      username: sessionData.username,
-      role: sessionData.role,
-      telefono: "+52 961 573 5235", // Datos por defecto
-      direccion: "Veracruz, Ver.",
+      username: sessionData.username || 'usuario',
+      role: sessionData.role || 'USER',
+      idCliente: sessionData.idCliente || sessionData.id || 'N/A',
+      // Datos que pueden venir de la sesión o usar defaults
+      telefono: sessionData.telefono || "+52 961 573 5235",
+      direccion: sessionData.direccion || "Veracruz, Ver.",
+      loginTime: sessionData.loginTime,
       empresa: {
-        nombre: "Importadora Ejemplo S.A. de C.V.",
-        rfc: "IEJ123456HM7",
+        nombre: sessionData.empresa || "Agencia Aduanal Rodall Oseguera",
+        rfc: sessionData.rfc || "N/A",
         cargo: sessionData.role,
-        direccion: "Av. Francisco I. Madero 33, Centro, 91700 Veracruz."
+        direccion: sessionData.direccionEmpresa || "Av. Francisco I. Madero 33, Centro, 91700 Veracruz."
       }
     };
     
-    //console.log('✅ UserData configurado:', userData);
+    console.log('✅ UserData configurado con datos reales:', userData);
     
     // Configurar la página
     configurarPagina();
@@ -87,8 +88,8 @@ function configurarPagina() {
   // Configurar formularios (solo para preferencias y seguridad)
   configurarFormularios();
   
-  // Cargar datos del usuario en la vista estática
-  cargarDatosUsuario()
+  // 🔥 IMPORTANTE: Cargar datos del usuario REAL en la vista
+  cargarDatosUsuario();
   
   // Configurar cerrar modales
   document.querySelectorAll('.close').forEach(closeBtn => {
@@ -106,19 +107,19 @@ function configurarPagina() {
 // Función para actualizar el header
 function actualizarHeader() {
   const userNameElement = document.querySelector('.user-name');
-  if (userNameElement && userData.nombre) {
-    userNameElement.textContent = `${userData.nombre} ${userData.apellidos}`.trim();
+  if (userNameElement && userData.nombreCompleto) {
+    userNameElement.textContent = userData.nombreCompleto;
   }
   
   // Actualizar información de usuario en la página
   const userFullName = document.getElementById('user-full-name');
   if (userFullName) {
-    userFullName.textContent = `${userData.nombre} ${userData.apellidos}`.trim();
+    userFullName.textContent = userData.nombreCompleto;
   }
   
   const userRole = document.querySelector('.user-role');
   if (userRole) {
-    userRole.textContent = formatearRol(userData.role) || 'Usuario';
+    userRole.textContent = formatearRol(userData.role);
   }
 }
 
@@ -160,63 +161,101 @@ function configurarFormularios() {
   }
 }
 
-// Cargar datos del usuario en la vista estática
+// 🔥 FUNCIÓN CORREGIDA: Cargar datos REALES del usuario
 function cargarDatosUsuario() {
-  // ===== INFORMACIÓN PERSONAL ESTÁTICA =====
+  console.log('🔄 Cargando datos del usuario:', userData);
   
-  // Datos personales
-  if (document.getElementById('display-nombre-completo')) {
-    document.getElementById('display-nombre-completo').textContent = `${userData.nombre} ${userData.apellidos}`.trim();
+  // ===== INFORMACIÓN PERSONAL CON DATOS REALES =====
+  
+  // Actualizar nombre completo en el avatar
+  const userFullNameElement = document.getElementById('user-full-name');
+  if (userFullNameElement) {
+    userFullNameElement.textContent = userData.nombreCompleto;
   }
   
-  if (document.getElementById('display-username')) {
-    document.getElementById('display-username').textContent = userData.username || 'N/A';
+  // Actualizar rol en el avatar
+  const userRoleElement = document.querySelector('.user-role');
+  if (userRoleElement) {
+    userRoleElement.textContent = formatearRol(userData.role);
   }
   
-  if (document.getElementById('display-role')) {
-    document.getElementById('display-role').textContent = formatearRol(userData.role) || 'Usuario';
+  // Actualizar fecha de usuario desde (usar loginTime o fecha por defecto)
+  const userSinceElement = document.querySelector('.user-since');
+  if (userSinceElement) {
+    const fechaRegistro = userData.loginTime ? 
+      new Date(userData.loginTime).toLocaleDateString('es-ES', { year: 'numeric', month: 'long' }) :
+      'Marzo 2025';
+    userSinceElement.textContent = `Usuario desde: ${fechaRegistro}`;
   }
   
-  // Información de contacto
-  if (document.getElementById('display-email')) {
-    document.getElementById('display-email').textContent = userData.email || 'No disponible';
+  // ===== CAMPOS DEL FORMULARIO CON DATOS REALES =====
+  
+  // Campo Nombre
+  const nombreInput = document.getElementById('nombre');
+  if (nombreInput) {
+    nombreInput.value = userData.nombre || '';
   }
   
-  if (document.getElementById('display-telefono')) {
-    document.getElementById('display-telefono').textContent = userData.telefono || 'No disponible';
+  // Campo Apellidos
+  const apellidosInput = document.getElementById('apellidos');
+  if (apellidosInput) {
+    apellidosInput.value = userData.apellidos || '';
   }
   
-  if (document.getElementById('display-direccion')) {
-    document.getElementById('display-direccion').textContent = userData.direccion || 'No disponible';
+  // Campo Email
+  const emailInput = document.getElementById('email');
+  if (emailInput) {
+    emailInput.value = userData.email || '';
+  }
+  
+  // Campo Teléfono
+  const telefonoInput = document.getElementById('telefono');
+  if (telefonoInput) {
+    telefonoInput.value = userData.telefono || '';
+  }
+  
+  // Campo Dirección
+  const direccionInput = document.getElementById('direccion');
+  if (direccionInput) {
+    direccionInput.value = userData.direccion || '';
+  }
+  
+  // ===== ELEMENTOS DE SOLO LECTURA (SI EXISTEN) =====
+  
+  // Username (si existe un elemento para mostrarlo)
+  const usernameElement = document.getElementById('display-username');
+  if (usernameElement) {
+    usernameElement.textContent = userData.username;
+  }
+  
+  // ID Cliente
+  const idClienteElement = document.getElementById('display-id-cliente');
+  if (idClienteElement) {
+    idClienteElement.textContent = userData.idCliente;
   }
   
   // Información empresarial
-  if (document.getElementById('display-empresa')) {
-    document.getElementById('display-empresa').textContent = 'Agencia Aduanal Rodall Oseguera';
+  const empresaElement = document.getElementById('display-empresa');
+  if (empresaElement) {
+    empresaElement.textContent = userData.empresa.nombre;
   }
   
-  if (document.getElementById('display-id-cliente')) {
-    // Obtener el ID cliente de la sesión
-    const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
-    let idCliente = 'N/A';
-    
-    if (userSession) {
-      try {
-        const sessionData = JSON.parse(userSession);
-        idCliente = sessionData.idCliente || sessionData.id || 'N/A';
-      } catch (error) {
-        console.error('Error al obtener ID cliente:', error);
-      }
-    }
-    
-    document.getElementById('display-id-cliente').textContent = idCliente;
+  // ===== INFORMACIÓN DE SEGURIDAD =====
+  
+  // Última actualización de contraseña (calcular desde loginTime si es disponible)
+  const ultimaActualizacionElement = document.getElementById('ultima-actualizacion');
+  if (ultimaActualizacionElement && userData.loginTime) {
+    const diasDesdeLogin = Math.floor((new Date() - new Date(userData.loginTime)) / (1000 * 60 * 60 * 24));
+    ultimaActualizacionElement.textContent = `hace ${diasDesdeLogin} días`;
   }
   
-  // ===== CARGAR PREFERENCIAS =====
+  // ===== CARGAR PREFERENCIAS GUARDADAS =====
   const itemsPorPagina = localStorage.getItem('itemsPorPagina');
   if (itemsPorPagina && document.getElementById('items-por-pagina')) {
     document.getElementById('items-por-pagina').value = itemsPorPagina;
   }
+  
+  console.log('✅ Datos del usuario cargados en la interfaz');
 }
 
 // Función para formatear nombres de roles
@@ -375,5 +414,5 @@ function mostrarAlerta(mensaje, tipo = 'info') {
 
 // Función para ver sesiones (placeholder)
 function verSesiones() {
-  mostrarAlerta('');
+  mostrarAlerta('Función de sesiones activas en desarrollo');
 }

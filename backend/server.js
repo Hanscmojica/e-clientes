@@ -8,8 +8,8 @@ const path = require('path');
 require('dotenv').config();
 
 // ✅ IMPORTAR CONFIGURACIÓN Y SERVICIOS FTP
-const ftpConfig = require('./config/ftp');           // ← USAR CONFIG DINÁMICA
-const ftpService = require('./services/ftpService'); // ← USAR SERVICIO MEJORADO
+const ftpConfig = require('./config/ftp');           
+const ftpService = require('./services/ftpService');  
 
 // Importar rutas
 const v1ApiExternaRouter = require("./routes/apiExternaRoutes");
@@ -530,7 +530,7 @@ app.use((err, req, res, next) => {
 // Iniciar servidor
 app.listen(SERVER_PORT, '0.0.0.0', () => {
     console.log(`🚀 Servidor ejecutándose en http://localhost:${SERVER_PORT}`);
-    console.log(`   Red: http://10.11.20.14:${SERVER_PORT} ←  USAR ESTA URL PARA RED`);
+    console.log(`   Red: http://localhost:${SERVER_PORT} ←  USAR ESTA URL PARA RED`);
     console.log('📋 Rutas API registradas:');
     console.log('   - /api/auth/*');
     console.log('   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN');
@@ -567,7 +567,7 @@ app.listen(SERVER_PORT, '0.0.0.0', () => {
     // Sistema de logging simple
 class SimpleLogger {
     constructor() {
-        this.BACKEND_URL = 'http://10.11.21.14:5001';
+        this.BACKEND_URL = 'http://localhost:5001';
     }
 
     getAuthToken() {
@@ -631,3 +631,4 @@ class SimpleLogger {
 const logger = new SimpleLogger();
 
 });
+

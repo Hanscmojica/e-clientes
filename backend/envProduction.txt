@@ -1,0 +1,28 @@
+# .env.production - CONFIGURACIÓN PARA PRODUCCIÓN
+
+# Puerto del servidor (IIS manejará el proxy)
+PORT=5001
+
+# 🌐 BASE DE DATOS DE PRODUCCIÓN
+# Cambiar por las credenciales reales del servidor
+DATABASE_URL="mysql://usuario_prod:password_prod@IP_SERVIDOR_BD:3306/nombre_bd_produccion"
+
+# Configuración FTP (mantener igual si es correcta)
+FTP_HOST=10.11.20.11
+FTP_PORT=21
+FTP_USER=user.eclientes
+FTP_PASSWORD=iMtH2HdEPYN
+FTP_SECURE=false
+FTP_BASE_PATH=/
+
+# 🔐 SEGURIDAD PARA PRODUCCIÓN
+JWT_SECRET=tu-clave-super-secreta-produccion-2024
+JWT_EXPIRE=8h
+
+# Entorno
+NODE_ENV=production
+
+# 🚀 CONFIGURACIÓN DEL SERVIDOR
+# IP donde escucha la app (para IIS)
+HOST=127.0.0.1
+

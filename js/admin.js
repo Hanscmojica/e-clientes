@@ -76,7 +76,7 @@ logger.setProductionMode();
 // ===============================
 // CONFIGURACIÓN Y VARIABLES
 // ===============================
-const apiBase = 'http://10.11.20.14:5001';
+const apiBase = 'http://localhost:5001';
 let usuarios = [];
 let perfiles = [];
 let currentSection = 'dashboard';
