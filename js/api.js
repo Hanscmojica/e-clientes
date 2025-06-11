@@ -272,17 +272,18 @@ function actualizarContadorBusqueda() {
         }
     }
 }
-
 function getCurrentClienteInfo() {
-    const userSession = JSON.parse(localStorage.getItem('userSession') || 'null');
+    const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
+    
     return referencias.length > 0 ? {
         idCliente: userSession ? userSession.idCliente : '',
         nombre: referencias[0].Cliente || '',
         importador: referencias[0].Importador || '',
         aduana: referencias[0].Aduana || ''
-    } : { idCliente: userSession ? userSession.id : '' };
+    } : { 
+        idCliente: userSession ? userSession.idCliente : '' // 🔥 CORREGIDO: era userSession.id
+    };
 }
-
 // ===============================
 // FUNCIONES DE FORMULARIO
 // ===============================
@@ -308,29 +309,33 @@ function limpiarFormulario() {
 // ===============================
 // CONSULTA DE REFERENCIAS
 // ===============================
+// ===============================
+// CONSULTA DE REFERENCIAS - CORREGIDO
+// ===============================
 function consultarReferencias() {
     const fechaInicial = document.getElementById('fechaInicial').value;
     const fechaFinal = document.getElementById('fechaFinal').value;
 
-    // Obtener el ID del usuario logueado automáticamente
+    // Obtener el ID del cliente del usuario logueado automáticamente
     const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
     
     if (!userSession || !userSession.idCliente) {
-        mostrarAlerta('No hay sesión activa. Por favor, inicie sesión nuevamente.', 'error');
+        mostrarAlerta('No hay sesión activa o no se encontró el ID de cliente. Por favor, inicie sesión nuevamente.', 'error');
         setTimeout(() => {
             logout();
         }, 2000);
         return;
     }
 
-    const clienteNo = userSession.idCliente; // USAR EL ID DEL USUARIO AUTOMÁTICAMENTE
+    // 🔥 USAR EL idCliente DEL USUARIO AUTOMÁTICAMENTE
+    const clienteNo = userSession.idCliente; 
 
     if (!fechaInicial || !fechaFinal) {
         mostrarAlerta('Por favor, complete las fechas.', 'error');
         return;
     }
 
-    logger.debug(`Consultando referencias para cliente ID: ${clienteNo}`);
+    logger.debug(`Consultando referencias para cliente ID: ${clienteNo} (Usuario: ${userSession.name})`);
 
     document.getElementById('loading').style.display = 'flex';
     const alertEl = document.getElementById('alert');
@@ -338,7 +343,7 @@ function consultarReferencias() {
     document.getElementById('referencias-container').innerHTML = '';
 
     const datos = {
-        ClienteNo: parseInt(clienteNo), // Usar el ID del usuario logueado
+        ClienteNo: parseInt(clienteNo), // 🔥 Usar el idCliente del usuario logueado
         TipoFecha: parseInt(document.getElementById('tipoFecha').value),
         FechaInicial: fechaInicial,
         FechaFinal: fechaFinal
@@ -354,6 +359,7 @@ function consultarReferencias() {
     }
 
     axios.post('https://e-clientes.rodall.com:5000/api/v1/apiExterna', datos, {
+
         headers: { 
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${userSession.token}`
@@ -361,6 +367,7 @@ function consultarReferencias() {
     })
     .then(res => {
         document.getElementById('loading').style.display = 'none';
+        logger.debug('Respuesta recibida:', res.data);
         procesarRespuesta(res.data);
     })
     .catch(err => {
@@ -425,15 +432,15 @@ function procesarRespuesta(data) {
             
             logger.info('Referencias procesadas exitosamente', { count: referencias.length });
             
-            // 🔥 LOG DE BÚSQUEDA DE REFERENCIAS
+            // 🔥 LOG DE BÚSQUEDA DE REFERENCIAS - CORREGIDO
             const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
             const datos = {
-                ClienteNo: parseInt(userSession.id),
+                ClienteNo: parseInt(userSession.idCliente), // 🔥 CORREGIDO: era userSession.id
                 TipoFecha: parseInt(document.getElementById('tipoFecha').value),
                 FechaInicial: document.getElementById('fechaInicial').value,
                 FechaFinal: document.getElementById('fechaFinal').value
             };
-            logger.log('REFERENCIAS_BUSQUEDA', '', `Parámetros: TipoFecha=${datos.TipoFecha}, Fechas=${datos.FechaInicial} a ${datos.FechaFinal}, Resultados=${referencias.length}`);
+            logger.log('REFERENCIAS_BUSQUEDA', '', `Cliente ID: ${userSession.idCliente}, Parámetros: TipoFecha=${datos.TipoFecha}, Fechas=${datos.FechaInicial} a ${datos.FechaFinal}, Resultados=${referencias.length}`);
             
         } else if (data.status && data.status !== "OK") {
             mostrarAlerta(data.message || 'Error en la consulta.', 'error');
@@ -486,7 +493,9 @@ function generarBibliotecaModal(referenciaOriginal) {
         return;
     }
 
+
     const BACKEND_URL = 'https://e-clientes.rodall.com:5000';
+
     const endpointUrl = `${BACKEND_URL}/api/referencias/${numeroReferencia}/documentos`;
     
     logger.debug(`Consultando endpoint: ${endpointUrl}`);
@@ -596,7 +605,9 @@ function verDocumentoModal(referenciaId, docNombre) {
 
 // Función para descargar documento (desde el modal)
 function descargarDocumentoModal(referenciaId, docNombre) {
+
     const BACKEND_URL = 'https://e-clientes.rodall.com:5000';
+
     const downloadUrl = `${BACKEND_URL}/download/${referenciaId}/${docNombre}`;
     
     logger.debug('Descargando documento', { url: downloadUrl });
@@ -780,17 +791,24 @@ function mostrarReferencias(clienteInfo, referenciasAMostrarParam) {
     }
     container.innerHTML = '';
 
+    // 🔥 ASEGURAR QUE EL ID CLIENTE SE MUESTRE CORRECTAMENTE
+    const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
+    const idClienteMostrar = clienteInfo.idCliente || (userSession ? userSession.idCliente : 'N/A');
+
     const clienteDiv = document.createElement('div');
     clienteDiv.className = 'cliente-info';
     clienteDiv.innerHTML = `
         <h2>Información del Cliente</h2>
         <div class="cliente-details">
-            <div class="cliente-detail-item"><strong>Cliente ID:</strong><span>${clienteInfo.idCliente}</span></div>
+            <div class="cliente-detail-item">
+                <strong>Cliente ID:</strong>
+                <span style="color: #2196F3; font-weight: bold; font-size: 1.1em;">${idClienteMostrar}</span>
+            </div>
             ${clienteInfo.nombre ? `<div class="cliente-detail-item"><strong>Nombre:</strong><span>${clienteInfo.nombre}</span></div>` : ''}
             ${clienteInfo.importador ? `<div class="cliente-detail-item"><strong>Importador:</strong><span>${clienteInfo.importador}</span></div>` : ''}
             ${clienteInfo.aduana ? `<div class="cliente-detail-item"><strong>Aduana:</strong><span>${clienteInfo.aduana}</span></div>` : ''}
             <div class="cliente-detail-item"><strong>Periodo:</strong><span>${formatearFecha(document.getElementById('fechaInicial').value)} - ${formatearFecha(document.getElementById('fechaFinal').value)}</span></div>
-            
+            ${userSession ? `<div class="cliente-detail-item"><strong>Usuario:</strong><span>${userSession.name} (${userSession.role})</span></div>` : ''}
         </div>`;
     container.appendChild(clienteDiv);
 
@@ -818,7 +836,10 @@ function mostrarReferencias(clienteInfo, referenciasAMostrarParam) {
 
     const resultsInfo = document.createElement('div');
     resultsInfo.className = 'results-info';
-    resultsInfo.textContent = `Mostrando ${inicio + 1} - ${fin} de ${referenciasAMostrar.length} referencias`;
+    resultsInfo.innerHTML = `
+        <span>Mostrando ${inicio + 1} - ${fin} de ${referenciasAMostrar.length} referencias</span>
+        <span style="margin-left: 20px; color: #2196F3; font-weight: bold;">Cliente ID: ${idClienteMostrar}</span>
+    `;
     container.appendChild(resultsInfo);
 
     if (totalPaginas > 1) {

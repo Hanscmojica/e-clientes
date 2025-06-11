@@ -11,8 +11,9 @@ const path = require('path');
 const mysql = require('mysql2/promise');
 
 // ✅ IMPORTAR CONFIGURACIÓN Y SERVICIOS FTP
-const ftpConfig = require('./config/ftp');
-const ftpService = require('./services/ftpService');
+
+const ftpConfig = require('./config/ftp');           
+const ftpService = require('./services/ftpService');  
 
 // Importar rutas
 const v1ApiExternaRouter = require("./routes/apiExternaRoutes");
@@ -579,4 +580,3 @@ app.use((err, req, res, next) => {
         message: 'Error interno del servidor'
     });
 });
-
