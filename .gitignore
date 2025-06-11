@@ -1,2 +1,3 @@
 web.config
 backend/.env
+/backend/daemon

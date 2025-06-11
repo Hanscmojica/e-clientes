@@ -6,7 +6,7 @@ class SecureLogger {
       this.isDevelopment = this.detectEnvironment();
       this.levels = { ERROR: 0, WARN: 1, INFO: 2, DEBUG: 3 };
       this.currentLevel = this.isDevelopment ? this.levels.DEBUG : this.levels.ERROR;
-      this.BACKEND_URL = 'http://10.11.20.14:5001';
+      this.BACKEND_URL = 'https://e-clientes.rodall.com:5000';
     }
     
     detectEnvironment() {
@@ -486,7 +486,7 @@ function generarBibliotecaModal(referenciaOriginal) {
         return;
     }
 
-    const BACKEND_URL = 'http://10.11.20.14:5001';
+    const BACKEND_URL = 'https://e-clientes.rodall.com:5000';
     const endpointUrl = `${BACKEND_URL}/api/referencias/${numeroReferencia}/documentos`;
     
     logger.debug(`Consultando endpoint: ${endpointUrl}`);
@@ -581,7 +581,7 @@ function generarBibliotecaModal(referenciaOriginal) {
 
 // Función para ver documento (desde el modal)
 function verDocumentoModal(referenciaId, docNombre) {
-    const BACKEND_URL = 'http://10.11.15.21:5001';
+    const BACKEND_URL = 'https://e-clientes.rodall.com:5000';
     const viewUrl = `${BACKEND_URL}/view/${referenciaId}/${docNombre}`;
     
     logger.debug('Abriendo vista previa', { url: viewUrl });
@@ -596,7 +596,7 @@ function verDocumentoModal(referenciaId, docNombre) {
 
 // Función para descargar documento (desde el modal)
 function descargarDocumentoModal(referenciaId, docNombre) {
-    const BACKEND_URL = 'http://10.11.20.14:5001';
+    const BACKEND_URL = 'https://e-clientes.rodall.com:5000';
     const downloadUrl = `${BACKEND_URL}/download/${referenciaId}/${docNombre}`;
     
     logger.debug('Descargando documento', { url: downloadUrl });
