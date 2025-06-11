@@ -1,5 +1,7 @@
 // Configuración de la API
-const apiBase = 'http://localhost:5001';
+
+const apiBase = 'https://e-clientes.rodall.com:5000';
+
 
 // Variables globales
 let usuarios = [];

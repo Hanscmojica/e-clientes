@@ -75,7 +75,7 @@ const logger = new SecureLogger();
 // ⚠️ PARA PRODUCCIÓN: Descomentar la siguiente línea
 logger.setProductionMode();
 
-const apiBase = 'http://localhost:5001';
+const apiBase = 'https://e-clientes.rodall.com:5000';
 logger.debug('Login.js cargado, API base', { apiBase });
 
 // ===============================

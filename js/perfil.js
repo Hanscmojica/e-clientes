@@ -1,5 +1,5 @@
 // Configuración de la URL base de la API
-const apiBase = `${window.location.protocol}//${window.location.hostname}:5001`;
+const apiBase = 'https://e-clientes.rodall.com:5000';
 
 // Variable global para datos del usuario
 let userData = {};
