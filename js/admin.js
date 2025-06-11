@@ -76,7 +76,7 @@ logger.setProductionMode();
 // ===============================
 // CONFIGURACIÓN Y VARIABLES
 // ===============================
-const apiBase = 'https://e-clientes.rodall.com:5001';
+const apiBase = 'https://e-clientes.rodall.com:5000';
 let usuarios = [];
 let perfiles = [];
 let currentSection = 'dashboard';

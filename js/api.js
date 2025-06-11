@@ -353,7 +353,7 @@ function consultarReferencias() {
         return;
     }
 
-    axios.post('http://10.11.20.14:5001/api/v1/apiExterna', datos, {
+    axios.post('https://e-clientes.rodall.com:5000/api/v1/apiExterna', datos, {
         headers: { 
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${userSession.token}`

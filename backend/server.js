@@ -61,29 +61,29 @@ app.use(express.static(path.join(__dirname, '../')));
 // ...existing code... (el resto del código permanece igual, solo eliminé las duplicaciones)
 
 // Crear servidores HTTP y HTTPS
-const httpServer = http.createServer(app);
+// const httpServer = http.createServer(app);
 const httpsServer = https.createServer(sslOptions, app);
 
-// Iniciar ambos servidores
-httpServer.listen(process.env.PORT, 'localhost', () => {
-    console.log(`🌐 Servidor HTTP ejecutándose en http://${process.env.DOMAIN}:${process.env.PORT}`);
-});
+// // Iniciar ambos servidores
+// httpServer.listen(process.env.PORT, 'e-clientes.rodall.com', () => {
+//     console.log(`🌐 Servidor HTTP ejecutándose en http://${process.env.DOMAIN}:${process.env.PORT}`);
+// });
 
-httpsServer.listen(process.env.SSL_PORT, 'localhost', () => {
+httpsServer.listen(process.env.SSL_PORT, 'e-clientes.rodall.com', () => {
     console.log(`🔒 Servidor HTTPS ejecutándose en https://${process.env.DOMAIN}:${process.env.SSL_PORT}`);
     testDatabaseConnection();
 });
 
-if (process.env.NODE_ENV === 'production') {
-    app.use((req, res, next) => {
-        if (!req.secure) {
-            return res.redirect(`https://${process.env.DOMAIN}:${process.env.SSL_PORT}${req.url}`);
-        }
-        next();
-    });
-}
+// if (process.env.NODE_ENV === 'production') {
+//     app.use((req, res, next) => {
+//         if (!req.secure) {
+//             return res.redirect(`https://${process.env.DOMAIN}:${process.env.SSL_PORT}${req.url}`);
+//         }
+//         next();
+//     });
+// }
 // ✅ CONFIGURACIÓN CORREGIDA - USAR .ENV
-const SERVER_PORT = process.env.PORT || 5001;
+// const SERVER_PORT = process.env.PORT || 5001;
 
 // ✅ MOSTRAR CONFIGURACIÓN AL INICIO
 console.log('🔧 Configuración FTP:');
@@ -94,9 +94,9 @@ console.log(`   Seguro: ${ftpConfig.secure}`);
 console.log(`   Ruta base: ${ftpConfig.basePath}`);
 
 
-// Inicializar app
-// Para obtener IPs reales detrás de proxies
-app.set('trust proxy', true);
+// // Inicializar app
+// // Para obtener IPs reales detrás de proxies
+// app.set('trust proxy', true);
 
 
 // Configurar multer para manejar archivos en memoria
@@ -580,107 +580,3 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Iniciar servidor
-// app.listen(SERVER_PORT, '0.0.0.0', () => {
-//     console.log(`🚀 Servidor ejecutándose en http://localhost:${SERVER_PORT}`);
-//     console.log(`   Red: http://10.11.20.14:${SERVER_PORT} ←  USAR ESTA URL PARA RED`);
-//     console.log('📋 Rutas API registradas:');
-//     console.log('   - /api/auth/*');
-//     console.log('   - /api/admin/*  ← RUTAS DE ADMINISTRACIÓN');
-//     console.log('   - /api/profile/*');
-//     console.log('   - /api/account-access/*');
-//     console.log('   - /api/v1/apiExterna/*');
-//     console.log('   - /api/ftp/test  ← TEST DE CONEXIÓN FTP');
-//     console.log('   - /api/referencias/:id/documentos  ← CONSULTA DOCUMENTOS');
-    
-//     // === TEST DE CONEXIÓN FTP AL INICIO ===
-//     setTimeout(async () => {
-//         try {
-//             console.log('\n🧪 Probando conexión FTP al inicio...');
-//             const testResult = await ftpService.testConnection();
-//             if (testResult.success) {
-//                 console.log('✅ FTP: Conexión inicial exitosa!');
-//             } else {
-//                 console.log('❌ FTP: Error en conexión inicial:', testResult.message);
-//             }
-//         } catch (error) {
-//             console.log('❌ FTP: Error probando conexión:', error.message);
-//         }
-//     }, 2000);
-    
-//     // === INICIAR LIMPIADOR DE SESIONES (OPCIONAL) ===
-//     try {
-//         const { startSessionCleaner } = require('./scripts/cleanSessions');
-//         startSessionCleaner();
-//         console.log('🧹 Limpiador de sesiones iniciado');
-//     } catch (error) {
-//         console.log('⚠️ No se pudo iniciar limpiador de sesiones:', error.message);
-//     }
-
-//     // Sistema de logging simple
-// class SimpleLogger {
-//     constructor() {
-//         this.BACKEND_URL = 'http://10.11.21.14:5001';
-//     }
-
-//     getAuthToken() {
-//         const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
-//         return userSession ? userSession.token : null;
-//     }
-
-//     async log(tipo, referencia = '', detalle = '', exito = true, error = null) {
-//         try {
-//             const token = this.getAuthToken();
-//             if (!token) return;
-
-//             await fetch(`${this.BACKEND_URL}/api/logging/consulta`, {
-//                 method: 'POST',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                     'Authorization': `Bearer ${token}`
-//                 },
-//                 body: JSON.stringify({
-//                     sFolioReferencia: referencia,
-//                     sDetalleConsulta: detalle,
-//                     sTipoConsulta: tipo,
-//                     bExito: exito,
-//                     sError: error,
-//                     sIpUsuario: 'web-client'
-//                 })
-//             });
-//         } catch (error) {
-//             // Fallar silenciosamente para no afectar UX
-//             console.log('Error logging:', error);
-//         }
-//     }
-
-//     // Métodos específicos
-//     busquedaReferencias(parametros, resultados) {
-//         const detalle = JSON.stringify({ ...parametros, resultados });
-//         this.log('REFERENCIAS_BUSQUEDA', '', detalle);
-//     }
-
-//     consultaHistorial(referencia, registros = 0) {
-//         const detalle = JSON.stringify({ registros_historial: registros });
-//         this.log('REFERENCIA_HISTORIAL', referencia, detalle);
-//     }
-
-//     consultaBiblioteca(referencia, documentos = 0) {
-//         const detalle = JSON.stringify({ documentos_encontrados: documentos });
-//         this.log('REFERENCIA_BIBLIOTECA', referencia, detalle);
-//     }
-
-//     descargaDocumento(referencia, documento) {
-//         const detalle = JSON.stringify({ documento: documento });
-//         this.log('DOCUMENTO_DESCARGA', referencia, detalle);
-//     }
-
-//     visualizacionDocumento(referencia, documento) {
-//         const detalle = JSON.stringify({ documento: documento });
-//         this.log('DOCUMENTO_VISUALIZACION', referencia, detalle);
-//     }
-// }
-
-// const logger = new SimpleLogger();
-
-// });
