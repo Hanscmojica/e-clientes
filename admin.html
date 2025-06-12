@@ -308,7 +308,6 @@
             </div>
           </div>
         </section>
-
       </div>
     </div>
   </main>
@@ -325,147 +324,124 @@
       </div>
       
       <form id="form-crear-usuario" class="modal-form">
-        <div class="form-tabs">
-          <button type="button" class="tab-btn active" data-tab="basic">Información Básica</button>
-          <button type="button" class="tab-btn" data-tab="profile">Perfil y Permisos</button>
-          <button type="button" class="tab-btn" data-tab="advanced">Configuración Avanzada</button>
+  <!-- Tabs, puedes mantener si usas varias pestañas -->
+  <div class="form-tabs">
+    <button type="button" class="tab-btn active" data-tab="basic">Información Básica</button>
+    <button type="button" class="tab-btn" data-tab="profile">Perfil y Permisos</button>
+    <button type="button" class="tab-btn" data-tab="advanced">Configuración Avanzada</button>
+  </div>
+  
+  <!-- Tab: Información Básica -->
+  <div id="tab-basic" class="tab-content active">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="nuevo-nombre">
+          <span class="material-icons">person</span> Nombre *
+        </label>
+        <input type="text" id="nuevo-nombre" required>
+      </div>
+      <div class="form-group">
+        <label for="nuevo-apellido-paterno">
+          <span class="material-icons">person</span> Apellido Paterno *
+        </label>
+        <input type="text" id="nuevo-apellido-paterno" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="nuevo-apellido-materno">
+          <span class="material-icons">person</span> Apellido Materno *
+        </label>
+        <input type="text" id="nuevo-apellido-materno" required>
+      </div>
+      <div class="form-group">
+        <label for="nuevo-usuario">
+          <span class="material-icons">account_circle</span> Usuario *
+        </label>
+        <input type="text" id="nuevo-usuario" required>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="nuevo-email">
+          <span class="material-icons">email</span> Email *
+        </label>
+        <input type="email" id="nuevo-email" required>
+      </div>
+      <div class="form-group">
+        <label for="password">
+          <span class="material-icons">lock</span> Contraseña
+        </label>
+        <div class="input-password-wrapper">
+          <input type="password" id="password" class="input-password">
+          <span class="material-icons toggle-password" onclick="toggleAdminPassword('password', this)">visibility_off</span>
         </div>
-        
-        <!-- Tab: Información Básica -->
-        <div id="tab-basic" class="tab-content active">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="nuevo-nombre">
-                <span class="material-icons">person</span>
-                Nombre *
-              </label>
-              <input type="text" id="nuevo-nombre" required>
-            </div>
-            <div class="form-group">
-              <label for="nuevo-apellido-paterno">
-                <span class="material-icons">person</span>
-                Apellido Paterno *
-              </label>
-              <input type="text" id="nuevo-apellido-paterno" required>
-            </div>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label for="nuevo-apellido-materno">
-                <span class="material-icons">person</span>
-                Apellido Materno *
-              </label>
-              <input type="text" id="nuevo-apellido-materno" required>
-            </div>
-            <div class="form-group">
-              <label for="nuevo-usuario">
-                <span class="material-icons">account_circle</span>
-                Usuario *
-              </label>
-              <input type="text" id="nuevo-usuario" required>
-            </div>
-          </div>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label for="nuevo-email">
-                <span class="material-icons">email</span>
-                Email *
-              </label>
-              <input type="email" id="nuevo-email" required>
-            </div>
-            <div class="form-group">
-              <label for="nuevo-password">
-                <span class="material-icons">lock</span>
-                Contraseña *
-              </label>
-              <div class="input-password-wrapper">
-                <input type="password" id="password" class="input-password">
-                <span class="material-icons toggle-password" onclick="toggleAdminPassword('nuevo-password', this)">visibility_off
-                </span>
-              </div>
-              <p>La contraseña debe contener por lo menos 8 caracteres como minimo, 1 número y 1 caracter especial</p>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Tab: Perfil y Permisos -->
-        <div id="tab-profile" class="tab-content">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="nuevo-id-cliente">
-                <span class="material-icons">numbers</span>
-                ID Cliente (para referencias) *
-              </label>
-              <input type="number" id="nuevo-id-cliente" required placeholder="ej: 3159">
-              <small>Este ID se usará para filtrar las referencias del usuario</small>
-            </div>
-            <div class="form-group">
-              <label for="nuevo-perfil">
-                <span class="material-icons">badge</span>
-                Perfil *
-              </label>
-              <select id="nuevo-perfil" required>
-                <option value="">Seleccionar perfil...</option>
-                <!-- Se llenarán dinámicamente -->
-              </select>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label>
-              <span class="material-icons">security</span>
-              Permisos Específicos
-            </label>
-            <div class="permissions-checkboxes" id="permissions-checkboxes">
-              <!-- Se llenarán dinámicamente -->
-            </div>
-          </div>
-        </div>
-        
-        <!-- Tab: Configuración Avanzada -->
-        <div id="tab-advanced" class="tab-content">
-          <div class="form-row">
-            <div class="form-group">
-              <label>
-                <input type="checkbox" id="nuevo-activo" checked>
-                Usuario Activo
-              </label>
-            </div>
-            <div class="form-group">
-              <label>
-                <input type="checkbox" id="nuevo-forzar-cambio-password">
-                Forzar cambio de contraseña en primer login
-              </label>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="nuevo-imagen">
-              <span class="material-icons">image</span>
-              Imagen de Perfil (URL)
-            </label>
-            <input type="url" id="nuevo-imagen" placeholder="https://...">
-          </div>
-          
-          <div class="form-group">
-            <label for="nuevo-notas">
-              <span class="material-icons">note</span>
-              Notas del Administrador
-            </label>
-            <textarea id="nuevo-notas" rows="3" placeholder="Notas internas sobre este usuario..."></textarea>
-          </div>
-        </div>
-        
-        <div class="form-actions">
-          <button type="button" class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
-          <button type="submit" class="btn-primary">
-            <span class="material-icons">save</span>
-            Crear Usuario
-          </button>
-        </div>
-      </form>
+        <p>La contraseña debe contener al menos 8 caracteres, 1 número y 1 caracter especial (si se ingresa).</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Perfil y Permisos -->
+  <div id="tab-profile" class="tab-content">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="nuevo-id-cliente">
+          <span class="material-icons">numbers</span> ID Cliente *
+        </label>
+        <input type="number" id="nuevo-id-cliente" required placeholder="Ej: 3159">
+        <small>Este ID se usará para filtrar las referencias del usuario</small>
+      </div>
+      <div class="form-group">
+        <label for="nuevo-perfil">
+          <span class="material-icons">badge</span> Perfil *
+        </label>
+        <select id="nuevo-perfil" required>
+          <option value="">Seleccionar perfil...</option>
+          <!-- Se llenan dinámicamente -->
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab: Configuración Avanzada -->
+  <div id="tab-advanced" class="tab-content">
+    <div class="form-row">
+      <div class="form-group">
+        <label>
+          <input type="checkbox" id="nuevo-activo" checked>
+          Usuario Activo
+        </label>
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" id="nuevo-forzar-cambio-password">
+          Forzar cambio de contraseña en primer login
+        </label>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="nuevo-imagen">
+        <span class="material-icons">image</span> Imagen de Perfil (URL)
+      </label>
+      <input type="url" id="nuevo-imagen" placeholder="https://...">
+    </div>
+    <div class="form-group">
+      <label for="nuevo-notas">
+        <span class="material-icons">note</span> Notas del Administrador
+      </label>
+      <textarea id="nuevo-notas" rows="3" placeholder="Notas internas sobre este usuario..."></textarea>
+    </div>
+  </div>
+  
+  <!-- Botones -->
+  <div class="form-actions">
+    <button type="button" class="btn-secondary" onclick="cerrarModal()">Cancelar</button>
+    <button type="submit" class="btn-primary">
+      <span class="material-icons">save</span> Crear Usuario
+    </button>
+  </div>
+</form>
+
     </div>
   </div>
 
