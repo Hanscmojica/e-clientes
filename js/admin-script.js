@@ -1,7 +1,5 @@
 // Configuración de la API
-
-const apiBase = 'https://e-clientes.rodall.com:5000';
-
+const apiBase = 'https://e-clientes.rodall.com:5000'; // URL base de la API
 
 // Variables globales
 let usuarios = [];
@@ -375,7 +373,7 @@ function editarUsuario(userId) {
   
   // Deshabilitar campo de username y password para edición
   document.getElementById('nuevo-usuario').disabled = true;
-  const passwordField = document.getElementById('password');
+  const passwordField = document.getElementById('nuevo-password');
   if (passwordField) {
     passwordField.required = false;
     passwordField.placeholder = 'Dejar en blanco para mantener actual';
@@ -523,7 +521,7 @@ function mostrarModalCrearUsuario() {
     const perfilSelect = document.getElementById('nuevo-perfil');
     perfilSelect.required = true;
     
-    const passwordField = document.getElementById('password');
+    const passwordField = document.getElementById('nuevo-password');
     if (passwordField) {
       passwordField.required = true;
       passwordField.placeholder = '';
@@ -576,7 +574,6 @@ async function cargarPerfilesEnSelect() {
         <option value="CLIENTE">CLIENTE - Cliente del sistema</option>
         <option value="ADMINISTRADOR">ADMINISTRADOR - Administrador del sistema</option>
         <option value="ADMIN">ADMIN - Administrador con acceso total</option>
-        <option value="USER">USER - Usuario con acceso limitado</option>
       `;
     }
   } catch (error) {
@@ -587,7 +584,6 @@ async function cargarPerfilesEnSelect() {
       <option value="CLIENTE">CLIENTE - Cliente del sistema</option>
       <option value="ADMINISTRADOR">ADMINISTRADOR - Administrador del sistema</option>
       <option value="ADMIN">ADMIN - Administrador con acceso total</option>
-      <option value="USER">USER - Usuario con acceso limitado</option>
     `;
   }
 }
@@ -602,105 +598,107 @@ function configurarFormularios() {
 }
 
 // ✅ FUNCIÓN CORREGIDA: Validación diferenciada para creación vs edición
-// ✅ FUNCIÓN COMPLETAMENTE CORREGIDA: manejarSubmitUsuario
-// ✅ FUNCIÓN CORREGIDA CON EL ID REAL DEL PASSWORD
-// FUNCIÓN DEPURADA: manejarSubmitUsuario
 async function manejarSubmitUsuario(e) {
   e.preventDefault();
-
-  // Obtener valores de los inputs
-  const nombre = document.getElementById('nuevo-nombre').value.trim();
-  const apellidoPaterno = document.getElementById('nuevo-apellido-paterno').value.trim();
-  const apellidoMaterno = document.getElementById('nuevo-apellido-materno').value.trim();
-  const username = document.getElementById('nuevo-usuario').value.trim();
-  const email = document.getElementById('nuevo-email').value.trim();
-  const password = document.getElementById('password').value; // Puede ser vacío
-  const idCliente = parseInt(document.getElementById('nuevo-id-cliente').value) || null;
-  const perfil = document.getElementById('nuevo-perfil').value;
-  const activo = document.getElementById('nuevo-activo').checked;
-
-  // LOG TODOS LOS VALORES ANTES DE VALIDAR
-  console.log('=== DATOS CAPTURADOS ===');
-  console.log({ nombre, apellidoPaterno, apellidoMaterno, username, email, password, idCliente, perfil, activo });
-
-  // Validaciones específicas de cada campo
-  if (!nombre) return mostrarAlerta('Campo obligatorio: Nombre', 'error');
-  if (!apellidoPaterno) return mostrarAlerta('Campo obligatorio: Apellido paterno', 'error');
-  if (!apellidoMaterno && apellidoMaterno !== "") return mostrarAlerta('Campo obligatorio: Apellido materno (puede ser vacío, pero no nulo)', 'error');
-  if (!username) return mostrarAlerta('Campo obligatorio: Usuario', 'error');
-  if (!email) return mostrarAlerta('Campo obligatorio: Email', 'error');
-  if (!idCliente) return mostrarAlerta('Campo obligatorio: ID Cliente', 'error');
-  if (!perfil) return mostrarAlerta('Campo obligatorio: Perfil', 'error');
-
-  // Validación de contraseña (solo si el usuario escribe una)
-  if (password) {
-    if (password.length < 8) {
-      return mostrarAlerta(`Contraseña demasiado corta (${password.length} caracteres). Debe tener al menos 8. Valor: "${password}"`, 'error');
-    }
-    if (!/\d/.test(password)) {
-      return mostrarAlerta(`La contraseña no tiene ningún número. Valor: "${password}"`, 'error');
-    }
-    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-      return mostrarAlerta(`La contraseña no tiene ningún caracter especial. Valor: "${password}"`, 'error');
-    }
-  } else {
-    // ¡Password vacío ahora PERMITIDO!
-    console.warn("Password está vacío, se permite en modo debug.");
-  }
-
-  // Construir el objeto para el backend
+  
   const formData = {
-    nombre,
-    apellidoPaterno,
-    apellidoMaterno,
-    username,
-    email,
-    idCliente,
-    perfil,
-    activo
+    nombre: document.getElementById('nuevo-nombre').value.trim(),
+    apellidoPaterno: document.getElementById('nuevo-apellido-paterno').value.trim(),
+    apellidoMaterno: document.getElementById('nuevo-apellido-materno').value.trim(),
+    username: document.getElementById('nuevo-usuario').value.trim(),
+    email: document.getElementById('nuevo-email').value.trim(),
+    idCliente: parseInt(document.getElementById('nuevo-id-cliente').value) || null,
+    perfil: document.getElementById('nuevo-perfil').value,
+    activo: document.getElementById('nuevo-activo').checked
   };
-  // Solo agregar password si tiene valor
-  if (password) formData.password = password;
-
-  // Log de lo que se enviará
-  console.log('=== DATOS A ENVIAR AL BACKEND ===');
-  console.log(formData);
-
-  // Enviar al backend
+  
+  // Solo incluir password si es creación o si se proporcionó
+  const passwordField = document.getElementById('nuevo-password');
+  if (passwordField && (passwordField.value || !editingUserId)) {
+    formData.password = passwordField.value;
+  }
+  
+  // ✅ VALIDACIONES DIFERENCIADAS
+  if (!formData.nombre || !formData.apellidoPaterno || !formData.username || !formData.email) {
+    mostrarAlerta('Todos los campos obligatorios deben ser completados', 'error');
+    return;
+  }
+  
+  // ✅ NUEVO: Password solo obligatorio en creación
+  if (!editingUserId && !formData.password) {
+    mostrarAlerta('La contraseña es requerida para usuarios nuevos', 'error');
+    return;
+  }
+  
+  // ✅ NUEVO: Perfil solo obligatorio en creación
+  if (!editingUserId && !formData.perfil) {
+    mostrarAlerta('Debe seleccionar un perfil para usuarios nuevos', 'error');
+    return;
+  }
+  
+  // ✅ NUEVO: En edición, si no se selecciona perfil, mantener el actual
+  if (editingUserId && !formData.perfil) {
+    const usuarioActual = usuarios.find(u => u.id === editingUserId);
+    if (usuarioActual) {
+      formData.perfil = usuarioActual.role;
+      console.log(`📝 Manteniendo rol actual: ${formData.perfil}`);
+    }
+  }
+  
+  if (!formData.idCliente) {
+    mostrarAlerta('El ID Cliente es requerido para vincular con las referencias', 'error');
+    return;
+  }
+  
   try {
     const token = getAuthToken();
-    const url = editingUserId
-      ? `${apiBase}/api/admin/usuarios/${editingUserId}`
-      : `${apiBase}/api/admin/usuarios`;
-
-    const response = await fetch(url, {
-      method: editingUserId ? 'PUT' : 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(formData)
-    });
-
-    const result = await response.json();
-    console.log('Respuesta del servidor:', result);
-
-    if (!response.ok) {
-      // Mostrar mensaje del backend si lo hay, si no, error genérico
-      throw new Error(result.message || 'Error en el servidor');
+    let response;
+    
+    console.log('📤 Enviando datos al backend:', formData);
+    
+    if (editingUserId) {
+      console.log(`🔄 Actualizando usuario ID: ${editingUserId}`);
+      response = await fetch(`${apiBase}/api/admin/usuarios/${editingUserId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+      });
+    } else {
+      console.log('➕ Creando nuevo usuario');
+      response = await fetch(`${apiBase}/api/admin/usuarios`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(formData)
+      });
     }
-
-    mostrarAlerta(result.message || 'Usuario guardado exitosamente', 'success');
+    
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error en la operación');
+    }
+    
+    const result = await response.json();
+    console.log('✅ Respuesta completa del servidor:', result);
+    
+    mostrarAlerta(result.message || `Usuario ${editingUserId ? 'actualizado' : 'creado'} exitosamente`, 'success');
+    
+    // Cerrar modal
     cerrarModal();
+    
+    // Recargar usuarios
     await cargarUsuarios();
-
+    
   } catch (error) {
-    console.error('Error:', error);
-    // Alerta ultra específica con mensaje y tipo
-    mostrarAlerta('Error al crear usuario: ' + (error.message || error), 'error');
+    console.error(`❌ Error ${editingUserId ? 'actualizando' : 'creando'} usuario:`, error);
+    mostrarAlerta('Error: ' + error.message, 'error');
   }
 }
-
 
 // ✅ FUNCIÓN CORREGIDA: Cerrar modal - Limpiar estado
 function cerrarModal() {
@@ -734,7 +732,7 @@ function cerrarModal() {
       perfilSelect.required = true; // Volver a hacer obligatorio para creación
     }
     
-    const passwordField = document.getElementById('password');
+    const passwordField = document.getElementById('nuevo-password');
     if (passwordField) {
       passwordField.required = true;
       passwordField.placeholder = '';
