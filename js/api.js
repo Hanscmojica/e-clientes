@@ -88,7 +88,7 @@ class SecureLogger {
                     sDetalleConsulta: detalle,
                     sTipoConsulta: tipo,
                     bExito: true,
-                    sIpUsuario: 'web-client'
+                    sIpUsuario: 'web-client'    
                 })
             });
         } catch (error) { 
@@ -722,24 +722,92 @@ function mostrarModalReferencia(indexEnListaMostrada) {
     generarBibliotecaModal(referenciaOriginal);
 
     // Pestaña "Historial"
+ // Pestaña "Historial" - 🚀 MODIFICADO PARA USAR DESCRIPCIONES DEL BACKEND
     const historialDiv = modal.querySelector('#historialContenido');
     if (historialDiv) {
         historialDiv.innerHTML = '';
-        if (!referenciaOriginal.Hist || referenciaOriginal.Hist.length === 0) {
-            historialDiv.innerHTML = '<p style="text-align:center; padding:10px; color:var(--light-text);">No hay registros en el historial.</p>';
+        
+        // 🚀 USAR 'Historial' (enriquecido) en lugar de 'Hist' (original)
+        const historialData = referenciaOriginal.Historial || referenciaOriginal.Hist || [];
+        
+        if (historialData.length === 0) {
+            historialDiv.innerHTML = '<p style="text-align:center; padding:20px; color:var(--light-text);">No hay registros en el historial.</p>';
         } else {
-            const historialOrdenado = [...referenciaOriginal.Hist].sort((a, b) => new Date(b.Fecha) - new Date(a.Fecha));
-            historialOrdenado.forEach(item => {
+            // Crear contenedor con scroll
+            const historialContainer = document.createElement('div');
+            historialContainer.className = 'historial-lista';
+            
+            const historialOrdenado = [...historialData].sort((a, b) => new Date(b.Fecha) - new Date(a.Fecha));
+            
+            historialOrdenado.forEach((evento, index) => {
                 const itemDiv = document.createElement('div');
-                itemDiv.className = `historial-item estado-${(item.Estado || '').toLowerCase()}`;
+                itemDiv.className = 'historial-evento';
+                
+                // 🚀 USAR LAS DESCRIPCIONES ENRIQUECIDAS DEL BACKEND
+                const estadoMostrar = evento.EstadoCompleto || 
+                                    (evento.DescripcionEstado ? `${evento.Estado} - ${evento.DescripcionEstado}` : 
+                                    `${evento.Estado || '-'} (${getEstadoDescripcionCompleta(evento.Estado)})`);
+                
+                // 🚀 FORMATO DIRECTO DE FECHA
+let fechaFormateada = '-';
+if (evento.Fecha) {
+    try {
+        // Si viene como "21/05/2025, 00:00" 
+        if (evento.Fecha.includes(',')) {
+            fechaFormateada = evento.Fecha.split(',')[0].trim();
+        }
+        // Si viene como fecha Date
+        else if (evento.Fecha instanceof Date) {
+            fechaFormateada = evento.Fecha.toLocaleDateString('es-MX');
+        }
+        // Si viene como string de fecha
+        else {
+            const fecha = new Date(evento.Fecha);
+            if (!isNaN(fecha.getTime())) {
+                fechaFormateada = fecha.toLocaleDateString('es-MX');
+            } else {
+                fechaFormateada = evento.Fecha; // Usar tal como viene
+            }
+        }
+    } catch (error) {
+        fechaFormateada = evento.Fecha;
+    }
+}
+                
                 itemDiv.innerHTML = `
-                    <p><strong>Estado:</strong> ${item.Estado || '-'} (${getEstadoDescripcion(item.Estado)})</p>
-                    <p><strong>Fecha:</strong> ${formatearFecha(item.Fecha) || '-'}</p>
-                    <p><strong>Causa:</strong> ${item.Causa || '-'}</p>
-                    <p><strong>Observaciones:</strong> ${item.Observaciones || '-'}</p>
-                    <p><strong>Usuario:</strong> ${item.Usuario || '-'}</p>`;
-                historialDiv.appendChild(itemDiv);
+                    <div class="evento-header">
+                        <div class="estado-info">
+                            <span class="estado-badge estado-${evento.Estado}">${estadoMostrar}</span>
+                        </div>
+                        <div class="fecha-info">
+                            <span class="fecha">${fechaFormateada}</span>
+                        </div>
+                    </div>
+                    
+                    ${evento.Causa ? `
+                        <div class="campo-historial">
+                            <label>Causa:</label>
+                            <span class="valor">${evento.Causa}</span>
+                        </div>
+                    ` : ''}
+                    
+                    ${evento.Observaciones ? `
+                        <div class="campo-historial">
+                            <label>Observaciones:</label>
+                            <span class="valor observaciones">${evento.Observaciones}</span>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="campo-historial usuario-info">
+                        <label>Usuario:</label>
+                        <span class="valor usuario">${evento.Usuario || 'N/A'}</span>
+                    </div>
+                `;
+                
+                historialContainer.appendChild(itemDiv);
             });
+            
+            historialDiv.appendChild(historialContainer);
         }
     }
 
@@ -772,11 +840,11 @@ function mostrarModalReferencia(indexEnListaMostrada) {
     if (modal) modal.style.display = "block";
 }
 
+
+// 🚀 FUNCIÓN ACTUALIZADA CON CATÁLOGO COMPLETO
 function getEstadoDescripcion(estadoCve) {
-    const estados = {
-        'P': 'Pendiente', 'C': 'En Proceso', 'D': 'Despacho', 'T': 'Terminado',
-    };
-    return estados[String(estadoCve).toUpperCase()] || estadoCve || 'Desconocido';
+    // Usar la función completa del catálogo
+    return getEstadoDescripcionCompleta(estadoCve);
 }
 
 // ===============================
@@ -883,10 +951,6 @@ function crearTarjetaReferencia(referencia, indexOriginal, indexEnVistaActual) {
             ${referencia.Buque ? `<div class="ref-detail-item"><strong>Buque:</strong><span>${referencia.Buque}</span></div>` : ''}
             ${referencia.TipoReconocimiento ? `<div class="ref-detail-item"><strong>Reconocimiento:</strong><span>${referencia.TipoReconocimiento}</span></div>` : ''}
         </div>
-        <div class="ref-actions">
-            <button class="btn-action btn-pdf" onclick="event.stopPropagation(); logger.debug('PDF para ref: ${referencia.Referencia}')">
-                <span class="material-icons">picture_as_pdf</span> PDF
-            </button>
             <button class="btn-action btn-preview" onclick="event.stopPropagation(); mostrarModalReferencia(${indexOriginal})">
                 <span class="material-icons">visibility</span> Vista Previa
             </button>
@@ -941,3 +1005,77 @@ document.addEventListener('DOMContentLoaded', () => {
         searchInput.addEventListener('keyup', filtrarReferencias);
     }
 }); 
+
+// 🚀 FUNCIONES AUXILIARES PARA HISTORIAL CON DESCRIPCIONES - AGREGAR AL FINAL
+
+// Catálogo completo de estados (igual al del backend)
+function getEstadoDescripcionCompleta(estadoCve) {
+    const catalogoEstados = {
+        "U": "ANTICIPO RECIBIDO",
+        "5": "ASESORIA",
+        "M": "AVERIA DEL VEHICULO",
+        "3": "CLASIFICADO",
+        "!": "COVE GENERADO",
+        "@": "COVE REALIZADO",
+        "1": "CUENTA DE GASTOS",
+        "K": "DESADUANADO O DESPACHADO",
+        "Y": "DESPACHADO - LIBRE",
+        "Z": "DESPACHADO C/ RECONOCIMIENTO",
+        "8": "DESPACHADO DESCAMEX",
+        "7": "DESPACHADO LAG",
+        "X": "EN ABANDONO",
+        "A": "EN ESPERA DE ANTICIPOS",
+        "L": "EN RUTA",
+        "6": "ETIQUETADO",
+        "P": "FALTA CARTA VACIOS",
+        "O": "FALTA TALON FLETE",
+        "B": "FALTAN DOCUMENTOS",
+        "H": "HOY",
+        "9": "JURIDICO",
+        "J": "MERCANCIA CARGADA",
+        "N": "MERCANCIA ENTREGADA",
+        "T": "OPERACION TERMINADA",
+        "Q": "OTROS (SE ESPECIFICA)",
+        "I": "POR CLASIFICAR",
+        "W": "POR DESPACHAR",
+        "F": "POR FACTURARSE",
+        "C": "POR REVALIDAR",
+        "G": "PREVIO CONCLUIDO",
+        "#": "PROFORMA DE COVE",
+        "R": "PROFORMA DE FACTURA",
+        "4": "PROFORMA PEDIMENTO",
+        "S": "PROFORMA REVISADA",
+        "E": "PROGRAMADO A PREVIO",
+        "D": "REVALIDADO",
+        "2": "SE REGRESA A EJECUTIVA",
+        "V": "VALIDADO"
+    };
+    
+    return catalogoEstados[estadoCve] || `ESTADO DESCONOCIDO (${estadoCve})`;
+}
+
+// Función para formatear fechas del historial
+function formatearFechaHistorial(fechaString) {
+    if (!fechaString) return 'Fecha no disponible';
+    
+    try {
+        const fecha = new Date(fechaString);
+        
+        // Verificar si la fecha es válida
+        if (isNaN(fecha.getTime())) {
+            return fechaString; // Devolver original si no se puede parsear
+        }
+        
+        return fecha.toLocaleDateString('es-MX', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+        });
+    } catch (error) {
+        logger.error('Error formateando fecha del historial:', error);
+        return fechaString;
+    }
+}
