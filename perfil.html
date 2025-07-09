@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <!-- Tipografía moderna -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
 </head>
 <body>
   <!-- Header moderno -->
@@ -16,45 +17,40 @@
     <div class="header-container">
       <div class="header-left">
         <div class="logo">
-          <img src="assets/01 IMAGOTIPO RODALL DORADO PNG.png" alt="Logo Rodall" style="height: 40px; margin-right: 12px; vertical-align: middle;">
+          <img src="assets/01 IMAGOTIPO RODALL BN PNG.png" alt="Logo Rodall" style="height: 40px; margin-right: 12px; vertical-align: middle;">
           <h1 style="display: inline-block; vertical-align: middle;">E-Clientes</h1>
         </div>
       </div>
-
-    <nav class="header-nav">
-  <ul>
-    <li><a href="api.html">Referencias</a></li>
-    <li><span class="menu-separator"></span></li>
-    <li><a href="perfil.html">Perfil</a></li>
-    <li><span class="menu-separator"></span></li>
-    <li><a href="admin.html">Administrar</a></li>
-  </ul>
-</nav>
+      
+      <nav class="header-nav">
+        <ul>
+          <li><a href="api.html">Referencias</a></li>
+        </ul>
+      </nav>
+      
       <div class="header-right">
         <div class="user-info">
           <span class="material-icons">account_circle</span>
-          <span class="user-name">Hans Carli Rowesonur</span>
-          <span class="user-id" style="font-size: 12px; color: #aaa; margin-left: 8px;">(ID: 123456)</span>
+          <span class="user-name">Usuario</span>
         </div>
-        <button class="logout-btn" title="Cerrar sesión">
+        <button class="logout-btn" title="Cerrar sesión" onclick="logout()">
           <span class="material-icons">logout</span>
         </button>
       </div>
     </div>
-
   </header>
-  
+
   <!-- Contenido principal -->
   <main class="main-content">
     <div class="container">
       <div class="page-header">
-        <h2>PERFIL DE USUARIO</h2>
+        <h2>Perfil de Usuario</h2>
         <p>Administra tu información personal y configuración de la cuenta</p>
       </div>
 
       <div class="profile-container">
         <!-- Sidebar de navegación -->
-        <aside class="profile-sidebar with-gradient">
+        <aside class="profile-sidebar">
           <nav class="profile-nav">
             <a href="#" class="nav-item active" data-section="personal">
               <span class="material-icons">person</span>
@@ -76,7 +72,7 @@
           <!-- Sección de Información Personal -->
           <section id="personal-section" class="profile-section active">
             <h3>Información Personal</h3>
-
+            
             <div class="avatar-section">
               <div class="avatar-container">
                 <img src="assets/naviera.jpg" alt="Avatar" id="avatar-img">
@@ -105,7 +101,7 @@
                     <span class="material-icons">person</span>
                     Apellidos
                   </label>
-                  <input type="text" id="apellidos" value="Hansen Mojica" required>
+                  <input type="text" id="apellidos" value="Hansen Mojica"required>
                 </div>
               </div>
 
@@ -146,30 +142,32 @@
           <!-- Sección de Seguridad -->
           <section id="security-section" class="profile-section">
             <h3>Seguridad</h3>
+            
             <div class="security-info">
-              <div class="seguridad-card">
-                <div class="security-item">
-                  <div class="security-icon">
-                    <span class="material-icons">lock</span>
-                  </div>
-                  <div class="security-content">
-                    <h4>Contraseña</h4>
-                    <p>Última actualización: <span id="ultima-actualizacion">hace 45 días</span></p>
-                    <p class="password-expiry-info" id="password-expiry-info"></p>
-                    <button class="btn-secondary" onclick="mostrarModalContraseña()">
-                      Cambiar Contraseña
-                    </button>
-                  </div>
+              <div class="security-item">
+                <div class="security-icon">
+                  <span class="material-icons">lock</span>
+                </div>
+                <div class="security-content">
+                  <h4>Contraseña</h4>
+                  <p>Última actualización: <span id="ultima-actualizacion">hace 45 días</span></p>
+                  <p class="password-expiry-info" id="password-expiry-info"></p>
+                  <button class="btn-secondary" onclick="mostrarModalContraseña()">
+                    Cambiar Contraseña
+                  </button>
                 </div>
               </div>
-            </div>
+              
           </section>
 
           <!-- Sección de Preferencias -->
           <section id="preferences-section" class="profile-section">
             <h3>Preferencias</h3>
-
+            
             <form id="preferences-form" class="profile-form">
+              <div class="preference-item">
+ 
+
               <div class="preference-item">
                 <div class="preference-info">
                   <h4>Resultados por Página</h4>
@@ -191,9 +189,6 @@
               </div>
             </form>
           </section>
-        </div>
-      </div>
-    </div>
   </main>
 
   <!-- Footer -->
@@ -203,7 +198,7 @@
         <h3>E-Clientes</h3>
         <p>Sistema de gestión de referencias y clientes para operaciones aduaneras.</p>
       </div>
-
+      
       <div class="footer-section">
         <h3>Enlaces Rápidos</h3>
         <ul>
@@ -213,7 +208,7 @@
           <li><a href="#">Términos de Uso</a></li>
         </ul>
       </div>
-
+      
       <div class="footer-section">
         <h3>Contacto</h3>
         <ul>
@@ -231,13 +226,13 @@
           </li>
         </ul>
       </div>
-
+      
       <div class="footer-section">
         <h3>Horario de Atención</h3>
         <p>Lunes a Viernes<br>8:00 AM - 6:00 PM<br><br></p>
       </div>
     </div>
-
+    
     <div class="footer-bottom">
       <p>&copy; 2025 Agencia Aduanal Rodall Oseguera. Todos los derechos reservados.</p>
     </div>
@@ -308,21 +303,24 @@
 
   <script src="/js/perfil.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const itemsPorPagina = localStorage.getItem('itemsPorPagina');
-      if (itemsPorPagina) {
-        document.getElementById('items-por-pagina').value = itemsPorPagina;
-      }
+  document.addEventListener('DOMContentLoaded', function() {
+    // Cargar preferencia guardada
+    const itemsPorPagina = localStorage.getItem('itemsPorPagina');
+    if (itemsPorPagina) {
+      document.getElementById('items-por-pagina').value = itemsPorPagina;
+    }
 
-      document.getElementById('preferences-form').addEventListener('submit', function (e) {
-        e.preventDefault();
-        const valor = document.getElementById('items-por-pagina').value;
-        localStorage.setItem('itemsPorPagina', valor);
-        alert('Preferencia guardada: ' + valor + ' elementos por página');
-        window.location.href = 'api.html';
-      });
+    // Guardar preferencia al enviar el formulario
+    document.getElementById('preferences-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const valor = document.getElementById('items-por-pagina').value;
+      localStorage.setItem('itemsPorPagina', valor);
+      alert('Preferencia guardada: ' + valor + ' elementos por página');
+      window.location.href = 'api.html'; // Redirige a la página de referencias
+      // Aquí podrías recargar la tabla si la tienes
     });
+  });
   </script>
+  
 </body>
 </html>
-  
