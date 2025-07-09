@@ -870,7 +870,7 @@ function mostrarReferencias(clienteInfo, referenciasAMostrarParam) {
         <div class="cliente-details">
             <div class="cliente-detail-item">
                 <strong>Cliente ID:</strong>
-                <span style="color: #2196F3; font-weight: bold; font-size: 1.1em;">${idClienteMostrar}</span>
+                <span style="color:rgb(255, 255, 255); font-weight: bold; font-size: 1.1em;">${idClienteMostrar}</span>
             </div>
             ${clienteInfo.nombre ? `<div class="cliente-detail-item"><strong>Nombre:</strong><span>${clienteInfo.nombre}</span></div>` : ''}
             ${clienteInfo.importador ? `<div class="cliente-detail-item"><strong>Importador:</strong><span>${clienteInfo.importador}</span></div>` : ''}
