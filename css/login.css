@@ -298,17 +298,7 @@ body {
   margin-bottom: 20px;
 
   /* Degradado dorado exacto que proporcionaste */
-  background: linear-gradient(90deg,
-    #723518 3.5372%,
-    #d1962e 16.3474%,
-    #f8f7c1 26.2788%,
-    #d1962e 38.9683%,
-    #f8f7c1 50.7655%,
-    #d1962e 63.3107%,
-    #f8f7c1 75.1884%,
-    #d1962e 86.6952%,
-    #723518 96.2253%
-  );
+  background: #fff;
   
   /* Estas propiedades hacen que el gradiente se aplique al texto */
   -webkit-background-clip: text;

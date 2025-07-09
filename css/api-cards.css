@@ -112,20 +112,20 @@
 
 /* Clases de estado específicas */
 .reference-card .ref-status.status-pending {
-  background: #fff3cd;
-  color: #856404;
+  background: #0303b5; 
+  color: #ffffff;
 }
 .reference-card .ref-status.status-processing {
-  background: #cce5ff;
-  color: #004085;
+  background: #0303b5;
+  color: rgb(255, 255, 255)
 }
 .reference-card .ref-status.status-completed {
-  background: #f7f6c1; /* Color dorado para estado completado */
-  color: black;
+  background: #0303b5;
+  color: rgb(255, 255, 255);
 }
 .reference-card .ref-status.status-dispatch {
-  background: #f8d7da;
-  color: #721c24;
+  background: #0303b5;
+  color: rgb(255, 255, 255)
 }
 
 .reference-card .ref-actions {
@@ -189,7 +189,7 @@
 
 .cliente-info h2 {
   background: black;
-  color: var(--light-bg); 
+  color: var(--light-bg); /* Color dorado para el título */
   padding: 10px 15px;
   margin: -20px -20px 20px -20px;
   border-radius: 12px 12px 0 0;
