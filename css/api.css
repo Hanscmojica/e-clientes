@@ -1,7 +1,7 @@
 /* Variables de colores según el manual de identidad de Rodall Oseguera */
 :root {
   /* Azules (identidad marítima) */
-  --primary-color: #04263f;       /* PANTONE 19-4024 TPG - Azul marino oscuro */
+  --primary-color: #0303b5;       /* Nuevo color azul solicitado */
   --primary-hover: #082f4c;       /* PANTONE 19-4111 TPG - Azul marino medio */
   --accent-color: #0b73a0;        /* PANTONE 18-4528 TPG - Azul claro */
   --secondary-color: #f8fafc;     /* Fondo claro para contraste */
@@ -18,11 +18,11 @@
   --danger-color: #ef4444;       /* Rojo para errores */
   --dark-text: #1f2937;          /* Texto oscuro principal */
   --light-text: #6b7280;         /* Texto claro/secundario */
-  --border-color: #e5e7eb;       /* Color para bordes */
+  --border-color: #000000;       /* Color para bordes */
   --light-bg: #ffffff;           /* Fondo blanco */
   --shadow: rgba(0,0,0,0.1);     /* Sombra estándar */
   --header-bg: #ffffff;          /* Fondo del encabezado */
-  --footer-bg: #04263f;          /* Fondo del pie de página */
+  --footer-bg: #0f2f4f;          /* Fondo del pie de página */
 }
   
 /* Reset y estilos base */
@@ -34,20 +34,18 @@
   
 body {
   font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --bg-color: color-mix(in srgb, rgb(249, 241, 241) 70%, #ececec);
+  background:  #f5f0f0;
   line-height: 1.6;
   color: var(--dark-text);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--bg-color);
-  --sidebar-color: #fff;
 }
 
 .sidebar {
   width: 220px;
   height: 100vh;
-  background-color: var(--primary-color); /* Azul corporativo oscuro */
+  background-color: var(--primary-color);
   color: white;
   position: fixed;
   top: 0;
@@ -89,7 +87,7 @@ body {
 }
 
 .sidebar-footer a {
-  color: var(--gold); /* Color dorado para destacar */
+  color: var(--gold);
   text-decoration: none;
 }
 
@@ -97,13 +95,43 @@ body {
   color: var(--gold-light);
 }
 
-/* Header Styles */
+/* Header Styles - CON DEGRADADO SOLICITADO */
 .main-header {
-  background-color: var(--header-bg);
+  background: linear-gradient(135deg, #000000 0%, #000000 100%);
   box-shadow: 0 2px 8px var(--shadow);
-  position: sticky;
+  position: relative;
   top: 0;
   z-index: 100;
+}
+
+.main-header::before,
+.main-header::after {
+  content: '';
+  position: absolute;
+  height: 3px;
+  background: linear-gradient(90deg,
+    #723518 3.5372%,
+    #d1962e 16.3474%,
+    #f8f7c1 26.2788%,
+    #d1962e 38.9683%,
+    #f8f7c1 50.7655%,
+    #d1962e 63.3107%,
+    #f8f7c1 75.1884%,
+    #d1962e 86.6952%,
+    #723518 96.2253%
+  );
+  border-radius: 1.5px;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+.main-header::before {
+  top: 0;
+}
+
+.main-header::after {
+  bottom: 0;
 }
   
 .header-container {
@@ -125,18 +153,64 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--gold); /* Color dorado para el logo */
   text-decoration: none;
+  position: relative;
+  padding: 15px 0;
+}
+
+logo::before,
+.logo::after {
+  content: '';
+  position: absolute;
+  height: 0.2px;
+  background: linear-gradient(90deg,
+    #723518 3.5372%,
+    #d1962e 16.3474%,
+    #f8f7c1 26.2788%,
+    #d1962e 38.9683%,
+    #f8f7c1 50.7655%,
+    #d1962e 63.3107%,
+    #f8f7c1 75.1884%,
+    #d1962e 86.6952%,
+    #723518 96.2253%
+  );
+  border-radius: 1px;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+.logo::before {
+  top: 0;
+}
+
+.logo::after {
+  bottom: 0;
 }
   
 .logo .material-icons {
   font-size: 32px;
+  color: var(--gold);
 }
   
 .logo h1 {
   font-size: 24px;
   font-weight: 700;
   margin: 0;
+  background: linear-gradient(90deg,
+    #723518 3.5372%,
+    #d1962e 16.3474%,
+    #f8f7c1 26.2788%,
+    #d1962e 38.9683%,
+    #f8f7c1 50.7655%,
+    #d1962e 63.3107%,
+    #f8f7c1 75.1884%,
+    #d1962e 86.6952%,
+    #723518 96.2253%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .material-symbols-outlined {
@@ -154,11 +228,34 @@ body {
   margin: 0;
   padding: 0;
   align-items: center;  
+  
 }
+
+/* Estilos para las rayitas (hr) del navbar */
+.header-nav hr {
+  width: 2px;
+  height: 30px;
+  border: none;
+  margin: 0 8px;
+  background: linear-gradient(0deg,
+    #723518 3.5372%,
+    #d1962e 16.3474%,
+    #f8f7c1 26.2788%,
+    #d1962e 38.9683%,
+    #f8f7c1 50.7655%,
+    #d1962e 63.3107%,
+    #f8f7c1 75.1884%,
+    #d1962e 86.6952%,
+    #723518 96.2253%
+  );
+  border-radius: 1px;
+  box-shadow: 0 0 4px rgba(215, 165, 32, 0.3);
+}
+
   
 .header-nav a {
   text-decoration: none;
-  color: var(--dark-text);
+  color: white;
   padding: 10px 20px;
   border-radius: 8px;
   font-weight: 500;
@@ -168,8 +265,8 @@ body {
   
 .header-nav a:hover,
 .header-nav a.active {
-  background-color: var(--secondary-color);
-  color: var(--primary-color);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
 }
   
 .header-right {
@@ -182,18 +279,18 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--dark-text);
+  color: white;
 }
   
 .user-info .material-icons {
   font-size: 28px;
-  color: var(--light-text);
+  color: white;
 }
   
 .logout-btn {
   background: none;
   border: none;
-  color: var(--light-text);
+  color: white;
   cursor: pointer;
   padding: 10px;
   border-radius: 8px;
@@ -201,7 +298,7 @@ body {
 }
   
 .logout-btn:hover {
-  background-color: var(--secondary-color);
+  background-color: rgba(255, 255, 255, 0.1);
   color: var(--danger-color);
 }
   
@@ -225,18 +322,54 @@ body {
 .page-header h2 {
   font-size: 32px;
   font-weight: 700;
-  color: var(--primary-color);
-  margin-bottom: 8px;
+  color: rgb(0, 0, 0);
+  margin-bottom: 20px;
+  padding: 15px 0;
+  position: relative;
+  display: inline-block;
+}
+
+.page-header h2::before,
+.page-header h2::after {
+  content: '';
+  position: absolute;
+  height: 3px;
+  background: linear-gradient(90deg,
+    #723518 3.5372%,
+    #d1962e 16.3474%,
+    #f8f7c1 26.2788%,
+    #d1962e 38.9683%,
+    #f8f7c1 50.7655%,
+    #d1962e 63.3107%,
+    #f8f7c1 75.1884%,
+    #d1962e 86.6952%,
+    #723518 96.2253%
+  );
+  border-radius: 1.5px;
+}
+
+.page-header h2::before {
+  top: -10px;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+.page-header h2::after {
+  bottom: -10px;
+  left: 0;
+  right: 0;
+  width: 100%;
 }
   
 .page-header p {
-  color: var(--light-text);
+  color: rgb(0, 0, 0);
   font-size: 18px;
 }
   
 /* Tarjeta de búsqueda */
 .search-card {
-  background-color: white;
+  background-color: #ffffff;
   padding: 35px;
   border-radius: 16px;
   box-shadow: 0 4px 12px var(--shadow);
@@ -244,7 +377,7 @@ body {
 }
   
 .search-card h3 {
-  color: var(--gold); /* Color dorado para el título */
+  color: var(--primary-color);
   font-size: 20px;
   font-weight: 600;
   margin-bottom: 25px;
@@ -267,7 +400,7 @@ body {
 .form-group label {
   font-weight: 600;
   margin-bottom: 10px;
-  color: var(--dark-text);
+  color: var(--black-text);
   font-size: 15px;
   display: flex;
   align-items: center;
@@ -306,11 +439,12 @@ body {
 }
   
 button {
-  background-color: var(--primary-color);
-  color: white;
+  background-color: #0303b5;
+  color: var(--light-bg);
   border: none;
   padding: 14px 28px;
   border-radius: 10px;
+  border-color: var(--border-color);
   cursor: pointer;
   font-weight: 600;
   display: flex;
@@ -323,7 +457,7 @@ button {
 button:hover {
   background-color: var(--primary-hover);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(4, 38, 63, 0.3);
+  box-shadow: 0 4px 12px rgba(15, 47, 79, 0.3);
 }
   
 button .material-icons {
@@ -331,7 +465,7 @@ button .material-icons {
 }
   
 #btnLimpiar {
-  background-color: var(--light-text);
+  background-color:  #0303b5;
 }
   
 #btnLimpiar:hover {
@@ -371,8 +505,8 @@ button .material-icons {
   
 /* Cliente info card */
 .cliente-info {
-  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-  color: white;
+  background: white;
+  color: var(--dark-text);
   padding: 25px;
   border-radius: 16px 16px 0 0;
 }
@@ -384,7 +518,10 @@ button .material-icons {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--gold); /* Color dorado para títulos */
+  color: var(--primary-color);
+  border-radius: 10px;
+  border-color: white;
+
 }
   
 .cliente-info h2::before {
@@ -400,13 +537,14 @@ button .material-icons {
 }
   
 .cliente-detail-item {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: #0303b5;
+  color: var(--dark-text);
   padding: 20px;
   border-radius: 10px;
-  backdrop-filter: blur(10px);
   word-wrap: break-word;
   overflow-wrap: break-word;
   min-height: 80px; 
+  border: 1px solid #e0f2fe;
 }
   
 .cliente-detail-item strong {
@@ -414,7 +552,7 @@ button .material-icons {
   font-weight: 600;
   margin-bottom: 8px; 
   font-size: 14px;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--light-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -426,6 +564,8 @@ button .material-icons {
   line-height: 1.4;
   word-break: break-word;
   display: block;
+  color: var(--dark-text);
+  background-color: #0303b5;
 }
   
 /* Tabla de referencias */
@@ -466,7 +606,7 @@ button .material-icons {
 }
   
 .referencias-table tbody tr:hover {
-  background-color: rgba(11, 115, 160, 0.05); /* Tono suave de accent-color */
+  background-color: rgba(11, 115, 160, 0.05);
 }
   
 /* Estados con badges */
@@ -612,7 +752,7 @@ button .material-icons {
   display: flex;
   justify-content: flex-end;
   padding: 10px 40px 0;
-  background-color: #ececec00;
+  background-color: transparent;
 }
 
 .top-bar-search input {
@@ -635,14 +775,6 @@ button .material-icons {
   font-size: 13px;
   color: var(--light-text);
   align-self: center;
-}
-
-/* Referencias container */
-.referencias-container {
-  background-color: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px var(--shadow);
-  overflow: hidden;
 }
 
 /* Modal Styles */
@@ -696,7 +828,7 @@ button .material-icons {
   margin: 0;
   font-size: 24px;
   font-weight: 700;
-  color: var(--gold); /* Color dorado para títulos */
+  color: var(--gold);
 }
   
 .modal-content h3 {
@@ -734,7 +866,7 @@ button .material-icons {
 .historial-item {
   margin-bottom: 20px;
   padding: 20px;
-  border-left: 4px solid var(--gold); /* Color dorado para bordes */
+  border-left: 4px solid var(--gold);
   background-color: var(--secondary-color);
   border-radius: 8px;
   transition: transform 0.2s ease;
@@ -772,41 +904,40 @@ html, body {
 
 /* Footer */
 .main-footer {
-  background-color: var(--primary-color);
+  background-color: #000000;
   color: white;
   padding: 20px 10px 10px;
   margin-top: 40px;
-  position: center;
 }
-  
+
 .footer-container {
   width: 100%;
   padding: 0 30px;
-  display: center;
+  display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 30px;
 }
-  
+
 .footer-section h3 {
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 25px;
-  color: var(--gold); /* Color dorado para títulos */
+  color: var(--gold);
 }
-  
+
 .footer-section p {
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.8);
   font-size: 14px;
   margin: 0;
 }
-  
+
 .footer-section ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-  
+
 .footer-section ul li {
   margin-bottom: 8px;
   display: flex;
@@ -815,30 +946,47 @@ html, body {
   color: rgba(255, 255, 255, 0.8);
   font-size: 14px;
 }
-  
+
 .footer-section ul li .material-icons {
   font-size: 16px;
-  color: var(--gold); /* Color dorado para íconos */
+  color: var(--gold);
 }
-  
+
 .footer-section ul li a {
   color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
   transition: color 0.2s ease;
   font-size: 14px;
 }
-  
+
 .footer-section ul li a:hover {
   color: var(--gold-light);
 }
-  
+
 .footer-bottom {
-  background-color: var(--primary-color);
+  background-color: #000000;
   padding: 12px 0;
-  margin-top: 20px;
-  text-align: center;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   color: rgb(255, 255, 255);
   font-size: 14px;
+  flex-direction: column;
+  /* Quita esta línea → height: 30px; */
+}
+
+.footer-bottom p {
+  margin: 0;
+  color: white;
+  background-color: transparent;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.footer-bottom img {
+  height: 40px;
 }
   
 /* Responsive */
@@ -878,6 +1026,6 @@ html, body {
 
 .nav-links {
   display: flex;
-  align-items: center; /* ← Esto alinea verticalmente */
+  align-items: center;
   gap: 20px;
 }

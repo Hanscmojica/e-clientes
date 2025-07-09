@@ -12,4 +12,4 @@ router.post(
   apiExternaController.consultarApiExterna
 );
 
-module.exports = router; 
+module.exports = router;  

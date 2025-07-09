@@ -52,7 +52,7 @@
     }
 
     .header-nav a {
-      color: white;
+      color: rgb(255, 255, 255);
       text-decoration: none;
       padding: 8px 16px;
       border-radius: 6px;
@@ -61,7 +61,7 @@
 
     .header-nav a.active,
     .header-nav a:hover {
-      background-color: rgba(255,255,255,0.2);
+      background-color: rgb(180, 142, 38);
     }
 
     .header-right {
@@ -81,7 +81,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #dbdee2;
+    color: #ffffff;
 }
 
     .logout-btn {
@@ -131,7 +131,7 @@
       align-items: center;
       gap: 12px;
       padding: 12px 24px;
-      color: #050064;
+      color: #ffffff;
       text-decoration: none;
       transition: all 0.3s;
       border-left: 3px solid transparent;
@@ -143,7 +143,7 @@
     }
 
     .nav-item.active {
-      background-color: #03070c;
+      background-color: #ffffff;
       color: #001135;
       border-left-color: #0f1627;
     }
@@ -284,11 +284,20 @@
     letter-spacing: 0.05em;
     border-bottom: 2px solid var(--border-color);
 }
-
-  
-
-
-
+    .admin-table tbody {
+      background: #f9fafb;
+    }
+    .admin-table tbody tr {
+      transition: background-color 0.3s;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .admin-table tbody tr:nth-child(even) {
+      background-color: #f3f4f6;
+    }
+    .admin-table tbody tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
+    
     .admin-table td {
       padding: 15px;
       border-bottom: 1px solid #ffffff;
@@ -320,6 +329,7 @@
 
     .user-avatar .material-icons {
       font-size: 18px;
+      background: black;
     }
 
     /* Botones */
@@ -374,7 +384,7 @@
 
     .btn-icon:hover {
       background: #f3f4f6;
-      color: #374151;
+      color: #d3d3d3;
     }
 
     .btn-icon.danger {
@@ -504,7 +514,7 @@
     }
 
     .stat-icon .material-icons {
-      color: white;
+      color: rgb(255, 255, 255);
       font-size: 28px;
     }
 

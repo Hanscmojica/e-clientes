@@ -1,14 +1,14 @@
+// ===== PERFIL.JS - VERSIÓN DE PRODUCCIÓN =====
+
 // Configuración de la URL base de la API
 const apiBase = 'https://e-clientes.rodall.com:5000';
 
 // Variable global para datos del usuario
 let userData = {};
 
-// Inicialización corregida
+// Inicialización
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🔍 Cargando perfil...');
-  
-  // Verificar sesión de forma más robusta
+  // Verificar sesión
   const token = localStorage.getItem('token');
   const userSessionLocal = localStorage.getItem('userSession');
   const userSessionSession = sessionStorage.getItem('userSession');
@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
   const userSession = userSessionLocal || userSessionSession;
   
   if (!token || !userSession) {
-    console.log('❌ No hay sesión válida, redirigiendo a login...');
     window.location.href = 'login.html';
     return;
   }
@@ -24,21 +23,10 @@ document.addEventListener('DOMContentLoaded', function() {
   try {
     // Parsear los datos de sesión
     const sessionData = JSON.parse(userSession);
-    console.log('✅ Datos de sesión recibidos:', sessionData);
     
-    // Verificar expiración (opcional, más flexible)
-    const loginTime = new Date(sessionData.loginTime);
-    const currentTime = new Date();
-    const hoursSinceLogin = (currentTime - loginTime) / (1000 * 60 * 60);
-    
-    if (hoursSinceLogin > 24) { // 24 horas en lugar de 8
-      console.log('⚠️ Sesión expirada, pero permitiendo acceso...');
-    }
-    
-    // 🔥 CORREGIR: Usar datos reales de la sesión, no datos hardcodeados
+    // Configurar userData con datos reales
     userData = {
       id: sessionData.id,
-      // Dividir el nombre completo en nombre y apellidos
       nombre: sessionData.name ? sessionData.name.split(' ').slice(0, 2).join(' ') : 'Usuario',
       apellidos: sessionData.name ? sessionData.name.split(' ').slice(2).join(' ') : '',
       nombreCompleto: sessionData.name || 'Usuario',
@@ -46,10 +34,10 @@ document.addEventListener('DOMContentLoaded', function() {
       username: sessionData.username || 'usuario',
       role: sessionData.role || 'USER',
       idCliente: sessionData.idCliente || sessionData.id || 'N/A',
-      // Datos que pueden venir de la sesión o usar defaults
       telefono: sessionData.telefono || "+52 961 573 5235",
       direccion: sessionData.direccion || "Veracruz, Ver.",
       loginTime: sessionData.loginTime,
+      lastPasswordChange: sessionData.lastPasswordChange,
       empresa: {
         nombre: sessionData.empresa || "Agencia Aduanal Rodall Oseguera",
         rfc: sessionData.rfc || "N/A",
@@ -58,24 +46,20 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     };
     
-    console.log('✅ UserData configurado con datos reales:', userData);
-    
-    // Configurar la página
     configurarPagina();
     
   } catch (error) {
-    console.error('❌ Error al parsear sesión:', error);
+    console.error('Error al parsear sesión:', error);
     window.location.href = 'login.html';
     return;
   }
 });
 
-// Función para configurar toda la página
+// Configurar página
 function configurarPagina() {
-  // Actualizar el header con datos reales
   actualizarHeader();
   
-  // Configurar navegación lateral
+  // Navegación
   const navItems = document.querySelectorAll('.nav-item');
   navItems.forEach(item => {
     item.addEventListener('click', (e) => {
@@ -85,18 +69,14 @@ function configurarPagina() {
     });
   });
 
-  // Configurar formularios (solo para preferencias y seguridad)
   configurarFormularios();
-  
-  // 🔥 IMPORTANTE: Cargar datos del usuario REAL en la vista
   cargarDatosUsuario();
   
-  // Configurar cerrar modales
+  // Cerrar modales
   document.querySelectorAll('.close').forEach(closeBtn => {
     closeBtn.addEventListener('click', cerrarModal);
   });
   
-  // Cerrar modal al hacer clic fuera
   window.addEventListener('click', (e) => {
     if (e.target.classList.contains('modal')) {
       cerrarModal();
@@ -104,14 +84,13 @@ function configurarPagina() {
   });
 }
 
-// Función para actualizar el header
+// Actualizar header
 function actualizarHeader() {
   const userNameElement = document.querySelector('.user-name');
   if (userNameElement && userData.nombreCompleto) {
     userNameElement.textContent = userData.nombreCompleto;
   }
   
-  // Actualizar información de usuario en la página
   const userFullName = document.getElementById('user-full-name');
   if (userFullName) {
     userFullName.textContent = userData.nombreCompleto;
@@ -123,16 +102,14 @@ function actualizarHeader() {
   }
 }
 
-// Función para cambiar entre secciones
+// Cambiar secciones
 function cambiarSeccion(sectionName) {
-  // Actualizar navegación
   document.querySelectorAll('.nav-item').forEach(item => {
     item.classList.remove('active');
   });
   const activeNavItem = document.querySelector(`[data-section="${sectionName}"]`);
   if (activeNavItem) activeNavItem.classList.add('active');
   
-  // Mostrar sección correspondiente
   document.querySelectorAll('.profile-section').forEach(section => {
     section.classList.remove('active');
   });
@@ -140,9 +117,8 @@ function cambiarSeccion(sectionName) {
   if (activeSection) activeSection.classList.add('active');
 }
 
-// Configurar todos los formularios
+// Configurar formularios
 function configurarFormularios() {
-  // Formulario de cambio de contraseña
   const passwordForm = document.getElementById('password-form');
   if (passwordForm) {
     passwordForm.addEventListener('submit', (e) => {
@@ -151,7 +127,6 @@ function configurarFormularios() {
     });
   }
   
-  // Formulario de preferencias
   const preferencesForm = document.getElementById('preferences-form');
   if (preferencesForm) {
     preferencesForm.addEventListener('submit', (e) => {
@@ -161,25 +136,19 @@ function configurarFormularios() {
   }
 }
 
-// 🔥 FUNCIÓN CORREGIDA: Cargar datos REALES del usuario
+// Cargar datos del usuario
 function cargarDatosUsuario() {
-  console.log('🔄 Cargando datos del usuario:', userData);
-  
-  // ===== INFORMACIÓN PERSONAL CON DATOS REALES =====
-  
-  // Actualizar nombre completo en el avatar
+  // Información personal
   const userFullNameElement = document.getElementById('user-full-name');
   if (userFullNameElement) {
     userFullNameElement.textContent = userData.nombreCompleto;
   }
   
-  // Actualizar rol en el avatar
   const userRoleElement = document.querySelector('.user-role');
   if (userRoleElement) {
     userRoleElement.textContent = formatearRol(userData.role);
   }
   
-  // Actualizar fecha de usuario desde (usar loginTime o fecha por defecto)
   const userSinceElement = document.querySelector('.user-since');
   if (userSinceElement) {
     const fechaRegistro = userData.loginTime ? 
@@ -188,77 +157,45 @@ function cargarDatosUsuario() {
     userSinceElement.textContent = `Usuario desde: ${fechaRegistro}`;
   }
   
-  // ===== CAMPOS DEL FORMULARIO CON DATOS REALES =====
-  
-  // Campo Nombre
+  // Campos del formulario
   const nombreInput = document.getElementById('nombre');
   if (nombreInput) {
     nombreInput.value = userData.nombre || '';
   }
   
-  // Campo Apellidos
   const apellidosInput = document.getElementById('apellidos');
   if (apellidosInput) {
     apellidosInput.value = userData.apellidos || '';
   }
   
-  // Campo Email
   const emailInput = document.getElementById('email');
   if (emailInput) {
     emailInput.value = userData.email || '';
   }
   
-  // Campo Teléfono
   const telefonoInput = document.getElementById('telefono');
   if (telefonoInput) {
     telefonoInput.value = userData.telefono || '';
   }
   
-  // Campo Dirección
   const direccionInput = document.getElementById('direccion');
   if (direccionInput) {
     direccionInput.value = userData.direccion || '';
   }
   
-  // ===== ELEMENTOS DE SOLO LECTURA (SI EXISTEN) =====
-  
-  // Username (si existe un elemento para mostrarlo)
-  const usernameElement = document.getElementById('display-username');
-  if (usernameElement) {
-    usernameElement.textContent = userData.username;
-  }
-  
-  // ID Cliente
-  const idClienteElement = document.getElementById('display-id-cliente');
-  if (idClienteElement) {
-    idClienteElement.textContent = userData.idCliente;
-  }
-  
-  // Información empresarial
-  const empresaElement = document.getElementById('display-empresa');
-  if (empresaElement) {
-    empresaElement.textContent = userData.empresa.nombre;
-  }
-  
-  // ===== INFORMACIÓN DE SEGURIDAD =====
-  
-  // Última actualización de contraseña (calcular desde loginTime si es disponible)
-  const ultimaActualizacionElement = document.getElementById('ultima-actualizacion');
-  if (ultimaActualizacionElement && userData.loginTime) {
-    const diasDesdeLogin = Math.floor((new Date() - new Date(userData.loginTime)) / (1000 * 60 * 60 * 24));
-    ultimaActualizacionElement.textContent = `hace ${diasDesdeLogin} días`;
-  }
-  
-  // ===== CARGAR PREFERENCIAS GUARDADAS =====
+  // Preferencias
   const itemsPorPagina = localStorage.getItem('itemsPorPagina');
   if (itemsPorPagina && document.getElementById('items-por-pagina')) {
     document.getElementById('items-por-pagina').value = itemsPorPagina;
   }
-  
-  console.log('✅ Datos del usuario cargados en la interfaz');
+
+  // Ejecutar módulo de contraseñas
+  setTimeout(() => {
+    actualizarEstadoContrasena();
+  }, 1000);
 }
 
-// Función para formatear nombres de roles
+// Formatear rol
 function formatearRol(role) {
   const roleMap = {
     'ADMIN': 'Administrador',
@@ -271,7 +208,7 @@ function formatearRol(role) {
   return roleMap[role] || role;
 }
 
-// Función para guardar preferencias
+// Guardar preferencias
 function guardarPreferencias() {
   const itemsPorPagina = document.getElementById('items-por-pagina')?.value;
   if (itemsPorPagina) {
@@ -280,71 +217,7 @@ function guardarPreferencias() {
   }
 }
 
-// Función para cambiar contraseña - CON BACKEND REAL
-async function cambiarContraseña() {
-  const currentPassword = document.getElementById('current-password').value;
-  const newPassword = document.getElementById('new-password').value;
-  const confirmPassword = document.getElementById('confirm-password').value;
-
-  try {
-    // Validaciones básicas
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      mostrarAlerta('Todos los campos son obligatorios', 'error');
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      mostrarAlerta('Las contraseñas no coinciden', 'error');
-      return;
-    }
-
-    if (newPassword.length < 8) {
-      mostrarAlerta('La contraseña debe tener al menos 8 caracteres', 'error');
-      return;
-    }
-
-    // Obtener el token del localStorage
-    const token = localStorage.getItem('token');
-    if (!token) {
-      mostrarAlerta('No hay sesión activa. Por favor, inicie sesión nuevamente.', 'error');
-      window.location.href = './login.html';
-      return;
-    }
-
-    console.log('Enviando solicitud de cambio de contraseña...');
-
-    const response = await fetch(`${apiBase}/api/profile/change-password`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify({
-        currentPassword,
-        newPassword
-      })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || 'Error al cambiar la contraseña');
-    }
-
-    console.log('✅ Contraseña cambiada exitosamente');
-
-    // Éxito
-    mostrarAlerta('Contraseña cambiada correctamente', 'success');
-    cerrarModal();
-    document.getElementById('password-form').reset();
-
-  } catch (error) {
-    console.error('Error al cambiar contraseña:', error);
-    mostrarAlerta(error.message || 'Error al cambiar la contraseña. Intente nuevamente.', 'error');
-  }
-}
-
-// Funciones de modal
+// Modales
 function mostrarModalContraseña() {
   const modal = document.getElementById('passwordModal');
   if (modal) modal.style.display = 'block';
@@ -357,27 +230,22 @@ function cerrarModal() {
   });
 }
 
-// Función para cerrar sesión
+// Cerrar sesión
 function logout() {
   if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-    // Eliminar datos de sesión
     localStorage.removeItem('userSession');
     localStorage.removeItem('token');
     sessionStorage.removeItem('userSession');
-    
-    // Redirigir a la página de login
     window.location.href = 'login.html';
   }
 }
 
-// Función para mostrar alertas
+// Mostrar alertas
 function mostrarAlerta(mensaje, tipo = 'info') {
-  // Crear elemento de alerta
   const alerta = document.createElement('div');
   alerta.className = `alert alert-${tipo}`;
   alerta.textContent = mensaje;
   
-  // Estilos de la alerta
   alerta.style.position = 'fixed';
   alerta.style.top = '20px';
   alerta.style.right = '20px';
@@ -387,7 +255,6 @@ function mostrarAlerta(mensaje, tipo = 'info') {
   alerta.style.zIndex = '1001';
   alerta.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
   
-  // Color según el tipo
   switch(tipo) {
     case 'success':
       alerta.style.backgroundColor = '#10b981';
@@ -404,7 +271,6 @@ function mostrarAlerta(mensaje, tipo = 'info') {
   
   document.body.appendChild(alerta);
   
-  // Remover después de 4 segundos
   setTimeout(() => {
     if (document.body.contains(alerta)) {
       document.body.removeChild(alerta);
@@ -412,7 +278,240 @@ function mostrarAlerta(mensaje, tipo = 'info') {
   }, 4000);
 }
 
-// Función para ver sesiones (placeholder)
+// Ver sesiones (placeholder)
 function verSesiones() {
   mostrarAlerta('Función de sesiones activas en desarrollo');
+}
+
+// Cambiar avatar (placeholder)
+function cambiarAvatar() {
+  mostrarAlerta('Función de cambio de avatar en desarrollo');
+}
+
+// ===== MÓDULO DE EXPIRACIÓN DE CONTRASEÑAS =====
+
+// Función principal para actualizar el estado de la contraseña
+function actualizarEstadoContrasena() {
+    const ultimaActualizacionElement = document.getElementById('ultima-actualizacion');
+    const tarjetaSeguridad = document.querySelector('.seguridad-card');
+    const passwordExpiryInfo = document.getElementById('password-expiry-info');
+    const passwordStatusText = document.getElementById('password-status-text');
+
+    const passwordExpirationDays = 180;
+    
+    // Buscar fecha de último cambio
+    let lastPasswordChangeDate = null;
+    
+    if (userData.lastPasswordChange) {
+        lastPasswordChangeDate = new Date(userData.lastPasswordChange);
+    }
+    else if (localStorage.getItem('lastPasswordChange')) {
+        lastPasswordChangeDate = new Date(localStorage.getItem('lastPasswordChange'));
+    }
+    else {
+        lastPasswordChangeDate = new Date(userData.loginTime);
+        localStorage.setItem('lastPasswordChange', userData.loginTime);
+    }
+
+    const now = new Date();
+    const diasDesdeCambio = Math.floor((now - lastPasswordChangeDate) / (1000 * 60 * 60 * 24));
+    const diasRestantes = passwordExpirationDays - diasDesdeCambio;
+
+    // Actualizar elementos
+    if (ultimaActualizacionElement) {
+        ultimaActualizacionElement.textContent = `hace ${diasDesdeCambio} días`;
+    }
+
+    if (passwordExpiryInfo) {
+        if (diasRestantes <= 0) {
+            passwordExpiryInfo.textContent = '🚨 Tu contraseña ha EXPIRADO';
+            passwordExpiryInfo.style.color = '#dc2626';
+            passwordExpiryInfo.style.fontWeight = 'bold';
+        } else if (diasRestantes <= 10) {
+            passwordExpiryInfo.textContent = `⚠️ Expira en ${diasRestantes} días`;
+            passwordExpiryInfo.style.color = '#dc2626';
+            passwordExpiryInfo.style.fontWeight = 'bold';
+        } else {
+            passwordExpiryInfo.textContent = `Expira en ${diasRestantes} días`;
+            passwordExpiryInfo.style.color = '#666';
+            passwordExpiryInfo.style.fontWeight = 'normal';
+        }
+    }
+
+    if (passwordStatusText) {
+        const estado = determinarEstadoTexto(diasDesdeCambio, diasRestantes);
+        passwordStatusText.textContent = `Estado: ${estado}`;
+    }
+
+    // Aplicar colores a la tarjeta
+    if (tarjetaSeguridad) {
+        const colorInfo = determinarColorEstado(diasDesdeCambio, diasRestantes);
+        
+        // Aplicar estilos
+        tarjetaSeguridad.style.border = `3px solid ${colorInfo.borderColor}`;
+        tarjetaSeguridad.style.backgroundColor = colorInfo.backgroundColor;
+        tarjetaSeguridad.style.borderRadius = '12px';
+        tarjetaSeguridad.style.transition = 'all 0.3s ease';
+        tarjetaSeguridad.style.boxShadow = `0 4px 12px ${colorInfo.borderColor}33`;
+        
+        // Mostrar alerta si es necesario
+        if (colorInfo.mostrarAlerta) {
+            mostrarAlerta(colorInfo.mensaje, colorInfo.tipoAlerta);
+        }
+    }
+
+    return {
+        diasDesdeCambio,
+        diasRestantes,
+        estado: determinarEstadoTexto(diasDesdeCambio, diasRestantes),
+        fechaExpiracion: new Date(lastPasswordChangeDate.getTime() + (passwordExpirationDays * 24 * 60 * 60 * 1000))
+    };
+}
+
+// Determinar color y estado
+function determinarColorEstado(diasDesdeCambio, diasRestantes) {
+    if (diasRestantes <= 0) {
+        return {
+            borderColor: '#dc2626',
+            backgroundColor: '#fef2f2',
+            mostrarAlerta: true,
+            mensaje: '🚨 Tu contraseña ha EXPIRADO. Debes cambiarla inmediatamente.',
+            tipoAlerta: 'error'
+        };
+    }
+    
+    if (diasRestantes <= 10) {
+        return {
+            borderColor: '#dc2626',
+            backgroundColor: '#fef2f2',
+            mostrarAlerta: true,
+            mensaje: `🔴 ¡URGENTE! Tu contraseña expirará en ${diasRestantes} días. Cámbiala ahora.`,
+            tipoAlerta: 'error'
+        };
+    }
+    
+    if (diasDesdeCambio >= 135) {
+        return {
+            borderColor: '#ea580c',
+            backgroundColor: '#fff7ed',
+            mostrarAlerta: false,
+            mensaje: `🟠 Tu contraseña vence pronto (${diasRestantes} días restantes)`,
+            tipoAlerta: 'warning'
+        };
+    }
+    
+    if (diasDesdeCambio >= 90) {
+        return {
+            borderColor: '#eab308',
+            backgroundColor: '#fefce8',
+            mostrarAlerta: false,
+            mensaje: `🟡 Considera cambiar tu contraseña pronto (${diasRestantes} días restantes)`,
+            tipoAlerta: 'info'
+        };
+    }
+    
+    if (diasDesdeCambio >= 45) {
+        return {
+            borderColor: '#22c55e',
+            backgroundColor: '#f0fdf4',
+            mostrarAlerta: false,
+            mensaje: `🟢 Estado normal (${diasRestantes} días restantes)`,
+            tipoAlerta: 'success'
+        };
+    }
+    
+    return {
+        borderColor: '#16a34a',
+        backgroundColor: '#f0fdf4',
+        mostrarAlerta: false,
+        mensaje: `🟢 Contraseña reciente (${diasRestantes} días restantes)`,
+        tipoAlerta: 'success'
+    };
+}
+
+// Determinar estado en texto
+function determinarEstadoTexto(diasDesdeCambio, diasRestantes) {
+    if (diasRestantes <= 0) return 'EXPIRADA';
+    if (diasRestantes <= 10) return 'CRÍTICO';
+    if (diasDesdeCambio >= 135) return 'NARANJA';
+    if (diasDesdeCambio >= 90) return 'AMARILLO';
+    if (diasDesdeCambio >= 45) return 'VERDE';
+    return 'ÓPTIMO';
+}
+
+// Cambiar contraseña con actualización de fecha
+async function cambiarContraseña() {
+    const currentPassword = document.getElementById('current-password').value;
+    const newPassword = document.getElementById('new-password').value;
+    const confirmPassword = document.getElementById('confirm-password').value;
+
+    try {
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            mostrarAlerta('Todos los campos son obligatorios', 'error');
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            mostrarAlerta('Las contraseñas no coinciden', 'error');
+            return;
+        }
+
+        if (newPassword.length < 8) {
+            mostrarAlerta('La contraseña debe tener al menos 8 caracteres', 'error');
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            mostrarAlerta('No hay sesión activa. Por favor, inicie sesión nuevamente.', 'error');
+            window.location.href = './login.html';
+            return;
+        }
+
+        const response = await fetch(`${apiBase}/api/profile/change-password`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                currentPassword,
+                newPassword
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Error al cambiar la contraseña');
+        }
+
+        // Actualizar fecha de último cambio
+        const fechaCambio = new Date().toISOString();
+        userData.lastPasswordChange = fechaCambio;
+        localStorage.setItem('lastPasswordChange', fechaCambio);
+        
+        // Actualizar sesión
+        const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+        if (userSession) {
+            try {
+                const sessionData = JSON.parse(userSession);
+                sessionData.lastPasswordChange = fechaCambio;
+                localStorage.setItem('userSession', JSON.stringify(sessionData));
+            } catch (e) {
+                console.log('No se pudo actualizar sesión');
+            }
+        }
+
+        // Re-ejecutar módulo
+        actualizarEstadoContrasena();
+
+        mostrarAlerta('Contraseña cambiada correctamente', 'success');
+        cerrarModal();
+        document.getElementById('password-form').reset();
+
+    } catch (error) {
+        console.error('Error al cambiar contraseña:', error);
+        mostrarAlerta(error.message || 'Error al cambiar la contraseña. Intente nuevamente.', 'error');
+    }
 }

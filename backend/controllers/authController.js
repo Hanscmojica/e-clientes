@@ -43,7 +43,7 @@ exports.login = async (req, res, next) => {
             console.log('✅ Login de prueba para HANS');
             
             // ✅ SEPARACIÓN CORRECTA DE CONCEPTOS
-            const usuarioId = 5951;  // ID único del usuario HANS
+            const usuarioId = 6;  // ID único del usuario HANS
             const clienteId = 5951;  // ID de la empresa de HANS
             
             const token = jwt.sign(

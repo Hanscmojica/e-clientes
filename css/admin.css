@@ -662,6 +662,7 @@
   .log-filters input,
   .log-filters select {
     padding: 10px 12px;
+    background: var(--bg-dark);
     border: 2px solid var(--border-color);
     border-radius: var(--radius-md);
     font-size: var(--font-sm);
@@ -682,13 +683,13 @@
     text-transform: uppercase;
   }
   
-  .log-login {
-    background: rgba(5, 150, 105, 0.1);
+  .log-login {  
+    background: rgb(0, 0, 0);
     color: var(--success-color);
   }
   
   .log-logout {
-    background: rgba(107, 114, 128, 0.1);
+    background: rgba(0, 0, 0, 0.1);
     color: var(--text-muted);
   }
   
