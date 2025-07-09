@@ -1,10 +1,12 @@
 /* Variables de colores según el manual de identidad de Rodall Oseguera */
 :root {
   /* Azules (identidad marítima) */
-  --primary-dark: #0f2f4f;      /* Nuevo color azul solicitado */
-  --primary-medium: #082f4c;     
-  --primary-blue: #0e5372;       
-  --primary-light: #0b73a0;      
+  --primary-color: black;
+  --primary-blue: #0303b5;
+  --primary-dark: #082f4c;
+  --primary-medium: #082f4c;        
+  --primary-light: #0b73a0;   
+
   
   /* Dorados (color del ingeniero) */
   --gold-dark: #733000;          
@@ -13,7 +15,6 @@
   --gold-light: #f9f9c0;         
   
   /* Para mantener compatibilidad con estilos existentes */
-  --primary-color: var(--primary-dark);
   --primary-hover: var(--primary-medium);
   --accent-color: var(--primary-light);
   --secondary-color: #f8fafc;
@@ -312,7 +313,7 @@
 
 .modal-header {
   padding: 15px 25px;
-  background-color: var(--primary-color);
+  background-color: var(--primary-blue);
   color: white;
   display: flex;
   justify-content: space-between;
@@ -324,10 +325,10 @@
 }
 
 .modal-header h2 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--gold); /* Color dorado para el título */
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: white;
 }
 
 .modal-header .close {
@@ -379,7 +380,7 @@
   color: var(--gold); /* Color dorado al pasar el cursor */
 }
 .tab-button.active {
-  color: var(--gold); /* Color dorado para la pestaña activa */
+  color: var(--dark-text);
   font-weight: 600;
   border-bottom-color: var(--gold);
 }
@@ -459,10 +460,11 @@
 }
 #listaDocumentos li > .material-icons {
   margin-right: 15px;
-  color: var(--gold); /* Color dorado para íconos */
+  color: var(--primary-blue);
   font-size: 24px;
   flex-shrink: 0;
 }
+
 #listaDocumentos li .document-name {
   flex-grow: 1;
   font-size: 15px;
@@ -497,7 +499,7 @@
   font-size: 18px;
 }
 .btn-accion-doc.download {
-  background-color: var(--primary-color);
+  background-color: var(--primary-blue);
   color: white;
 }
 .btn-accion-doc.download:hover {
