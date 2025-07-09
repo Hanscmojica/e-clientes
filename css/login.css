@@ -3,8 +3,8 @@
   /* Azules (identidad marítima) */
   --primary-dark: #0e5372;  /* PANTONE 19-4024 TPG */
   --primary-medium: #04263f; /* PANTONE 19-4111 TPG */
-  --primary-blue: #04263f;  /* PANTONE 19-4540 TPG */
-  --primary-light: #0b73a0; /* PANTONE 18-4528 TPG */
+  --primary-blue: #0303b5;  /* PANTONE 19-4540 TPG */
+  --primary-light: #f5f0f0; /* PANTONE 18-4528 TPG */
   --blue-lightest: #9cdfe8; /* Azul muy claro del manual */
   
   /* Dorados (color del ingeniero) */
@@ -17,7 +17,7 @@
   --success-color: #4CAF50;
   --error-color: #ef4444;
   --dark-text: #1f2937;
-  --light-text: #6b7280;  
+  --light-text:#323c4e;
   --border-color: #e5e7eb;
   --light-bg: #ffffff;
   --shadow: rgba(0,0,0,0.1);
@@ -35,7 +35,7 @@ body {
   line-height: 1.6;
   color: var(--dark-text);
   /* Gradiente azul basado en los azules del manual */
-  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 50%, var(--primary-blue) 100%);
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-light) 50%, var(--primary-light) 100%);
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -60,12 +60,13 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  background-color: black;
 }
 
 .login-info {
   flex: 1;
   /* Gradiente basado en los azules del manual */
-  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-blue) 100%);
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue) 100%);
   color: white;
   padding: 60px;
   display: flex;
@@ -85,7 +86,7 @@ body {
   width: 80px;
   height: 80px;
   /* Color dorado del ingeniero como fondo del logo */
-  background-color: white;
+  background-color: rgb(0, 0, 0);
   border-radius: 20px;
   margin-bottom: 20px;
 }
@@ -98,13 +99,31 @@ body {
 .login-header h1 {
   font-size: 32px;
   font-weight: 700;
-  /* Color dorado del ingeniero para el título */
-  color: var(--gold);
   margin-bottom: 8px;
+
+  background: linear-gradient(90deg,
+    #723518 3.5372%,
+    #d1962e 16.3474%,
+    #f8f7c1 26.2788%,
+    #d1962e 38.9683%,
+    #f8f7c1 50.7655%,
+    #d1962e 63.3107%,
+    #f8f7c1 75.1884%,
+    #d1962e 86.6952%,
+    #723518 96.2253%
+  );
+
+  /* Estas propiedades hacen que el gradiente se aplique al texto */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  /* Fallback para navegadores que no soporten background-clip */
+  color: var(--gold);
 }
 
 .login-header p {
-  color: var(--light-text);
+  color: var(--light-bg);
   font-size: 16px;
 }
 
@@ -125,7 +144,7 @@ body {
   gap: 8px;
   font-weight: 600;
   margin-bottom: 8px;
-  color: var(--dark-text);
+  color: var(--light-bg);
   font-size: 15px;
 }
 
@@ -189,7 +208,7 @@ body {
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  color: var(--dark-text);
+  color: var(--light-bg);
 }
 
 .remember-me input[type="checkbox"] {
@@ -199,7 +218,7 @@ body {
 }
 
 .forgot-password {
-  color: var(--primary-light);
+  color: var(--light-bg);
   text-decoration: none;
   font-weight: 500;
 }
@@ -212,7 +231,7 @@ body {
   width: 100%;
   padding: 14px 20px;
   /* Gradiente basado en los azules del manual */
-  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue) 100%);
   color: white;
   border: none;
   border-radius: 10px;
@@ -259,10 +278,11 @@ body {
   margin-top: 30px;
   color: var(--light-text);
   font-size: 14px;
+  color :white;
 }
 
 .login-footer a {
-  color: var(--primary-light);
+  color: rgb(255, 255, 255);
   text-decoration: none;
   font-weight: 500;
 }
@@ -276,7 +296,26 @@ body {
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 20px;
-  /* Aplicamos el color dorado en el título */
+
+  /* Degradado dorado exacto que proporcionaste */
+  background: linear-gradient(90deg,
+    #723518 3.5372%,
+    #d1962e 16.3474%,
+    #f8f7c1 26.2788%,
+    #d1962e 38.9683%,
+    #f8f7c1 50.7655%,
+    #d1962e 63.3107%,
+    #f8f7c1 75.1884%,
+    #d1962e 86.6952%,
+    #723518 96.2253%
+  );
+  
+  /* Estas propiedades hacen que el gradiente se aplique al texto */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  /* Fallback para navegadores que no soporten background-clip */
   color: var(--gold);
 }
 
@@ -304,7 +343,7 @@ body {
 .login-info ul li .material-icons {
   font-size: 24px;
   /* Usamos el color dorado para los iconos de verificación */
-  color: var(--gold);
+  color: white
 }
 
 /* Responsive */
