@@ -54,8 +54,6 @@ router.get('/profiles', verifyToken, async (req, res) => {
     }
 });
 
-// === NUEVAS RUTAS AGREGADAS ===
-
 // Obtener sesiones activas del usuario
 router.get('/sessions', verifyToken, async (req, res) => {
     try {
@@ -181,7 +179,7 @@ router.post('/close-all-sessions', verifyToken, async (req, res) => {
     }
 });
 
-// ✅ NUEVA RUTA: Cambiar contraseña en primer ingreso
+//Cambiar contraseña en primer ingreso
 router.post('/change-first-password', authController.changeFirstPassword);
 
 module.exports = router;

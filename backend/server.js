@@ -26,10 +26,10 @@ const adminRoutes = require('./routes/admin');
 const app = express();
 
 // Configuración SSL
-const sslOptions = {
-    key: fs.readFileSync(path.join(__dirname, process.env.SSL_KEY_PATH)),
-    cert: fs.readFileSync(path.join(__dirname, process.env.SSL_CERT_PATH))
-};
+//const sslOptions = {
+    //key: fs.readFileSync(path.join(__dirname, process.env.SSL_KEY_PATH)),
+    //cert: fs.readFileSync(path.join(__dirname, process.env.SSL_CERT_PATH))
+//};
 
 // Test de conexión a base de datos
 async function testDatabaseConnection() {
@@ -59,21 +59,19 @@ app.use(cors({
 }));
 app.use(express.static(path.join(__dirname, '../')));
 
-// ...existing code... (el resto del código permanece igual, solo eliminé las duplicaciones)
-
 // Crear servidores HTTP y HTTPS
 // const httpServer = http.createServer(app);
-const httpsServer = https.createServer(sslOptions, app);
+//const httpsServer = https.createServer(sslOptions, app);
 
 // // Iniciar ambos servidores
 // httpServer.listen(process.env.PORT, 'e-clientes.rodall.com', () => {
 //     console.log(`🌐 Servidor HTTP ejecutándose en http://${process.env.DOMAIN}:${process.env.PORT}`);
 // });
 
-httpsServer.listen(process.env.SSL_PORT, 'e-clientes.rodall.com', () => {
-    console.log(`🔒 Servidor HTTPS ejecutándose en https://${process.env.DOMAIN}:${process.env.SSL_PORT}`);
-    testDatabaseConnection();
-});
+//httpsServer.listen(process.env.SSL_PORT, 'e-clientes.rodall.com', () => {
+    //console.log(`🔒 Servidor HTTPS ejecutándose en https://${process.env.DOMAIN}:${process.env.SSL_PORT}`);
+    //testDatabaseConnection();
+//});
 
 // if (process.env.NODE_ENV === 'production') {
 //     app.use((req, res, next) => {
@@ -580,3 +578,57 @@ app.use((err, req, res, next) => {
         message: 'Error interno del servidor'
     });
 });
+
+// ✅ CONFIGURACIÓN DEL SERVIDOR PARA DESARROLLO
+const PORT = process.env.PORT || 5000;
+//const SSL_PORT = process.env.SSL_PORT || 5001;
+const HOST = process.env.HOST || '127.0.0.1'; // localhost para desarrollo
+
+console.log(`🔧 Configuración del servidor:`);
+console.log(`   Host: ${HOST}`);
+console.log(`   Puerto HTTP: ${PORT}`);
+//console.log(`   Puerto HTTPS: ${SSL_PORT}`);
+console.log(`   Entorno: ${process.env.NODE_ENV}`);
+
+// Función para iniciar servidor
+async function startServer() {
+    try {
+        // Test conexión BD
+        await testDatabaseConnection();
+        
+        // Servidor HTTP
+        const httpServer = http.createServer(app);
+        httpServer.listen(PORT, HOST, () => {
+            console.log(`🚀 Servidor HTTP corriendo en http://${HOST}:${PORT}`);
+        });
+        
+        // Servidor HTTPS (opcional)
+        try {
+            const httpsServer = https.createServer(sslOptions, app);
+            httpsServer.listen(SSL_PORT, HOST, () => {
+                console.log(`🔒 Servidor HTTPS corriendo en https://${HOST}:${SSL_PORT}`);
+            });
+        } catch (sslError) {
+            console.log('⚠️  SSL no disponible, solo HTTP activo');
+        }
+        
+    } catch (error) {
+        console.error('❌ Error al iniciar servidor:', error);
+        process.exit(1);
+    }
+}
+
+// Manejo de errores de red
+process.on('uncaughtException', (err) => {
+    if (err.code === 'EADDRNOTAVAIL') {
+        console.error(`❌ Error: La dirección ${err.address}:${err.port} no está disponible`);
+        console.error('💡 Solución: Verifica las variables HOST y PORT en tu archivo .env');
+        console.error('💡 Para desarrollo usa HOST=127.0.0.1 o HOST=localhost');
+    } else {
+        console.error('❌ Error no controlado:', err);
+    }
+    process.exit(1);
+});
+
+// Iniciar servidor
+startServer();

@@ -53,3 +53,4 @@ if (module.exports.host === '10.11.20.11' && module.exports.secure === true) {
 if (module.exports.host === '10.11.20.11' && module.exports.secure === false) {
     console.log('✅ Configuración correcta para servidor 10.11.20.11 con FTP simple');
 }
+

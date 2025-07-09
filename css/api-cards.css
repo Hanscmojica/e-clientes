@@ -1,16 +1,16 @@
 /* Variables de colores según el manual de identidad de Rodall Oseguera */
 :root {
   /* Azules (identidad marítima) */
-  --primary-dark: #04263f;       /* PANTONE 19-4024 TPG - Azul marino oscuro */
-  --primary-medium: #082f4c;     /* PANTONE 19-4111 TPG - Azul marino medio */
-  --primary-blue: #0e5372;       /* PANTONE 19-4540 TPG */
-  --primary-light: #0b73a0;      /* PANTONE 18-4528 TPG - Azul claro */
+  --primary-dark: #0f2f4f;      /* Nuevo color azul solicitado */
+  --primary-medium: #082f4c;     
+  --primary-blue: #0e5372;       
+  --primary-light: #0b73a0;      
   
   /* Dorados (color del ingeniero) */
-  --gold-dark: #733000;          /* PANTONE 19-1535 TPG */
-  --gold-medium: #d2972e;        /* PANTONE 15-0953 TPG */
-  --gold: #d7a520;               /* PANTONE 15-0954 TPG - Dorado principal */
-  --gold-light: #f9f9c0;         /* PANTONE 11-0617 TPG */
+  --gold-dark: #733000;          
+  --gold-medium: #d2972e;        
+  --gold: #d7a520;               
+  --gold-light: #f9f9c0;         
   
   /* Para mantener compatibilidad con estilos existentes */
   --primary-color: var(--primary-dark);
@@ -532,45 +532,43 @@
 }
 
 /* Estilos para los items del historial */
-/* 🎨 HISTORIAL CON DISEÑO CERRADO - ESTILO ORIGINAL */
 
 /* Contenedor principal del historial - Funcionalidad mantenida */
 .historial-lista {
     max-height: none;
-    min-height: 400px;
+    min-height: 500px;
     overflow-y: auto;
     padding: 15px;
     padding-right: 20px;
     flex-grow: 1;
 }
 
-/* 🎨 DISEÑO CERRADO - Como estaba antes */
+/* 🎨 Evento del historial - Funcionalidad mantenida */
 .historial-evento {
-    padding: 15px; /* 🎨 Igual que antes */
-    margin-bottom: 10px; /* 🎨 Igual que antes */
-    border-left: 4px solid var(--gold); /* 🎨 Igual que antes */
-    background-color: var(--secondary-color); /* 🎨 Igual que antes */
-    border-radius: 0 8px 8px 0; /* 🎨 Igual que antes */
-    transition: background-color 0.2s ease; /* 🎨 Igual que antes */
-    border: none; /* Solo el borde izquierdo */
+    padding: 15px; 
+    margin-bottom: 10px; 
+    border-left: 4px solid var(--gold); 
+    background-color: var(--secondary-color); 
+    border-radius: 0 8px 8px 0; 
+    transition: background-color 0.2s ease;
+    border: none;
 }
 
 .historial-evento:hover {
-    background-color: #e9ecef; /* 🎨 Igual que antes */
+    background-color: #e9ecef;
 }
 
-/* 🎨 PÁRRAFOS como antes - pero manteniendo funcionalidad */
 .historial-evento p {
-    margin: 5px 0; /* 🎨 Igual que antes */
-    font-size: 14px; /* 🎨 Igual que antes */
-    line-height: 1.5; /* 🎨 Igual que antes */
+    margin: 5px 0; 
+    font-size: 14px; 
+    line-height: 1.5; 
 }
 
 .historial-evento p strong {
-    font-weight: 600; /* 🎨 Igual que antes */
-    color: var(--dark-text); /* 🎨 Igual que antes */
-    min-width: 100px; /* 🎨 Igual que antes */
-    display: inline-block; /* 🎨 Igual que antes */
+    font-weight: 600; 
+    color: var(--dark-text); 
+    min-width: 100px; 
+    display: inline-block; 
 }
 
 /* 🎨 HEADER compacto */
@@ -578,9 +576,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px; /* 🎨 Más compacto */
+    margin-bottom: 8px; 
     flex-wrap: wrap;
-    gap: 10px; /* 🎨 Gap más pequeño */
+    gap: 10px; 
 }
 
 .estado-info {
@@ -636,38 +634,38 @@
 
 /* 🎨 CAMPOS como párrafos - DISEÑO COMPACTO */
 .campo-historial {
-    margin: 5px 0; /* 🎨 Como párrafos originales */
-    font-size: 14px; /* 🎨 Como antes */
-    line-height: 1.5; /* 🎨 Como antes */
+    margin: 5px 0; 
+    font-size: 14px; 
+    line-height: 1.5;
 }
 
 .campo-historial label {
-    font-weight: 600; /* 🎨 Como strong antes */
-    color: var(--dark-text); /* 🎨 Como antes */
-    min-width: 100px; /* 🎨 Como antes */
-    display: inline-block; /* 🎨 Como antes */
-    font-size: 14px; /* 🎨 Como antes */
+    font-weight: 600; 
+    color: var(--dark-text); 
+    min-width: 150px; 
+    display: inline-block; 
+    font-size: 14px; 
     text-transform: none;
     letter-spacing: normal;
 }
 
 /* 🎨 VALORES como texto normal */
 .campo-historial .valor {
-    display: inline; /* 🎨 Como texto normal */
+    display: inline; 
     background: transparent;
     padding: 0;
     border: none;
     border-radius: 0;
-    font-size: 14px; /* 🎨 Como antes */
-    line-height: 1.5; /* 🎨 Como antes */
+    font-size: 14px; 
+    line-height: 1.5; 
     color: #212529;
     vertical-align: top;
 }
 
 /* 🎨 OBSERVACIONES - tratamiento especial pero compacto */
 .campo-historial .valor.observaciones {
-    display: block; /* 🎨 Para observaciones largas */
-    margin-left: 100px; /* 🎨 Alineado con el texto */
+    display: block; 
+    margin-left: 100px; 
     margin-top: 2px;
     white-space: pre-wrap;
 }
@@ -679,7 +677,7 @@
 
 /* 🎨 INFO de usuario compacta */
 .usuario-info {
-    margin-top: 5px; /* 🎨 Como párrafo normal */
+    margin-top: 5px; 
 }
 
 /* 🎨 RESPONSIVE - igual que antes */
@@ -699,11 +697,10 @@
     }
     
     .campo-historial .valor.observaciones {
-        margin-left: 0; /* 🎨 Sin margen en móvil */
+        margin-left: 0; 
     }
 }
 
-/* 🎨 Scrollbar personalizado */
 .historial-lista::-webkit-scrollbar {
     width: 6px;
 }
@@ -722,7 +719,6 @@
     background: #a1a1a1;
 }
 
-/* 🎨 Estado cuando no hay historial */
 .no-historial {
     text-align: center;
     padding: 40px 20px;
@@ -734,7 +730,6 @@
     margin: 0;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .referencias-grid {
     grid-template-columns: 1fr;
@@ -799,7 +794,6 @@
     font-size: 12px;
   }
 
-  /* 🔥 ASEGURAR QUE EL TAB-PANEL DEL HISTORIAL USE TODO EL ESPACIO */
 #historial-tab {
     min-height: 500px;
     max-height: none;
@@ -807,7 +801,7 @@
 
 .historial-lista {
     max-height: none !important;
-    min-height: 400px;
+    min-height: 500px;
     flex-grow: 1;
 }
   .historial-evento {

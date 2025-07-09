@@ -617,7 +617,7 @@ document.addEventListener('DOMContentLoaded', function() {
     logger.debug('Event listener para cambio de contraseña (viejo) agregado');
   }
 
-  // ✅ NUEVO: Cerrar modal al hacer click fuera de él (opcional)
+  // ✅ NUEVO: Cerrar modal al hacer click fuera de él (opcional)   
   const modal = document.getElementById('changePasswordModal');
   if (modal) {
     modal.addEventListener('click', function(e) {
