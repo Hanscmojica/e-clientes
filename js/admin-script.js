@@ -1298,7 +1298,7 @@ async function actualizarPerfil(perfilId) {
     }
 
   } catch (error) {
-    console.error('❌ Error actualizando perfil:', error);
+    console.error(' Error actualizando perfil:', error);
     mostrarAlerta('Error de conexión al actualizar perfil', 'error');
   }
 }
