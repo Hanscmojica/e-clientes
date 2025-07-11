@@ -18,7 +18,7 @@
       top: 0;
       left: 0;
       right: 0;
-      background: linear-gradient(135deg, #0c1d41 0%, #061d5f 100%);
+      background: linear-gradient(135deg, #000000 0%, #000000 100%);
       color: white;
       padding: 0 20px;
       height: 70px;
@@ -99,32 +99,32 @@
     }
 
     /* Layout principal */
-    .main-content {
-      margin-top: 70px;
-      display: flex;
-      min-height: calc(100vh - 130px);
-    }
+   /* Configuración para que la sidebar ocupe toda la altura disponible */
 
-    .admin-container {
-      display: flex;
-      width: 100%;
-      max-width: none;
-    }
+.main-content {
+  margin-top: 0; /* Quitar margen superior */
+  display: flex;
+  min-height: calc(100vh - 70px); /* Solo descontar altura del header */
+}
 
-    /* Sidebar mejorado */
-    .admin-sidebar {
-      width: 280px;
-      min-width: 280px;
-      background: #04263f;
-      border-right: 1px solid #e5e7eb;
-      padding: 20px 0;
-      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    }
+.admin-container {
+  display: flex;
+  width: 100%;
+  max-width: none;
+  height: calc(100vh - 70px); /* Altura completa menos header */
+}
 
-    .admin-nav {
-      display: flex;
-      flex-direction: column;
-    }
+/* Sidebar que ocupa toda la altura */
+.admin-sidebar {
+  width: 280px;
+  min-width: 280px;
+  height: 100%; /* Ocupa toda la altura del contenedor */
+  background: #0303b5;
+  border-right: 1px solid #e5e7eb;
+  padding: 20px 0;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  position: relative; /* Para mantener en flujo normal */
+}
 
     .nav-item {
       display: flex;
@@ -334,7 +334,7 @@
 
     /* Botones */
     .btn-primary {
-      background: linear-gradient(135deg, #0c204c 0%, #031b5d 100%);
+      background: linear-gradient(135deg, #0303b5 0%,  #0303b5 100%);
       color: white;
       border: none;
       padding: 12px 24px;
@@ -457,7 +457,7 @@
       bottom: 0;
       left: 0;
       right: 0;
-      background: #04263f;
+      background: #000000;
       color: white;
       padding: 15px 0;
       border-top: 1px solid #ffffff;
@@ -465,7 +465,7 @@
     }
 
     .footer-bottom {
-    background-color: #04263f;
+    background-color: #000000;
     padding: 6px 0;
     margin-top: 5px;
     text-align: center;
@@ -510,7 +510,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #04263f 0%, #04263f 100%);
+      background: linear-gradient(135deg, #0303b5 0%, #0303b5 100%);
     }
 
     .stat-icon .material-icons {
