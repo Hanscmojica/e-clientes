@@ -252,7 +252,7 @@ logo::before,
   box-shadow: 0 0 4px rgba(215, 165, 32, 0.3);
 }
 
-  
+/* MANTENER todos los estilos originales de botones del header */
 .header-nav a {
   text-decoration: none;
   color: white;
@@ -262,11 +262,32 @@ logo::before,
   transition: all 0.2s ease;
   font-size: 15px;
 }
-  
+
 .header-nav a:hover,
 .header-nav a.active {
   background-color: rgba(255, 255, 255, 0.1);
   color: white;
+}
+
+/* SOLO aplicar degradado dorado al texto del botón "Perfil" cuando esté activo */
+.header-nav a.active.perfil-button {
+  background: linear-gradient(90deg,
+    #723518 3.5372%,
+    #d1962e 16.3474%,
+    #f8f7c1 26.2788%,
+    #d1962e 38.9683%,
+    #f8f7c1 50.7655%,
+    #d1962e 63.3107%,
+    #f8f7c1 75.1884%,
+    #d1962e 86.6952%,
+    #723518 96.2253%
+  ) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
 }
   
 .header-right {

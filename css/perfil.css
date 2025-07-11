@@ -52,31 +52,79 @@
     justify-content: space-between;
     height: 70px;
     color: white;
+    gap: 20px;
   }
+
   
   .header-left {
     display: flex;
     align-items: center;
   }
   
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: #d7a520; 
-    text-decoration: none;
-    cursor: pointer;
-  }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  position: relative;
+  padding: 15px 0;
+}
+
+logo::before,
+.logo::after {
+  content: '';
+  position: absolute;
+  height: 0.2px;
+  background: linear-gradient(90deg,
+    #723518 3.5372%,
+    #d1962e 16.3474%,
+    #f8f7c1 26.2788%,
+    #d1962e 38.9683%,
+    #f8f7c1 50.7655%,
+    #d1962e 63.3107%,
+    #f8f7c1 75.1884%,
+    #d1962e 86.6952%,
+    #723518 96.2253%
+  );
+  border-radius: 1px;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+.logo::before {
+  top: 0;
+}
+
+.logo::after {
+  bottom: 0;
+}
   
-  .logo .material-icons {
-    font-size: 32px;
-  }
+.logo .material-icons {
+  font-size: 32px;
+  color: var(--gold);
+}
   
-  .logo h1 {
-    font-size: 24px;
-    font-weight: 700;
-    margin: 0;
-  }
+.logo h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(90deg,
+    #723518 3.5372%,
+    #d1962e 16.3474%,
+    #f8f7c1 26.2788%,
+    #d1962e 38.9683%,
+    #f8f7c1 50.7655%,
+    #d1962e 63.3107%,
+    #f8f7c1 75.1884%,
+    #d1962e 86.6952%,
+    #723518 96.2253%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
   
   .header-nav ul {
     display: flex;
@@ -96,21 +144,66 @@
     box-shadow: 0 0 4px rgba(215, 165, 32, 0.3);
   }
 
-  .header-nav a {
-    text-decoration: none;
-    color: var(--light-text);
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    font-size: 15px;
-  }
-  
-  .header-nav a:hover,
-  .header-nav a.active {
-    background-color: var(--secondary-color);
-    color: var(--primary-color);
-  }
+ /* Agregar esta regla CSS para aplicar el degradado dorado al texto "Perfil" en el header */
+
+/* Selector específico para el enlace "Perfil" en el header */
+/* CSS corregido - Solo aplica degradado dorado al enlace "Perfil" específicamente */
+
+/* Selector muy específico para SOLO el enlace "Perfil" */
+/* CSS corregido - Solo aplica degradado dorado al enlace "Perfil" específicamente */
+
+/* Selector muy específico para SOLO el enlace "Perfil" */
+.header-nav a[href*="perfil"]:not([href*="referencias"]) {
+  background: linear-gradient(90deg,
+    #723518 3.5372%,
+    #d1962e 16.3474%,
+    #f8f7c1 26.2788%,
+    #d1962e 38.9683%,
+    #f8f7c1 50.7655%,
+    #d1962e 63.3107%,
+    #f8f7c1 75.1884%,
+    #d1962e 86.6952%,
+    #723518 96.2253%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+/* Alternativa si usas clases específicas */
+.header-nav a.perfil-link {
+  background: linear-gradient(90deg,
+    #723518 3.5372%,
+    #d1962e 16.3474%,
+    #f8f7c1 26.2788%,
+    #d1962e 38.9683%,
+    #f8f7c1 50.7655%,
+    #d1962e 63.3107%,
+    #f8f7c1 75.1884%,
+    #d1962e 86.6952%,
+    #723518 96.2253%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+/* MANTENER los estilos originales para Referencias */
+.header-nav a:not([href*="perfil"]) {
+  background: none !important;
+  -webkit-background-clip: initial !important;
+  -webkit-text-fill-color: initial !important;
+  background-clip: initial !important;
+  color: var(--light-text) !important;
+}
+
+/* Mantener hover normal para Referencias */
+.header-nav a:not([href*="perfil"]):hover {
+  background-color: var(--secondary-color) !important;
+  color: var(--primary-color) !important;
+}
   
   .header-right {
     display: flex;
@@ -1180,26 +1273,6 @@ input:checked + .slider:before {
     font-size: 1.2em !important;
   }
 }
-}
-/* Separadores decorativos entre elementos del navbar */
-.menu-separator {
-  display: inline-block;
-  width: 2px;
-  height: 24px;
-  background: linear-gradient(0deg,
-    #723518 3.5372%,
-    #d1962e 16.3474%,
-    #f8f7c1 26.2788%,
-    #d1962e 38.9683%,
-    #f8f7c1 50.7655%,
-    #d1962e 63.3107%,
-    #f8f7c1 75.1884%,
-    #d1962e 86.6952%,
-    #723518 96.2253%
-  );
-  border-radius: 2px;
-  margin: 0 10px;
-  vertical-align: middle;
 }
 
 /* Ocultar separadores en móviles para mejor UX */
