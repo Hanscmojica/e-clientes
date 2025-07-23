@@ -34,61 +34,82 @@ body {
   font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
   line-height: 1.6;
   color: var(--dark-text);
-  /* Gradiente azul basado en los azules del manual */
-  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-light) 50%, var(--primary-light) 100%);
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
+  position: relative;
+  overflow: hidden;
 }
+
+/* Video de fondo */
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  object-fit: cover;
+}
+
+/* Overlay eliminado - video sin filtros */
 
 .login-container {
   display: flex;
   width: 100%;
-  max-width: 1200px;
-  min-height: 600px;
-  background-color: white;
+  max-width: 900px; /* Reducido de 1200px a 900px */
+  min-height: 500px; /* Reducido de 600px a 500px */
+  background-color: rgba(255, 255, 255, 0.5); /* 50% transparente */
+  backdrop-filter: blur(10px); /* Efecto de blur para mejor legibilidad */
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(92, 83, 83, 0.2);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .login-card {
   flex: 1;
-  padding: 60px;
+  padding: 40px; /* Reducido de 60px a 40px */
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background-color: black;
+  background-color: rgba(0, 0, 0, 0.5); /* 50% transparente */
+  backdrop-filter: blur(10px);
 }
 
 .login-info {
   flex: 1;
-  /* Gradiente basado en los azules del manual */
-  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue) 100%);
+  /* Gradiente basado en los azules del manual con 50% transparencia */
+  background: linear-gradient(135deg, 
+    rgba(3, 3, 181, 0.5) 0%, 
+    rgba(14, 83, 114, 0.5) 100%
+  );
   color: white;
-  padding: 60px;
+  padding: 40px; /* Reducido de 60px a 40px */
   display: flex;
   flex-direction: column;
   justify-content: center;
+  backdrop-filter: blur(10px);
 }
 
 .login-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 30px; /* Reducido de 40px a 30px */
 }
 
 .logo {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
+  width: 60px; /* Reducido de 80px a 60px */
+  height: 60px; /* Reducido de 80px a 60px */
   /* Color dorado del ingeniero como fondo del logo */
-  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.5); /* 50% transparente */
   border-radius: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 15px; /* Reducido de 20px a 15px */
+  backdrop-filter: blur(5px);
 }
 
 .logo .material-icons {
@@ -97,9 +118,10 @@ body {
 }
 
 .login-header h1 {
-  font-size: 32px;
+  font-size: 28px; /* Reducido de 32px a 28px */
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: 6px; /* Reducido de 8px a 6px */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Sombra para mejor legibilidad */
 
   background: linear-gradient(90deg,
     #723518 3.5372%,
@@ -125,16 +147,17 @@ body {
 .login-header p {
   color: var(--light-bg);
   font-size: 16px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .login-form {
   width: 100%;
-  max-width: 400px;
+  max-width: 320px; /* Reducido de 400px a 320px */
   margin: 0 auto;
 }
 
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 20px; /* Reducido de 24px a 20px */
   position: relative;
 }
 
@@ -146,6 +169,7 @@ body {
   margin-bottom: 8px;
   color: var(--light-bg);
   font-size: 15px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .form-group label .material-icons {
@@ -155,20 +179,21 @@ body {
 
 .form-group input {
   width: 100%;
-  padding: 14px 16px;
-  padding-right: 45px;
+  padding: 12px 14px; /* Reducido de 14px 16px a 12px 14px */
+  padding-right: 40px; /* Reducido de 45px a 40px */
   border: 2px solid var(--border-color);
-  border-radius: 10px;
-  font-size: 16px;
+  border-radius: 8px; /* Reducido de 10px a 8px */
+  font-size: 15px; /* Reducido de 16px a 15px */
   transition: all 0.3s ease;
-  background-color: #f8fafc;
+  background-color: rgba(248, 250, 252, 0.5); /* 50% transparente */
+  backdrop-filter: blur(5px);
 }
 
 .form-group input:focus {
   outline: none;
   border-color: var(--primary-light);
   box-shadow: 0 0 0 3px rgba(11, 115, 160, 0.1);
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.7); /* Más opaco al hacer focus */
 }
 
 .toggle-password {
@@ -199,8 +224,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  font-size: 14px;
+  margin-bottom: 25px; /* Reducido de 30px a 25px */
+  font-size: 13px; /* Reducido de 14px a 13px */
 }
 
 .remember-me {
@@ -209,6 +234,7 @@ body {
   gap: 8px;
   cursor: pointer;
   color: var(--light-bg);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .remember-me input[type="checkbox"] {
@@ -221,6 +247,7 @@ body {
   color: var(--light-bg);
   text-decoration: none;
   font-weight: 500;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .forgot-password:hover {
@@ -229,20 +256,42 @@ body {
 
 .login-button {
   width: 100%;
-  padding: 14px 20px;
+  padding: 12px 18px; /* Reducido de 14px 20px a 12px 18px */
   /* Gradiente basado en los azules del manual */
   background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue) 100%);
   color: white;
   border: none;
-  border-radius: 10px;
-  font-size: 16px;
+  border-radius: 8px; /* Reducido de 10px a 8px */
+  font-size: 15px; /* Reducido de 16px a 15px */
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px; /* Reducido de 10px a 8px */
   transition: all 0.3s ease;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(3, 3, 181, 0.3);
+}
+
+/* Responsive para dispositivos móviles */
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+    margin: 10px;
+  }
+  
+  .login-card, .login-info {
+    padding: 40px 30px;
+  }
+  
+  .video-background {
+    object-position: center;
+  }
 }
 
 .login-button:hover {

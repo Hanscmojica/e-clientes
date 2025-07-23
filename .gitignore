@@ -3,3 +3,4 @@ backend/.env
 /backend/daemon
 /backend
 web.config
+assets/cargo-ship-containers.mp4
