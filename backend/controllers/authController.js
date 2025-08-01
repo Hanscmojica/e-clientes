@@ -32,78 +32,22 @@ function validatePasswordStrength(password) {
 
 exports.login = async (req, res, next) => {
     try {
-        console.log('Login request received:', req.body);
         const { username, password } = req.body;
-        console.log('🔍 Username recibido:', username);
         
-        const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-        
-        // USUARIO DE PRUEBA HANS - SIEMPRE DISPONIBLE
-        if (username.toUpperCase() === 'HANS' && password === '12345') {
-            console.log('✅ Login de prueba para HANS');
-            
-            // ✅ SEPARACIÓN CORRECTA DE CONCEPTOS
-            const usuarioId = 6;  // ID único del usuario HANS
-            const clienteId = 5951;  // ID de la empresa de HANS
-            
-            const token = jwt.sign(
-                { 
-                    id: usuarioId,           // ✅ ID único del usuario
-                    idCliente: clienteId,    // ✅ ID de la empresa/cliente
-                    username: 'HANS', 
-                    role: 'ADMIN',
-                    originalId: usuarioId,   // ✅ Para logs (ID único del usuario)
-                    primerIngreso: false     // ✅ NUEVO: HANS no requiere cambio
-                },
-                process.env.JWT_SECRET || 'clave_secreta_para_jwt',
-                { expiresIn: process.env.JWT_EXPIRE || '24h' }
-            );
-            
-            // 🔥 REGISTRAR LOG DE LOGIN EXITOSO
-            try {
-                await authService.createAuthLog({
-                    nId01Usuario: usuarioId,  // ✅ Usar ID único del usuario
-                    sTipoAccion: 'LOGIN',
-                    dFechaHora: new Date(),
-                    sIpUsuario: (ip || 'unknown').substring(0, 50),
-                    sUserAgent: (req.headers['user-agent'] || '').substring(0, 500),
-                    sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
-                    sUbicacion: null,
-                    bExitoso: true,
-                    sDetalleError: null,
-                    sTokenSesion: token.substring(0, 255)
-                });
-                console.log('✅ Log de autenticación guardado para HANS');
-            } catch (logError) {
-                console.error('⚠️ Error al guardar log:', logError);
-            }
-            
-            // 🔥 CREAR SESIÓN ACTIVA
-            try {
-                await authService.createActiveSession(usuarioId, token, req);
-                console.log('✅ Sesión activa creada para HANS');
-            } catch (sessionError) {
-                console.error('⚠️ Error al crear sesión:', sessionError);
-            }
-            
-            return res.status(200).json({
-                success: true,
-                message: 'Login exitoso',
-                token: token,
-                user: {
-                    id: usuarioId,           // ✅ ID único del usuario
-                    idCliente: clienteId,    // ✅ ID de la empresa/cliente
-                    username: 'HANS',
-                    name: 'Hans Hansen Mojica',
-                    role: 'ADMIN',
-                    email: 'hans@hotmail.com',
-                    primerIngreso: false     // ✅ NUEVO: No requiere cambio
-                }
+        // Basic input validation
+        if (!username || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'Username and password are required'
             });
         }
         
-        // Buscar usuario en la base de datos utilizando Prisma
-        console.log('Buscando usuario en base de datos:', username);
+        const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        
+        // NOTE: Hardcoded test user removed for security
+        // All users must be properly configured in the database
+        
+        // Search user in database
         
         let user;
         try {
@@ -120,7 +64,11 @@ exports.login = async (req, res, next) => {
                 }
             });
         } catch (dbError) {
-            console.error('❌ Error de base de datos:', dbError);
+            // Log database errors for debugging (without sensitive data)
+            console.error('Database connection error:', {
+                message: dbError.message,
+                code: dbError.code
+            });
             
             // 🔥 REGISTRAR LOG DE LOGIN FALLIDO POR ERROR DE BD
             try {
@@ -140,60 +88,7 @@ exports.login = async (req, res, next) => {
                 console.error('⚠️ Error al guardar log de error BD:', logError);
             }
             
-            // Fallback para HANS en caso de error de BD
-            if (username.toUpperCase() === 'HANS' && password === '12345') {
-                console.log('⚠️ Error de BD, usando fallback para HANS');
-                
-                const usuarioId = 5951;
-                const clienteId = 5951;
-                
-                const token = jwt.sign(
-                    { 
-                        id: usuarioId,
-                        idCliente: clienteId,
-                        username: 'HANS', 
-                        role: 'ADMIN',
-                        originalId: usuarioId,
-                        primerIngreso: false     // ✅ NUEVO
-                    },
-                    process.env.JWT_SECRET || 'clave_secreta_para_jwt',
-                    { expiresIn: process.env.JWT_EXPIRE || '24h' }
-                );
-                
-                // 🔥 REGISTRAR LOG DE FALLBACK
-                try {
-                    await authService.createAuthLog({
-                        nId01Usuario: usuarioId,
-                        sTipoAccion: 'LOGIN',
-                        dFechaHora: new Date(),
-                        sIpUsuario: (ip || 'unknown').substring(0, 50),
-                        sUserAgent: (req.headers['user-agent'] || '').substring(0, 500),
-                        sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
-                        sUbicacion: null,
-                        bExitoso: true,
-                        sDetalleError: 'Fallback por error BD',
-                        sTokenSesion: token.substring(0, 255)
-                    });
-                    await authService.createActiveSession(usuarioId, token, req);
-                } catch (logError) {
-                    console.error('⚠️ Error al guardar log de fallback:', logError);
-                }
-                
-                return res.status(200).json({
-                    success: true,
-                    message: 'Login exitoso (fallback)',
-                    token: token,
-                    user: {
-                        id: usuarioId,
-                        idCliente: clienteId,
-                        username: 'HANS',
-                        name: 'Hans Hansen Mojica',
-                        role: 'ADMIN',
-                        email: 'hans@hotmail.com',
-                        primerIngreso: false     // ✅ NUEVO
-                    }
-                });
-            }
+            // No fallback users - proper database connection required
             
             return res.status(500).json({
                 success: false,
@@ -201,8 +96,7 @@ exports.login = async (req, res, next) => {
             });
         }
         
-        // ✅ MODIFICADO: Incluir información de primer ingreso
-        console.log('Usuario encontrado:', user ? `ID: ${user.nId01Usuario}, Activo: ${user.bActivo}, PrimerIngreso: ${user.bPrimerIngreso}` : 'No encontrado');
+        // User found - validate status
         
         // Verificar si existe el usuario
         if (!user) {
@@ -230,9 +124,8 @@ exports.login = async (req, res, next) => {
             });
         }
         
-        // Verificar contraseña
+        // Verify password
         const passwordValid = await bcrypt.compare(password, user.sPassword);
-        console.log('Verificación de contraseña:', passwordValid ? 'Correcta' : 'Incorrecta');
         
         if (!passwordValid) {
             // 🔥 REGISTRAR LOG DE LOGIN FALLIDO - CONTRASEÑA INCORRECTA
@@ -293,12 +186,8 @@ exports.login = async (req, res, next) => {
         const clienteId = user.nIdCliente || usuarioId;   // ID del cliente/empresa (5951, 3159... o fallback)
         const primerIngreso = user.bPrimerIngreso || false; // ✅ NUEVO: Verificar primer ingreso
         
-        // ✅ MODIFICADO: Incluir información de primer ingreso
-        console.log(`✅ Usuario: ${user.sUsuario} - ID Usuario: ${usuarioId} - ID Cliente: ${clienteId} - Primer Ingreso: ${primerIngreso}`);
-        
-        // ✅ NUEVO: Verificar si es primer ingreso
+        // Check if first login
         if (primerIngreso) {
-            console.log('🔑 Primer ingreso detectado, requiere cambio de contraseña');
             
             // Generar token temporal para cambio de contraseña
             const tempToken = jwt.sign(
@@ -308,7 +197,7 @@ exports.login = async (req, res, next) => {
                     tempPasswordChange: true,
                     exp: Math.floor(Date.now() / 1000) + (15 * 60) // 15 minutos
                 },
-                process.env.JWT_SECRET || 'clave_secreta_para_jwt'
+                process.env.JWT_SECRET
             );
             
             // 🔥 REGISTRAR LOG DE PRIMER INGRESO
@@ -353,7 +242,7 @@ exports.login = async (req, res, next) => {
                 originalId: usuarioId,   // ✅ Para logs (ID único del usuario)
                 primerIngreso: false     // ✅ NUEVO: Ya no es primer ingreso
             },
-            process.env.JWT_SECRET || 'clave_secreta_para_jwt',
+                            process.env.JWT_SECRET,
             { expiresIn: process.env.JWT_EXPIRE || '8h' }
         );
         
@@ -371,23 +260,16 @@ exports.login = async (req, res, next) => {
                 sDetalleError: null,
                 sTokenSesion: token.substring(0, 255)
             });
-            console.log('✅ Log de autenticación guardado para:', user.sUsuario);
         } catch (logError) {
-            console.error('⚠️ Error al guardar log de login exitoso:', logError);
+            console.error('Error saving authentication log:', logError.message);
         }
         
-        // 🔥 CREAR SESIÓN ACTIVA
+        // Create active session
         try {
             await authService.createActiveSession(usuarioId, token, req);
-            console.log('✅ Sesión activa creada para:', user.sUsuario);
         } catch (sessionError) {
-            console.error('⚠️ Error al crear sesión activa:', sessionError);
+            console.error('Error creating active session:', sessionError.message);
         }
-        
-        console.log('✅ Login exitoso para:', user.sUsuario);
-        console.log('✅ ID Usuario:', usuarioId);
-        console.log('✅ ID Cliente para referencias:', clienteId);
-        console.log('✅ Logs de autenticación registrados');
         
         // Responder con datos del usuario y token
         return res.status(200).json({
@@ -406,9 +288,13 @@ exports.login = async (req, res, next) => {
             }
         });
     } catch (error) {
-        console.error('❌ Error en login:', error);
+        // Log error for debugging (without sensitive data)
+        console.error('Login error:', {
+            message: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
         
-        // 🔥 REGISTRAR LOG DE ERROR GENERAL
+        // Log authentication failure
         try {
             await authService.createAuthLog({
                 nId01Usuario: null,
@@ -419,70 +305,17 @@ exports.login = async (req, res, next) => {
                 sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
                 sUbicacion: null,
                 bExitoso: false,
-                sDetalleError: `Error interno: ${error.message}`,
+                sDetalleError: 'Internal server error',
                 sTokenSesion: null
             });
         } catch (logError) {
-            console.error('⚠️ Error al guardar log de error general:', logError);
+            console.error('Error saving error log:', logError.message);
         }
         
-        // Fallback final para HANS
-        if (req.body.username?.toUpperCase() === 'HANS' && req.body.password === '12345') {
-            console.log('⚠️ Error general, usando fallback final para HANS');
-            
-            const usuarioId = 5951;
-            const clienteId = 5951;
-            
-            const token = jwt.sign(
-                { 
-                    id: usuarioId,
-                    idCliente: clienteId,
-                    username: 'HANS', 
-                    role: 'ADMIN',
-                    originalId: usuarioId,
-                    primerIngreso: false     // ✅ NUEVO
-                },
-                process.env.JWT_SECRET || 'clave_secreta_para_jwt',
-                { expiresIn: process.env.JWT_EXPIRE || '24h' }
-            );
-            
-            // 🔥 REGISTRAR LOG DE FALLBACK FINAL
-            try {
-                await authService.createAuthLog({
-                    nId01Usuario: usuarioId,
-                    sTipoAccion: 'LOGIN',
-                    dFechaHora: new Date(),
-                    sIpUsuario: (req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown').substring(0, 50),
-                    sUserAgent: (req.headers['user-agent'] || '').substring(0, 500),
-                    sDispositivo: authService.getDeviceInfo(req.headers['user-agent']),
-                    sUbicacion: null,
-                    bExitoso: true,
-                    sDetalleError: 'Fallback por error general',
-                    sTokenSesion: token.substring(0, 255)
-                });
-                await authService.createActiveSession(usuarioId, token, req);
-            } catch (logError) {
-                console.error('⚠️ Error al guardar log de fallback final:', logError);
-            }
-            
-            return res.status(200).json({
-                success: true,
-                message: 'Login exitoso (modo emergencia)',
-                token: token,
-                user: {
-                    id: usuarioId,
-                    idCliente: clienteId,
-                    username: 'HANS',
-                    name: 'Hans Hansen Mojica',
-                    role: 'ADMIN',
-                    primerIngreso: false     // ✅ NUEVO
-                }
-            });
-        }
-        
+        // Generic error response to prevent information leakage
         return res.status(500).json({
             success: false,
-            message: 'Error interno del servidor'
+            message: 'Internal server error. Please try again later.'
         });
     }
 };
@@ -507,7 +340,7 @@ exports.changeFirstPassword = async (req, res) => {
         // Verificar token temporal
         let decoded;
         try {
-            decoded = jwt.verify(tempToken, process.env.JWT_SECRET || 'clave_secreta_para_jwt');
+            decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
         } catch (error) {
             console.error('❌ Token temporal inválido:', error);
             return res.status(401).json({
@@ -601,7 +434,7 @@ exports.changeFirstPassword = async (req, res) => {
             console.error('⚠️ Error al guardar log de cambio de contraseña:', logError);
         }
         
-        console.log(`✅ Contraseña cambiada exitosamente para usuario: ${user.sUsuario}`);
+        // Password changed successfully
         
         res.status(200).json({
             success: true,
@@ -609,10 +442,13 @@ exports.changeFirstPassword = async (req, res) => {
         });
         
     } catch (error) {
-        console.error('❌ Error al cambiar contraseña:', error);
+        console.error('Password change error:', {
+            message: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
         res.status(500).json({
             success: false,
-            message: 'Error interno del servidor'
+            message: 'Internal server error. Please try again later.'
         });
     }
 };
@@ -658,33 +494,20 @@ exports.logout = async (req, res) => {
             message: 'Sesión cerrada correctamente'
         });
     } catch (error) {
-        console.error('Error en logout:', error);
+        console.error('Logout error:', {
+            message: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
         res.status(500).json({
             success: false,
-            message: 'Error al cerrar sesión'
+            message: 'Error logging out. Please try again later.'
         });
     }
 };
 
 exports.getProfile = async (req, res, next) => {
     try {
-        // Para HANS de prueba, devolver datos directamente
-        if (req.user.username === 'HANS' && req.user.id === 5951) {
-            return res.status(200).json({
-                success: true,
-                user: {
-                    id: 5951,              // ✅ ID único del usuario
-                    idCliente: 5951,       // ✅ ID del cliente/empresa
-                    username: 'HANS',
-                    name: 'Hans Hansen Mojica',
-                    email: 'hans@hotmail.com',
-                    role: 'ADMIN',
-                    active: true,
-                    primerIngreso: false,  // ✅ NUEVO: HANS no requiere cambio
-                    createdAt: new Date().toISOString()
-                }
-            });
-        }
+        // All users retrieved from database - no hardcoded test users
         
         const userId = req.user.originalId || req.user.id;
         
@@ -730,7 +553,13 @@ exports.getProfile = async (req, res, next) => {
             }
         });
     } catch (error) {
-        console.error('Error al obtener perfil:', error);
-        next(error);
+        console.error('Profile fetch error:', {
+            message: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
+        res.status(500).json({
+            success: false,
+            message: 'Error retrieving profile. Please try again later.'
+        });
     }
 };  

@@ -11,7 +11,7 @@ let modulosDisponibles = [];
 
 // Inicialización
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('🔧 Cargando panel de administrador...');
+  // Loading admin panel
   
   // Verificación simple - solo comprobar si hay sesión
   const userSession = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession') || 'null');
