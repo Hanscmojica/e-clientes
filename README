@@ -1,19 +1,31 @@
-SERVIDOR CORRIENDO EN EL PUERTO 5000
-FTP CORRIENDO EN EL 10.11.20.11
-CONEXION EXITOSA 04/05/2025
+# E-Clientes System
 
-CREDENCIALES:
-USUARIO: HANS (admin, hardcoreado)
-CONTRASEÑA: 12345
+## System Information
+- Server running on port 5000
+- FTP server: 10.11.20.11
+- Last connection: 04/05/2025
 
-USUARIO: GHERSON (admin)
-CONTRASEÑA : Islasfaroe1$ 
+## Setup Instructions
 
-USUARIO : amartinez
-CONTRASEÑA: AMARTINEZ1$ (cliente)
+### Environment Configuration
+1. Copy `backend/envProduction.txt` to `backend/.env`
+2. Update all credentials in `.env` file with your actual values
+3. Ensure JWT_SECRET is set to a strong, unique value
+4. Configure database connection string
 
-USUARIO: ROGELIO
-CONTRASEÑA: Holamundo1$
+### User Management
+- All users must be properly configured in the database
+- No hardcoded credentials are supported for security reasons
+- Contact your system administrator for user setup
 
-USUARIO:SHADOWKADIZZ  (eliw)
-CONTRASEÑA: SHADOWKADIZZ1$ 
+### Security Notes
+- Never commit credential files to version control
+- Use strong passwords for all accounts
+- Regularly rotate JWT secrets and database passwords
+- Monitor access logs for suspicious activity
+
+## Deployment
+- Ensure all environment variables are properly set
+- Verify database connectivity before starting
+- Use HTTPS in production
+- Implement proper backup procedures 

@@ -1,6 +1,48 @@
+# Configuration files
 web.config
+
+# Environment variables and secrets
 backend/.env
+backend/envProduction.txt
+backend/envProducción.txt
+.env
+.env.*
+!.env.example
+
+# Build and dependency directories
+node_modules/
 /backend/daemon
-/backend
-web.config
+dist/
+build/
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Media files
 assets/cargo-ship-containers.mp4
+
+# SSL certificates and keys
+*.key
+*.crt
+*.pem
+backend/Key_Cer_WildCard_2025/

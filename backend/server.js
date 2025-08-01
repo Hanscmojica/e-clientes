@@ -1,4 +1,9 @@
 require('dotenv').config();
+
+// Validate environment variables before starting server
+const { validateEnvironment } = require('./config/env-validation');
+validateEnvironment();
+
 const express = require('express');
 const http = require('http');
 const https = require('https');
@@ -24,6 +29,9 @@ const adminRoutes = require('./routes/admin');
 
 // Inicializar app
 const app = express();
+
+// Import rate limiting middleware
+const { generalLimiter, authLimiter, adminLimiter } = require('./middlewares/rateLimiting');
 
 // Configuración SSL
 const sslOptions = {
@@ -51,12 +59,40 @@ async function testDatabaseConnection() {
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// Configure CORS with specific allowed origins for security
+const allowedOrigins = [
+    'https://e-clientes.rodall.com',
+    'https://www.e-clientes.rodall.com'
+];
+
+// Add localhost for development only
+if (process.env.NODE_ENV === 'development') {
+    allowedOrigins.push('http://localhost:3000', 'http://localhost:5000', 'http://127.0.0.1:5000');
+}
+
 app.use(cors({
-    origin: '*',
+    origin: function (origin, callback) {
+        // Allow requests with no origin (mobile apps, etc.)
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            console.warn(`🚫 CORS blocked origin: ${origin}`);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
+
+// Apply rate limiting
+app.use('/api/', generalLimiter); // General rate limiting for all API endpoints
+app.use('/api/auth/login', authLimiter); // Strict rate limiting for login
+app.use('/api/auth/change-first-password', authLimiter); // Strict rate limiting for password changes
+app.use('/api/admin/', adminLimiter); // Rate limiting for admin endpoints
+
 app.use(express.static(path.join(__dirname, '../')));
 
 // Crear servidores HTTP y HTTPS
